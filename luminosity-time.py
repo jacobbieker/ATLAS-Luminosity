@@ -23,7 +23,7 @@ def luminosity_vs_time(timing_list, luminosity_list, style):
 
         # set visual attributes
 
-    graph.linecolor = 'white'
+    graph.linecolor = 'white' # Hides the lines at this time
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Time")
     graph.yaxis.SetTitle("Luminosity")
@@ -33,14 +33,6 @@ def luminosity_vs_time(timing_list, luminosity_list, style):
     # plot with ROOT
     canvas = Canvas()
     graph.Draw("APL")
-
-    label = ROOT.TText(0.4, 0.8, "ROOT")
-    label.SetTextFont(43)
-    label.SetTextSize(25)
-    label.SetNDC()
-    label.Draw()
-    canvas.Modified()
-    canvas.Update()
     wait(True)
 
 
