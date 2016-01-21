@@ -1,5 +1,5 @@
 __author__ = 'Jacob Bieker'
-import rootpy as ROOT
+import ROOT
 import numpy as np
 from rootpy.plotting import Canvas, Graph
 from rootpy.plotting.style import get_style, set_style
@@ -18,7 +18,28 @@ def luminosity_vs_time(timing_list, luminosity_list, style):
 
     # create graph
     graph = Graph(len(timing_list))
+    for i, (xx, yy) in enumerate(zip(timing_list, luminosity_list)):
+        graph.SetPoint(i, xx, yy)
 
+        # set visual attributes
+    graph.linecolor = 'blue'
+    graph.markercolor = 'blue'
+    graph.xaxis.SetTitle("Time")
+    graph.yaxis.SetTitle("Luminosity")
+    graph.xaxis.SetRangeUser(min(timing_list), max(timing_list))
+    graph.yaxis.SetRangeUser(min(luminosity_list), max(luminosity_list))
+
+    # plot with ROOT
+    canvas = Canvas()
+    graph.Draw("APL")
+
+    label = ROOT.TText(0.4, 0.8, "ROOT")
+    label.SetTextFont(43)
+    label.SetTextSize(25)
+    label.SetNDC()
+    label.Draw()
+    canvas.Modified()
+    canvas.Update()
 
 # Go through each directory of luminosity data
 
