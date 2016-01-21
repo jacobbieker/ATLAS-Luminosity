@@ -22,7 +22,8 @@ def luminosity_vs_time(timing_list, luminosity_list, style):
         graph.SetPoint(i, xx, yy)
 
         # set visual attributes
-    graph.linecolor = 'blue'
+
+    graph.linecolor = 'white'
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Time")
     graph.yaxis.SetTitle("Luminosity")
@@ -40,6 +41,7 @@ def luminosity_vs_time(timing_list, luminosity_list, style):
     label.Draw()
     canvas.Modified()
     canvas.Update()
+    wait(True)
 
 
 # Go through each directory of luminosity data
