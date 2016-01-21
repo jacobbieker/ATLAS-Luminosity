@@ -62,3 +62,6 @@ for atlas_file in atlas_4557_data:
             elif int(event_data[1]) == 5:
                 cms_timing.append(int(event_data[0]))
                 cms_luminosity.append(int(event_data[2]))
+
+# Actually plot the data
+luminosity_vs_time(atlas_timing, atlas_luminosity, "ATLAS")
