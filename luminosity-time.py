@@ -41,6 +41,7 @@ def luminosity_vs_time(timing_list, luminosity_list, style):
     canvas.Modified()
     canvas.Update()
 
+
 # Go through each directory of luminosity data
 
 # ATLAS 4557 Data
@@ -57,11 +58,11 @@ for atlas_file in atlas_4557_data:
         for line in data:
             event_data = line.split(" ")
             if int(event_data[1]) == 1: # Check if ATLAS (=1) or CMS (=5)
-                atlas_timing.append(int(event_data[0])) # Add timing data to array
-                atlas_luminosity.append(event_data[2]) # Add instantaneous luminosity to array
+                atlas_timing.append(float(event_data[0])) # Add timing data to array
+                atlas_luminosity.append(float(event_data[2])) # Add instantaneous luminosity to array
             elif int(event_data[1]) == 5:
-                cms_timing.append(int(event_data[0]))
-                cms_luminosity.append(int(event_data[2]))
+                cms_timing.append(float(event_data[0]))
+                cms_luminosity.append(event_data[2])
 
 # Actually plot the data
 luminosity_vs_time(atlas_timing, atlas_luminosity, "ATLAS")
