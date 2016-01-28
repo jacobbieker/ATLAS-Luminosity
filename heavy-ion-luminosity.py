@@ -11,8 +11,7 @@ filename = os.path.join("data", "r284484.root")
 # Convert a TTree in a ROOT file into a NumPy structured array
 arr = root2array(filename)
 
-for element in arr:
-    print(element)
+print(arr.dtype)
 # The TTree name is always optional if there is only one TTree in the file
 
 # Convert a TTree in a ROOT file into a NumPy record array
