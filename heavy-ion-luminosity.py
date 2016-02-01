@@ -22,14 +22,14 @@ rfile = ROOT.TFile(filename)
 
 # Get LUCID and BCM EventOR data to graph
 
-lucid_event_or_bi = detector_array['LUCID_EVENTOR_BI']
+lucid_event_or_bi = detector_array['LUCID_EVENTOR_BI'].tolist()
 
-bcm_h_event_or = detector_array['BCM_H_EVENTOR']
+bcm_h_event_or = detector_array['BCM_H_EVENTOR'].tolist()
 
-bcm_v_event_or = detector_array['BCM_V_EVENTOR']
+bcm_v_event_or = detector_array['BCM_V_EVENTOR'].tolist()
 
 # Timing is named Status in the root file
-timing = detector_array['Status']
+timing = detector_array['Status'].tolist()
 
 
 def plot_luminosity_ratio(detector_one_data, detector_two_data, timing, style):
@@ -61,3 +61,6 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, timing, style):
     canvas = Canvas()
     graph.Draw("APL")
     wait(True)
+
+
+plot_luminosity_ratio(lucid_event_or_bi, bcm_h_event_or, timing, 'ATLAS')
