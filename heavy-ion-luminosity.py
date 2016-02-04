@@ -20,17 +20,34 @@ for element in detector_array.dtype.names:
 # Get the TTree from the ROOT file
 rfile = ROOT.TFile(filename)
 
+# Slice the data to remove runs that have zeros at either detector or are too short
+detector_subset = detector_array[['LBDATA_StartTime', 'LBDATA_EndTime', 'LUCID_EVENTOR_BI', 'BCM_H_EVENTOR',
+                                  'BCM_V_EVENTOR', 'Status']]
+
 # Get LUCID and BCM EventOR data to graph
 
-lucid_event_or_bi = detector_array['LUCID_EVENTOR_BI'].tolist()
+start_time = detector_array['LBDATA_StartTime'].tolist()
+end_time = detector_array['LBDATA_EndTime'].tolist()
 
-bcm_h_event_or = detector_array['BCM_H_EVENTOR'].tolist()
+lucid_event_or_bi = detector_array['LUCID_EVENTOR_BI'][1].tolist()
 
-bcm_v_event_or = detector_array['BCM_V_EVENTOR'].tolist()
+bcm_h_event_or = detector_array['BCM_H_EVENTOR'][1].tolist()
+bcm_v_event_or = detector_array['BCM_V_EVENTOR'][1].tolist()
 
 # Timing is named Status in the root file
 timing = detector_array['Status'].tolist()
 
+# Slice the data to ignore certain datasets because of physical reasons
+for index in range(len(lucid_event_or_bi)):
+    # Go through and eliminate entries where the detector value is zero, so that no divide by zero
+    if lucid_event_or_bi[index] == 0.0 or bcm_h_event_or[index] == 0.0 or bcm_v_event_or[index] == 0.0:
+        # Delete the values for the other detectors and timing for events that have zero
+        del lucid_event_or_bi[index]
+        del bcm_h_event_or[index]
+        del bcm_v_event_or[index]
+        del start_time[index]
+        del end_time[index]
+        del timing[index]
 
 def plot_luminosity_ratio(detector_one_data, detector_two_data, timing, style):
     # Set ROOT graph style
