@@ -84,8 +84,6 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, timing, style):
     # create graph
     graph = Graph(len(timing))
     for i, (xx, yy) in enumerate(zip(timing, luminosity_ratio)):
-        print(xx)
-        print(yy)
         graph.SetPoint(i, float(xx), float(yy))
 
         # set visual attributes
