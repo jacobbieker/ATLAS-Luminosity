@@ -68,9 +68,11 @@ print(" Length of BCM V: " + str(len(bcm_v_event_or)))
 print(" Length of Start: " + str(len(start_time)))
 print(" Length of End: " + str(len(end_time)))
 print(" Length of Timing: " + str(len(timing)))
+
 def plot_luminosity_ratio(detector_one_data, detector_two_data, timing, style):
     # Set ROOT graph style
     set_style(str(style))
+
 
     # Get ratio of the detectors
     luminosity_ratio = []
@@ -82,6 +84,8 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, timing, style):
     # create graph
     graph = Graph(len(timing))
     for i, (xx, yy) in enumerate(zip(timing, luminosity_ratio)):
+        print(xx)
+        print(yy)
         graph.SetPoint(i, float(xx), float(yy))
 
         # set visual attributes
@@ -99,4 +103,8 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, timing, style):
     wait(True)
 
 
-plot_luminosity_ratio(lucid_event_or_bi, bcm_h_event_or, timing, 'ATLAS')
+plot_luminosity_ratio(lucid_event_or_bi, bcm_h_event_or, start_time, 'ATLAS')
+
+plot_luminosity_ratio(lucid_event_or_bi, bcm_h_event_or, start_time, 'ATLAS')
+
+plot_luminosity_ratio(bcm_h_event_or, bcm_v_event_or, start_time, 'ATLAS')
