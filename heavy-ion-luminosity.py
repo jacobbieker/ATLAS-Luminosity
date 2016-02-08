@@ -5,6 +5,7 @@ from rootpy.plotting import Canvas, Graph
 from rootpy.plotting.style import get_style, set_style
 from rootpy.interactive import wait
 import os
+import math
 from root_numpy import root2array, root2rec, tree2rec
 
 # Look at r284484 data
@@ -22,9 +23,13 @@ rfile = ROOT.TFile(filename)
 
 # Slice the data to remove runs that have zeros at either detector or are too short
 detector_subset = detector_array[['LBDATA_StartTime', 'LBDATA_EndTime', 'LUCID_EVENTOR_BI', 'BCM_H_EVENTOR',
-                                  'BCM_V_EVENTOR', 'Status']]
+                                  'BCM_V_EVENTOR', 'Status', 'LBDATA_stable', 'LBDATA_Run', 'LBDATA_LB']]
 
 # Get LUCID and BCM EventOR data to graph
+luminosity_block = detector_array['LBDATA_LB'].tolist()
+luminosity_block_stable = detector_array['LBDATA_stable'].tolist()
+luminosity_block_run = detector_array['LBDATA_Run'].tolist()
+
 
 start_time = detector_array['LBDATA_StartTime'].tolist()
 end_time = detector_array['LBDATA_EndTime'].tolist()
@@ -35,18 +40,42 @@ bcm_h_event_or = detector_array['BCM_H_EVENTOR'][0].tolist()
 bcm_v_event_or = detector_array['BCM_V_EVENTOR'][0].tolist()
 
 # Timing is named Status in the root file
-timing = detector_array['Status'].tolist()
+status = detector_array['Status'].tolist()
 
 print("Length of LUCID: " + str(len(lucid_event_or_bi)))
 print(" Length of BCM H: " + str(len(bcm_h_event_or)))
 print(" Length of BCM V: " + str(len(bcm_v_event_or)))
 print(" Length of Start: " + str(len(start_time)))
 print(" Length of End: " + str(len(end_time)))
-print(" Length of Timing: " + str(len(timing)))
+print(" Length of Status: " + str(len(status)))
+print(" Length of Luminosity Block Data: " + str(len(luminosity_block)))
+print(" Length of LB Stable: " + str(len(luminosity_block_stable)))
+print(" Length of LB Run: " + str(len(luminosity_block_stable)))
 # Slice the data to ignore certain datasets because of physical reasons
 temp_lucid = []
 temp_bcm_h = []
 temp_bcm_v = []
+
+# Go through each BCID number
+lucid_sum = 0.0
+bcm_h_sum = 0.0
+bcm_v_sum = 0.0
+for bcid in range(3564):
+    if luminosity_block_stable[bcid] != 0.0 and status[bcid] != 0.0:
+        lucid = lucid_event_or_bi[bcid]
+        bcm_h = bcm_h_event_or[bcid]
+        bcm_v = bcm_v_event_or[bcid]
+        # Add as the negative log of 1 - rate, as that should be linear to luminosity
+        lucid_sum += -math.log(1-lucid)
+        bcm_h_sum += -math.log(1-bcm_h)
+        bcm_v_sum += -math.log(1-bcm_v)
+
+luminosity_ratio_lucid_h = lucid_sum/bcm_h_sum
+
+luminosity_ratio_lucid_v = lucid_sum/bcm_v_sum
+
+luminosity_ratio_h_v = bcm_h_sum/bcm_v_sum
+
 for index in range(len(lucid_event_or_bi)):
     # Go through and eliminate entries where the detector value is zero, so that no divide by zero
     if lucid_event_or_bi[index] != 0.0 and bcm_h_event_or[index] != 0.0 and bcm_v_event_or[index] != 0.0:
@@ -64,7 +93,7 @@ print(" Length of BCM H: " + str(len(bcm_h_event_or)))
 print(" Length of BCM V: " + str(len(bcm_v_event_or)))
 print(" Length of Start: " + str(len(start_time)))
 print(" Length of End: " + str(len(end_time)))
-print(" Length of Timing: " + str(len(timing)))
+print(" Length of Timing: " + str(len(status)))
 
 def plot_luminosity_ratio(detector_one_data, detector_two_data, timing, style):
     # Set ROOT graph style
