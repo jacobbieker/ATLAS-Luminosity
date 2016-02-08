@@ -30,7 +30,6 @@ luminosity_block = detector_array['LBDATA_LB'].tolist()
 luminosity_block_stable = detector_array['LBDATA_stable'].tolist()
 luminosity_block_run = detector_array['LBDATA_Run'].tolist()
 
-
 start_time = detector_array['LBDATA_StartTime'].tolist()
 end_time = detector_array['LBDATA_EndTime'].tolist()
 
@@ -60,22 +59,33 @@ temp_bcm_v = []
 lucid_sum = 0.0
 bcm_h_sum = 0.0
 bcm_v_sum = 0.0
+
+
+# Save each event to a list to plot later
+lucid_event_or_bi1 = []
+bcm_v_event_or1 = []
+bcm_h_event_or1 = []
 for bcid in range(3564):
     if luminosity_block_stable[bcid] != 0.0 and status[bcid] != 0.0:
         lucid = lucid_event_or_bi[bcid]
         bcm_h = bcm_h_event_or[bcid]
         bcm_v = bcm_v_event_or[bcid]
+        # Save the event to the list
+        lucid_event_or_bi1.append(lucid)
+        bcm_h_event_or1.append(bcm_h)
+        bcm_v_event_or1.append(bcm_v)
         # Add as the negative log of 1 - rate, as that should be linear to luminosity
-        lucid_sum += -math.log(1-lucid)
-        bcm_h_sum += -math.log(1-bcm_h)
-        bcm_v_sum += -math.log(1-bcm_v)
+        lucid_sum += -math.log(1 - lucid)
+        bcm_h_sum += -math.log(1 - bcm_h)
+        bcm_v_sum += -math.log(1 - bcm_v)
 
-luminosity_ratio_lucid_h = lucid_sum/bcm_h_sum
+luminosity_ratio_lucid_h = lucid_sum / bcm_h_sum
 
-luminosity_ratio_lucid_v = lucid_sum/bcm_v_sum
+luminosity_ratio_lucid_v = lucid_sum / bcm_v_sum
 
-luminosity_ratio_h_v = bcm_h_sum/bcm_v_sum
+luminosity_ratio_h_v = bcm_h_sum / bcm_v_sum
 
+# Old way. Left in for now while making sure above is supposed to be the way to do it
 for index in range(len(lucid_event_or_bi)):
     # Go through and eliminate entries where the detector value is zero, so that no divide by zero
     if lucid_event_or_bi[index] != 0.0 and bcm_h_event_or[index] != 0.0 and bcm_v_event_or[index] != 0.0:
@@ -95,6 +105,7 @@ print(" Length of Start: " + str(len(start_time)))
 print(" Length of End: " + str(len(end_time)))
 print(" Length of Timing: " + str(len(status)))
 
+
 def plot_luminosity_ratio(detector_one_data, detector_two_data, timing, style):
     # Set ROOT graph style
     set_style(str(style))
@@ -103,7 +114,7 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, timing, style):
     # Get ratio of the detectors
     luminosity_ratio = []
     for index in range(len(detector_one_data)):
-        ratio = detector_one_data[index] / detector_two_data[index]
+        ratio = -math.log(1 - detector_one_data[index]) / -math.log(1 - detector_two_data[index])
         luminosity_ratio.append(ratio)
 
 
@@ -127,8 +138,11 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, timing, style):
     wait(True)
 
 
-plot_luminosity_ratio(lucid_event_or_bi, bcm_h_event_or, start_time, 'ATLAS')
 
-plot_luminosity_ratio(lucid_event_or_bi, bcm_h_event_or, start_time, 'ATLAS')
+#plot_luminosity_ratio(lucid_event_or_bi, bcm_h_event_or, start_time, 'ATLAS')
 
-plot_luminosity_ratio(bcm_h_event_or, bcm_v_event_or, start_time, 'ATLAS')
+#plot_luminosity_ratio(lucid_event_or_bi, bcm_h_event_or, start_time, 'ATLAS')
+
+#plot_luminosity_ratio(bcm_h_event_or, bcm_v_event_or, start_time, 'ATLAS')
+
+plot_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1, status, 'ATLAS')
