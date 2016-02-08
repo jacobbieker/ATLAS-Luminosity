@@ -54,9 +54,6 @@ for index in range(len(lucid_event_or_bi)):
         temp_lucid.append(lucid_event_or_bi[index])
         temp_bcm_h.append(bcm_h_event_or[index])
         temp_bcm_v.append(bcm_v_event_or[index])
-        #del start_time[index]
-        #del end_time[index]
-        #del timing[index]
 
 # Reset to previous arrays
 lucid_event_or_bi = temp_lucid
