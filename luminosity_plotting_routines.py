@@ -70,11 +70,6 @@ def plot_normalized_luminosity_ratio(detector_one_data, detector_two_data, lumin
     :return: ROOT plots of the ratio of luminosities over the luminosity, normalized to one
     '''
 
-    def normalize(x, x_min, x_max):
-        top = x - x_min
-        bottom = x_max - x_min
-        return top / bottom
-
     # Set ROOT graph style
     set_style(str(style))
 
@@ -89,6 +84,17 @@ def plot_normalized_luminosity_ratio(detector_one_data, detector_two_data, lumin
             if detector_one_point != 0.0 and detector_two_point != 0.0:
                 ratio = -math.log(1 - detector_one_point) / -math.log(1 - detector_two_point)
                 luminosity_ratio.append(ratio)
+
+    # Normalize the ratios
+    def normalize(x, x_min, x_max):
+        top = x - x_min
+        bottom = x_max - x_min
+        return top / bottom
+
+    max_ratio = max(luminosity_ratio)
+    min_ratio = min(luminosity_ratio)
+    for ratio_entry in luminosity_ratio:
+        luminosity_ratio[ratio_entry] = normalize(luminosity_ratio[ratio_entry], x_max=max_ratio, x_min=min_ratio)
 
     # create graph
     graph = Graph(len(luminosity_blocks))
