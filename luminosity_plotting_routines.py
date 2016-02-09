@@ -93,7 +93,7 @@ def plot_normalized_luminosity_ratio(detector_one_data, detector_two_data, lumin
 
     max_ratio = max(luminosity_ratio)
     min_ratio = min(luminosity_ratio)
-    for ratio_entry in luminosity_ratio:
+    for ratio_entry in range(len(luminosity_ratio)):
         luminosity_ratio[ratio_entry] = normalize(luminosity_ratio[ratio_entry], x_max=max_ratio, x_min=min_ratio)
 
     # create graph
