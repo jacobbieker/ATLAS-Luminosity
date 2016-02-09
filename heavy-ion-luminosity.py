@@ -85,8 +85,11 @@ for file_name in data_files:
             new_luminosity_block.append(block)
 
     # Actually plot the luminosity ratios
-    luminosity_plotting.plot_normalized_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1, new_luminosity_block, 'ATLAS')
+    luminosity_plotting.plot_percent_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1, new_luminosity_block,
+                                                      'ATLAS', os.path.splitext(file_name)[0])
 
-    luminosity_plotting.plot_normalized_luminosity_ratio(lucid_event_or_bi1, bcm_h_event_or1, new_luminosity_block, 'ATLAS')
+    luminosity_plotting.plot_percent_luminosity_ratio(lucid_event_or_bi1, bcm_h_event_or1, new_luminosity_block,
+                                                      'ATLAS', os.path.splitext(file_name)[0])
 
-    luminosity_plotting.plot_normalized_luminosity_ratio(bcm_h_event_or1, bcm_v_event_or1, new_luminosity_block, 'ATLAS')
+    luminosity_plotting.plot_percent_luminosity_ratio(bcm_h_event_or1, bcm_v_event_or1, new_luminosity_block,
+                                                      'ATLAS', os.path.splitext(file_name)[0])
