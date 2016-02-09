@@ -57,6 +57,7 @@ for file_name in data_files:
     luminosity_ratio_lucid_h_sum = [[] for _ in xrange(len(luminosity_block))]
     luminosity_ratio_h_v_sum = [[] for _ in xrange(len(luminosity_block))]
     luminosity_ratio_lucid_v_sum = [[] for _ in xrange(len(luminosity_block))]
+    new_luminosity_block = []
 
     for block in range(len(luminosity_block)):
         for bcid in range(3564):
@@ -73,18 +74,19 @@ for file_name in data_files:
                     lucid_sum += -math.log(1 - lucid)
                     bcm_h_sum += -math.log(1 - bcm_h)
                     bcm_v_sum += -math.log(1 - bcm_v)
-    # Print out if the blocks are zero
-    if lucid_sum != 0.0 or bcm_h_sum != 0.0 or bcm_v_sum != 0.0:
-        luminosity_ratio_lucid_h = lucid_sum / bcm_h_sum
-        luminosity_ratio_lucid_v = lucid_sum / bcm_v_sum
-        luminosity_ratio_h_v = bcm_h_sum / bcm_v_sum
-        luminosity_ratio_lucid_h_sum[block].append(luminosity_ratio_lucid_h)
-        luminosity_ratio_lucid_v_sum[block].append(luminosity_ratio_lucid_v)
-        luminosity_ratio_h_v_sum[block].append(luminosity_ratio_h_v)
+        # Print out if the blocks are zero
+        if lucid_sum != 0.0 or bcm_h_sum != 0.0 or bcm_v_sum != 0.0:
+            luminosity_ratio_lucid_h = lucid_sum / bcm_h_sum
+            luminosity_ratio_lucid_v = lucid_sum / bcm_v_sum
+            luminosity_ratio_h_v = bcm_h_sum / bcm_v_sum
+            luminosity_ratio_lucid_h_sum[block].append(luminosity_ratio_lucid_h)
+            luminosity_ratio_lucid_v_sum[block].append(luminosity_ratio_lucid_v)
+            luminosity_ratio_h_v_sum[block].append(luminosity_ratio_h_v)
+            new_luminosity_block.append(block)
 
     # Actually plot the luminosity ratios
-    luminosity_plotting.plot_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1, luminosity_block, 'ATLAS')
+    luminosity_plotting.plot_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1, new_luminosity_block, 'ATLAS')
 
-    luminosity_plotting.plot_luminosity_ratio(lucid_event_or_bi1, bcm_h_event_or1, luminosity_block, 'ATLAS')
+    luminosity_plotting.plot_luminosity_ratio(lucid_event_or_bi1, bcm_h_event_or1, new_luminosity_block, 'ATLAS')
 
-    luminosity_plotting.plot_luminosity_ratio(bcm_h_event_or1, bcm_v_event_or1, luminosity_block, 'ATLAS')
+    luminosity_plotting.plot_luminosity_ratio(bcm_h_event_or1, bcm_v_event_or1, new_luminosity_block, 'ATLAS')
