@@ -33,10 +33,10 @@ luminosity_block_run = detector_array['LBDATA_Run'].tolist()
 start_time = detector_array['LBDATA_StartTime'].tolist()
 end_time = detector_array['LBDATA_EndTime'].tolist()
 
-lucid_event_or_bi = detector_array['LUCID_EVENTOR_BI'][0].tolist()
+lucid_event_or_bi = detector_array['LUCID_EVENTOR_BI'].tolist()
 
-bcm_h_event_or = detector_array['BCM_H_EVENTOR'][0].tolist()
-bcm_v_event_or = detector_array['BCM_V_EVENTOR'][0].tolist()
+bcm_h_event_or = detector_array['BCM_H_EVENTOR'].tolist()
+bcm_v_event_or = detector_array['BCM_V_EVENTOR'].tolist()
 
 # Timing is named Status in the root file
 status = detector_array['Status'].tolist()
@@ -50,6 +50,8 @@ print(" Length of Status: " + str(len(status)))
 print(" Length of Luminosity Block Data: " + str(len(luminosity_block)))
 print(" Length of LB Stable: " + str(len(luminosity_block_stable)))
 print(" Length of LB Run: " + str(len(luminosity_block_stable)))
+
+# Each luminosity block is an array in the
 # Slice the data to ignore certain datasets because of physical reasons
 temp_lucid = []
 temp_bcm_h = []
@@ -60,24 +62,24 @@ lucid_sum = 0.0
 bcm_h_sum = 0.0
 bcm_v_sum = 0.0
 
-
 # Save each event to a list to plot later
 lucid_event_or_bi1 = []
 bcm_v_event_or1 = []
 bcm_h_event_or1 = []
-for bcid in range(3564):
-    if luminosity_block_stable[bcid] != 0.0 and status[bcid] != 0.0:
-        lucid = lucid_event_or_bi[bcid]
-        bcm_h = bcm_h_event_or[bcid]
-        bcm_v = bcm_v_event_or[bcid]
-        # Save the event to the list
-        lucid_event_or_bi1.append(lucid)
-        bcm_h_event_or1.append(bcm_h)
-        bcm_v_event_or1.append(bcm_v)
-        # Add as the negative log of 1 - rate, as that should be linear to luminosity
-        lucid_sum += -math.log(1 - lucid)
-        bcm_h_sum += -math.log(1 - bcm_h)
-        bcm_v_sum += -math.log(1 - bcm_v)
+for block in range(len(luminosity_block)):
+    for bcid in range(3564):
+        if luminosity_block_stable[block] != 0.0 and status[block] != 0.0:
+            lucid = lucid_event_or_bi[block][bcid]
+            bcm_h = bcm_h_event_or[block][bcid]
+            bcm_v = bcm_v_event_or[block][bcid]
+            # Save the event to the list
+            lucid_event_or_bi1.append(lucid)
+            bcm_h_event_or1.append(bcm_h)
+            bcm_v_event_or1.append(bcm_v)
+            # Add as the negative log of 1 - rate, as that should be linear to luminosity
+            lucid_sum += -math.log(1 - lucid)
+            bcm_h_sum += -math.log(1 - bcm_h)
+            bcm_v_sum += -math.log(1 - bcm_v)
 
 luminosity_ratio_lucid_h = lucid_sum / bcm_h_sum
 
@@ -85,28 +87,18 @@ luminosity_ratio_lucid_v = lucid_sum / bcm_v_sum
 
 luminosity_ratio_h_v = bcm_h_sum / bcm_v_sum
 
-# Old way. Left in for now while making sure above is supposed to be the way to do it
-for index in range(len(lucid_event_or_bi)):
-    # Go through and eliminate entries where the detector value is zero, so that no divide by zero
-    if lucid_event_or_bi[index] != 0.0 and bcm_h_event_or[index] != 0.0 and bcm_v_event_or[index] != 0.0:
-        # Delete the values for the other detectors and timing for events that have zero
-        temp_lucid.append(lucid_event_or_bi[index])
-        temp_bcm_h.append(bcm_h_event_or[index])
-        temp_bcm_v.append(bcm_v_event_or[index])
-
-# Reset to previous arrays
-lucid_event_or_bi = temp_lucid
-bcm_h_event_or = temp_bcm_h
-bcm_v_event_or = temp_bcm_v
-print("Length of LUCID: " + str(len(lucid_event_or_bi)))
-print(" Length of BCM H: " + str(len(bcm_h_event_or)))
-print(" Length of BCM V: " + str(len(bcm_v_event_or)))
-print(" Length of Start: " + str(len(start_time)))
-print(" Length of End: " + str(len(end_time)))
-print(" Length of Timing: " + str(len(status)))
-
 
 def plot_luminosity_ratio(detector_one_data, detector_two_data, timing, style):
+    '''
+
+    :param detector_one_data: Data from one detector type, such as ATLAS' LUCID, in a list of lists, every entry is one
+    luminsoity block, with the luminosity block being a list of BCID data
+    :param detector_two_data: Data from another detector type, such as ATLAS' LUCID, in a list of lists, every entry is
+    one luminsoity block, with the luminosity block being a list of BCID data
+    :param timing: A list of times for the luminosity blocks
+    :param style: The ROOT style for the graph, generally 'ATLAS'
+    :return: ROOT plots of the ratio of luminosities over the luminosity
+    '''
     # Set ROOT graph style
     set_style(str(style))
 
@@ -137,12 +129,4 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, timing, style):
     graph.Draw("APL")
     wait(True)
 
-
-
-#plot_luminosity_ratio(lucid_event_or_bi, bcm_h_event_or, start_time, 'ATLAS')
-
-#plot_luminosity_ratio(lucid_event_or_bi, bcm_h_event_or, start_time, 'ATLAS')
-
-#plot_luminosity_ratio(bcm_h_event_or, bcm_v_event_or, start_time, 'ATLAS')
-
-plot_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1, status, 'ATLAS')
+plot_luminosity_ratio(lucid_event_or_bi, bcm_v_event_or, status, 'ATLAS')
