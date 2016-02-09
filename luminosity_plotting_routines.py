@@ -29,8 +29,12 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, luminosity_block
     luminosity_ratio = []
     for block in range(len(detector_one_data)):
         for bcid in range(len(detector_one_data[block])):
-            ratio = -math.log(1 - detector_one_data[block][bcid]) / -math.log(1 - detector_two_data[block][bcid])
-            luminosity_ratio.append(ratio)
+            detector_one_point = detector_one_data[block][bcid]
+            detector_two_point = detector_two_data[block][bcid]
+            # Check if the blocks are zero
+            if detector_one_point != 0.0 and detector_two_point != 0.0:
+                ratio = -math.log(1 - detector_one_point) / -math.log(1 - detector_two_point)
+                luminosity_ratio.append(ratio)
 
     # create graph
     graph = Graph(len(luminosity_blocks))
@@ -65,6 +69,12 @@ def plot_normalized_luminosity_ratio(detector_one_data, detector_two_data, lumin
     :param style: The ROOT style for the graph, generally 'ATLAS'
     :return: ROOT plots of the ratio of luminosities over the luminosity, normalized to one
     '''
+
+    def normalize(x, x_min, x_max):
+        top = x - x_min
+        bottom = x_max - x_min
+        return top / bottom
+
     # Set ROOT graph style
     set_style(str(style))
 
@@ -75,15 +85,9 @@ def plot_normalized_luminosity_ratio(detector_one_data, detector_two_data, lumin
         for bcid in range(len(detector_one_data[block])):
             detector_one_point = detector_one_data[block][bcid]
             detector_two_point = detector_two_data[block][bcid]
-            # Print out if the blocks are zero
-            if detector_one_point != 0.0 or detector_two_point != 0.0:
-                luminosity_ratio_lucid_h = lucid_sum / bcm_h_sum
-                luminosity_ratio_lucid_v = lucid_sum / bcm_v_sum
-                luminosity_ratio_h_v = bcm_h_sum / bcm_v_sum
-                luminosity_ratio_lucid_h_sum[block].append(luminosity_ratio_lucid_h)
-                luminosity_ratio_lucid_v_sum[block].append(luminosity_ratio_lucid_v)
-                luminosity_ratio_h_v_sum[block].append(luminosity_ratio_h_v)
-                ratio = -math.log(1 - detector_one_data[block][bcid]) / -math.log(1 - detector_two_data[block][bcid])
+            # Check if the blocks are zero
+            if detector_one_point != 0.0 and detector_two_point != 0.0:
+                ratio = -math.log(1 - detector_one_point) / -math.log(1 - detector_two_point)
                 luminosity_ratio.append(ratio)
 
     # create graph
