@@ -1,3 +1,5 @@
+from __future__ import division
+
 __author__ = 'jacob'
 import ROOT
 import numpy as np
@@ -63,39 +65,50 @@ bcm_h_sum = 0.0
 bcm_v_sum = 0.0
 
 # Save each event to a list to plot later
-lucid_event_or_bi1 = []
-bcm_v_event_or1 = []
-bcm_h_event_or1 = []
+lucid_event_or_bi1 = [[] for _ in xrange(len(luminosity_block))]
+bcm_v_event_or1 = [[] for _ in xrange(len(luminosity_block))]
+bcm_h_event_or1 = [[] for _ in xrange(len(luminosity_block))]
+luminosity_ratio_lucid_h_sum = [[] for _ in xrange(len(luminosity_block))]
+luminosity_ratio_h_v_sum = [[] for _ in xrange(len(luminosity_block))]
+luminosity_ratio_lucid_v_sum = [[] for _ in xrange(len(luminosity_block))]
+
+print(luminosity_ratio_lucid_h_sum)
+
 for block in range(len(luminosity_block)):
     for bcid in range(3564):
         if luminosity_block_stable[block] != 0.0 and status[block] != 0.0:
-            lucid = lucid_event_or_bi[block][bcid]
-            bcm_h = bcm_h_event_or[block][bcid]
-            bcm_v = bcm_v_event_or[block][bcid]
-            # Save the event to the list
-            lucid_event_or_bi1.append(lucid)
-            bcm_h_event_or1.append(bcm_h)
-            bcm_v_event_or1.append(bcm_v)
-            # Add as the negative log of 1 - rate, as that should be linear to luminosity
-            lucid_sum += -math.log(1 - lucid)
-            bcm_h_sum += -math.log(1 - bcm_h)
-            bcm_v_sum += -math.log(1 - bcm_v)
+            if lucid_event_or_bi[block][bcid] != 0.0 and bcm_h_event_or[block][bcid] != 0.0 and bcm_v_event_or[block][bcid] != 0.0:
+                lucid = lucid_event_or_bi[block][bcid]
+                bcm_h = bcm_h_event_or[block][bcid]
+                bcm_v = bcm_v_event_or[block][bcid]
+                # Save the event to the list
+                lucid_event_or_bi1[block].append(lucid)
+                bcm_h_event_or1[block].append(bcm_h)
+                bcm_v_event_or1[block].append(bcm_v)
+                # Add as the negative log of 1 - rate, as that should be linear to luminosity
+                lucid_sum += -math.log(1 - lucid)
+                bcm_h_sum += -math.log(1 - bcm_h)
+                bcm_v_sum += -math.log(1 - bcm_v)
 
-luminosity_ratio_lucid_h = lucid_sum / bcm_h_sum
+    luminosity_ratio_lucid_h = lucid_sum / bcm_h_sum
+    luminosity_ratio_lucid_v = lucid_sum / bcm_v_sum
+    luminosity_ratio_h_v = bcm_h_sum / bcm_v_sum
 
-luminosity_ratio_lucid_v = lucid_sum / bcm_v_sum
+    luminosity_ratio_lucid_h_sum[block].append(luminosity_ratio_lucid_h)
+    luminosity_ratio_lucid_v_sum[block].append(luminosity_ratio_lucid_v)
+    luminosity_ratio_h_v_sum[block].append(luminosity_ratio_h_v)
 
-luminosity_ratio_h_v = bcm_h_sum / bcm_v_sum
 
-
-def plot_luminosity_ratio(detector_one_data, detector_two_data, timing, style):
+def plot_luminosity_ratio(detector_one_data, detector_two_data, luminosity_blocks, style):
     '''
 
     :param detector_one_data: Data from one detector type, such as ATLAS' LUCID, in a list of lists, every entry is one
-    luminsoity block, with the luminosity block being a list of BCID data
+    luminsoity block, with the luminosity block being a list of BCID data, assumed to be same
+    length as detector_two_data
     :param detector_two_data: Data from another detector type, such as ATLAS' LUCID, in a list of lists, every entry is
-    one luminsoity block, with the luminosity block being a list of BCID data
-    :param timing: A list of times for the luminosity blocks
+    one luminsoity block, with the luminosity block being a list of BCID data, assumed to be same
+    length as detector_one_data
+    :param luminosity_blocks: A list of luminosity blocks
     :param style: The ROOT style for the graph, generally 'ATLAS'
     :return: ROOT plots of the ratio of luminosities over the luminosity
     '''
@@ -105,23 +118,25 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, timing, style):
 
     # Get ratio of the detectors
     luminosity_ratio = []
-    for index in range(len(detector_one_data)):
-        ratio = -math.log(1 - detector_one_data[index]) / -math.log(1 - detector_two_data[index])
-        luminosity_ratio.append(ratio)
+    for block in range(len(detector_one_data)):
+        for bcid in range(len(detector_one_data[block])):
+            ratio = -math.log(1 - detector_one_data[block][bcid]) / -math.log(1 - detector_two_data[block][bcid])
+            luminosity_ratio.append(ratio)
 
-
+    print(luminosity_ratio)
+    print(luminosity_blocks)
     # create graph
-    graph = Graph(len(timing))
-    for i, (xx, yy) in enumerate(zip(timing, luminosity_ratio)):
+    graph = Graph(len(luminosity_blocks))
+    for i, (xx, yy) in enumerate(zip(luminosity_blocks, luminosity_ratio)):
         graph.SetPoint(i, float(xx), float(yy))
 
         # set visual attributes
 
     graph.linecolor = 'white'  # Hides the lines at this time
     graph.markercolor = 'blue'
-    graph.xaxis.SetTitle("Time")
+    graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity")
-    graph.xaxis.SetRangeUser(min(timing), max(timing))
+    graph.xaxis.SetRangeUser(min(luminosity_blocks), max(luminosity_blocks))
     graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
 
     # plot with ROOT
@@ -129,4 +144,4 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, timing, style):
     graph.Draw("APL")
     wait(True)
 
-plot_luminosity_ratio(lucid_event_or_bi, bcm_v_event_or, status, 'ATLAS')
+plot_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1, luminosity_block, 'ATLAS')
