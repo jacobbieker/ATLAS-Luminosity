@@ -51,8 +51,16 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, luminosity_block
     graph.Draw("APL")
     wait(True)
 
+
 # Functions to graph luminosity data
 def luminosity_vs_time(timing_list, luminosity_list, style):
+    '''
+
+    :param timing_list: Python list containing the timing data
+    :param luminosity_list: Python list containing the luminosity data
+    :param style: ROOT style in string, such as 'ATLAS'
+    :return:
+    '''
     # Set ROOT graph style
     set_style(str(style))
 
@@ -63,7 +71,7 @@ def luminosity_vs_time(timing_list, luminosity_list, style):
 
         # set visual attributes
 
-    graph.linecolor = 'white' # Hides the lines at this time
+    graph.linecolor = 'white'  # Hides the lines at this time
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Time")
     graph.yaxis.SetTitle("Luminosity")

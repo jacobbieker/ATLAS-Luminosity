@@ -78,7 +78,6 @@ for file_name in data_files:
         luminosity_ratio_lucid_h = lucid_sum / bcm_h_sum
         luminosity_ratio_lucid_v = lucid_sum / bcm_v_sum
         luminosity_ratio_h_v = bcm_h_sum / bcm_v_sum
-
         luminosity_ratio_lucid_h_sum[block].append(luminosity_ratio_lucid_h)
         luminosity_ratio_lucid_v_sum[block].append(luminosity_ratio_lucid_v)
         luminosity_ratio_h_v_sum[block].append(luminosity_ratio_h_v)
