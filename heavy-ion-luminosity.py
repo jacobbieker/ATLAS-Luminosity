@@ -60,8 +60,8 @@ for file_name in data_files:
 
     for block in range(len(luminosity_block)):
         for bcid in range(3564):
-            if luminosity_block_stable[block] != 0.0 and status[block] != 0.0:
-                if lucid_event_or_bi[block][bcid] != 0.0 and bcm_h_event_or[block][bcid] != 0.0 and bcm_v_event_or[block][bcid] != 0.0:
+            if luminosity_block_stable[block] > 0.0 and status[block] > 0.0:
+                if lucid_event_or_bi[block][bcid] > 0.0 and bcm_h_event_or[block][bcid] > 0.0 and bcm_v_event_or[block][bcid] > 0.0:
                     lucid = lucid_event_or_bi[block][bcid]
                     bcm_h = bcm_h_event_or[block][bcid]
                     bcm_v = bcm_v_event_or[block][bcid]
@@ -73,7 +73,8 @@ for file_name in data_files:
                     lucid_sum += -math.log(1 - lucid)
                     bcm_h_sum += -math.log(1 - bcm_h)
                     bcm_v_sum += -math.log(1 - bcm_v)
-
+    # Print out if the blocks are zero
+    if lucid_sum != 0.0 or bcm_h_sum != 0.0 or bcm_v_sum != 0.0:
         luminosity_ratio_lucid_h = lucid_sum / bcm_h_sum
         luminosity_ratio_lucid_v = lucid_sum / bcm_v_sum
         luminosity_ratio_h_v = bcm_h_sum / bcm_v_sum
