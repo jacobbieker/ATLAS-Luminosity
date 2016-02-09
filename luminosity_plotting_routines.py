@@ -50,3 +50,27 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, luminosity_block
     canvas = Canvas()
     graph.Draw("APL")
     wait(True)
+
+# Functions to graph luminosity data
+def luminosity_vs_time(timing_list, luminosity_list, style):
+    # Set ROOT graph style
+    set_style(str(style))
+
+    # create graph
+    graph = Graph(len(timing_list))
+    for i, (xx, yy) in enumerate(zip(timing_list, luminosity_list)):
+        graph.SetPoint(i, xx, yy)
+
+        # set visual attributes
+
+    graph.linecolor = 'white' # Hides the lines at this time
+    graph.markercolor = 'blue'
+    graph.xaxis.SetTitle("Time")
+    graph.yaxis.SetTitle("Luminosity")
+    graph.xaxis.SetRangeUser(min(timing_list), max(timing_list))
+    graph.yaxis.SetRangeUser(1, max(luminosity_list))
+
+    # plot with ROOT
+    canvas = Canvas()
+    graph.Draw("APL")
+    wait(True)

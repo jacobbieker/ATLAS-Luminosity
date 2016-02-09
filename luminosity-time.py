@@ -9,32 +9,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import AutoMinorLocator, MultipleLocator
 import os
 import glob
-
-
-# Functions to graph luminosity data
-def luminosity_vs_time(timing_list, luminosity_list, style):
-    # Set ROOT graph style
-    set_style(str(style))
-
-    # create graph
-    graph = Graph(len(timing_list))
-    for i, (xx, yy) in enumerate(zip(timing_list, luminosity_list)):
-        graph.SetPoint(i, xx, yy)
-
-        # set visual attributes
-
-    graph.linecolor = 'white' # Hides the lines at this time
-    graph.markercolor = 'blue'
-    graph.xaxis.SetTitle("Time")
-    graph.yaxis.SetTitle("Luminosity")
-    graph.xaxis.SetRangeUser(min(timing_list), max(timing_list))
-    graph.yaxis.SetRangeUser(1, max(luminosity_list))
-
-    # plot with ROOT
-    canvas = Canvas()
-    graph.Draw("APL")
-    wait(True)
-
+import luminosity_plotting_routines as luminosity_plotting
 
 # Go through each directory of luminosity data
 
@@ -59,4 +34,4 @@ for atlas_file in atlas_4557_data:
                 cms_luminosity.append(event_data[2])
 
 # Actually plot the data
-luminosity_vs_time(atlas_timing, atlas_luminosity, "ATLAS")
+luminosity_plotting.luminosity_vs_time(atlas_timing, atlas_luminosity, "ATLAS")
