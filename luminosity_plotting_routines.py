@@ -25,6 +25,7 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, luminosity_block
     set_style(str(style))
 
 
+    print("Number of Luminosity Blocks included: " + str(len(detector_one_data)))
     # Get ratio of the detectors
     luminosity_ratio = []
     for block in range(len(detector_one_data)):
@@ -74,6 +75,7 @@ def plot_normalized_luminosity_ratio(detector_one_data, detector_two_data, lumin
     # Set ROOT graph style
     set_style(str(style))
 
+    print("Number of Luminosity Blocks included: " + str(len(detector_one_data)))
 
     # Get ratio of the detectors
     luminosity_ratio = []
@@ -137,6 +139,7 @@ def plot_percent_luminosity_ratio(detector_one_data, detector_two_data, luminosi
     set_style(str(style))
 
 
+    print("Number of Luminosity Blocks included: " + str(len(detector_one_data)))
     # Get ratio of the detectors
     luminosity_ratio = []
     for block in range(len(detector_one_data)):
