@@ -167,7 +167,7 @@ def plot_percent_luminosity_ratio(detector_one_data, detector_two_data, luminosi
     graph.yaxis.SetTitle("Luminosity")
     graph.SetTitle(str(run_name))
     graph.xaxis.SetRangeUser(min(luminosity_blocks), max(luminosity_blocks))
-    graph.yaxis.SetRangeUser(min(luminosity_ratio), 3)
+    graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
 
     # plot with ROOT
     canvas = Canvas()
@@ -199,7 +199,7 @@ def luminosity_vs_time(timing_list, luminosity_list, style):
     graph.xaxis.SetTitle("Time")
     graph.yaxis.SetTitle("Luminosity")
     graph.xaxis.SetRangeUser(min(timing_list), max(timing_list))
-    graph.yaxis.SetRangeUser(1, max(luminosity_list))
+    graph.yaxis.SetRangeUser(min(luminosity_list), max(luminosity_list))
 
     # plot with ROOT
     canvas = Canvas()
