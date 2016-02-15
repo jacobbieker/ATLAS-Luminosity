@@ -47,7 +47,7 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, luminosity_block
     graph.linecolor = 'white'  # Hides the lines at this time
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
-    graph.yaxis.SetTitle("Luminosity")
+    graph.yaxis.SetTitle("Luminosity [Ratio]")
     graph.SetTitle(str(run_name))
     graph.xaxis.SetRangeUser(min(luminosity_blocks), max(luminosity_blocks))
     graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
@@ -111,7 +111,7 @@ def plot_normalized_luminosity_ratio(detector_one_data, detector_two_data, lumin
     graph.linecolor = 'white'  # Hides the lines at this time
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
-    graph.yaxis.SetTitle("Luminosity")
+    graph.yaxis.SetTitle("Luminosity [Normalized Ratio]")
     graph.SetTitle(str(run_name))
     graph.xaxis.SetRangeUser(min(luminosity_blocks), max(luminosity_blocks))
     graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
@@ -167,7 +167,7 @@ def plot_percent_luminosity_ratio(detector_one_data, detector_two_data, luminosi
     graph.linecolor = 'white'  # Hides the lines at this time
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
-    graph.yaxis.SetTitle("Luminosity")
+    graph.yaxis.SetTitle("Luminosity [Percent Ratio]")
     graph.SetTitle(str(run_name))
     graph.xaxis.SetRangeUser(min(luminosity_blocks), max(luminosity_blocks))
     graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))

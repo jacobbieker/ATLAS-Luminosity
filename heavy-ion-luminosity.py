@@ -61,7 +61,10 @@ for file_name in data_files:
 
     for block in range(len(luminosity_block)):
         for bcid in range(3564):
-            if luminosity_block_stable[block] > 0.0 and status[block] > 0.0:
+            # Get status by BCID, should have 3564 in it, so not by block
+            # Add better names to plots
+            # Convert to simple luminsity plot, to try to get smooth drop off
+            if luminosity_block_stable[block] > 0.0 and status[block][bcid] > 0.0:
                 if lucid_event_or_bi[block][bcid] > 0.0 and bcm_h_event_or[block][bcid] > 0.0 and bcm_v_event_or[block][bcid] > 0.0:
                     lucid = lucid_event_or_bi[block][bcid]
                     bcm_h = bcm_h_event_or[block][bcid]
