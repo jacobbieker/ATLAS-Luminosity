@@ -34,4 +34,4 @@ for atlas_file in atlas_4557_data:
                 cms_luminosity.append(event_data[2])
 
 # Actually plot the data
-luminosity_plotting.luminosity_vs_time(atlas_timing, atlas_luminosity, "ATLAS", atlas_file)
+luminosity_plotting.luminosity_vs_time(atlas_timing, atlas_luminosity, "ATLAS", "4557")
