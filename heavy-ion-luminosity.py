@@ -75,23 +75,23 @@ for file_name in data_files:
                     lucid_sum += -math.log(1 - lucid)
                     bcm_h_sum += -math.log(1 - bcm_h)
                     bcm_v_sum += -math.log(1 - bcm_v)
-        # Print out if the blocks are zero
-        if lucid_sum != 0.0 or bcm_h_sum != 0.0 or bcm_v_sum != 0.0:
-            luminosity_ratio_lucid_h = lucid_sum / bcm_h_sum
-            luminosity_ratio_lucid_v = lucid_sum / bcm_v_sum
-            luminosity_ratio_h_v = bcm_h_sum / bcm_v_sum
-            luminosity_ratio_lucid_h_sum[block].append(luminosity_ratio_lucid_h)
-            luminosity_ratio_lucid_v_sum[block].append(luminosity_ratio_lucid_v)
-            luminosity_ratio_h_v_sum[block].append(luminosity_ratio_h_v)
-            new_luminosity_block.append(block)
+            # Print out if the blocks are zero
+            if lucid_sum != 0.0 or bcm_h_sum != 0.0 or bcm_v_sum != 0.0:
+                luminosity_ratio_lucid_h = lucid_sum / bcm_h_sum
+                luminosity_ratio_lucid_v = lucid_sum / bcm_v_sum
+                luminosity_ratio_h_v = bcm_h_sum / bcm_v_sum
+                luminosity_ratio_lucid_h_sum[block].append(luminosity_ratio_lucid_h)
+                luminosity_ratio_lucid_v_sum[block].append(luminosity_ratio_lucid_v)
+                luminosity_ratio_h_v_sum[block].append(luminosity_ratio_h_v)
+                new_luminosity_block.append(block)
 
     # Actually plot the luminosity ratios
     luminosity_plotting.plot_luminosity_log(lucid_event_or_bi1, new_luminosity_block, 'ATLAS',
                                             os.path.splitext(file_name[1]))
     # Plot each Luminosity block as a run
-    for block in range(len(lucid_event_or_bi1)):
-        if len(lucid_event_or_bi1[block]) != 0:
-            luminosity_plotting.luminosity_block_log_time(lucid_event_or_bi1[block], 'ATLAS')
+    #for block in range(len(lucid_event_or_bi1)):
+     #   if len(lucid_event_or_bi1[block]) != 0:
+    #        luminosity_plotting.luminosity_block_log_time(lucid_event_or_bi1[block], 'ATLAS')
     '''
     luminosity_plotting.plot_percent_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1, new_luminosity_block,
                                                       'ATLAS', os.path.splitext(file_name)[0])

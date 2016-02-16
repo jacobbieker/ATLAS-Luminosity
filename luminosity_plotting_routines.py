@@ -222,6 +222,7 @@ def plot_luminosity_log(detector_one_data, luminosity_blocks, style, run_name):
     graph.Draw("APL")
     wait(True)
 
+
 # Functions to graph luminosity data
 def luminosity_vs_time(timing_list, luminosity_list, style):
     '''
