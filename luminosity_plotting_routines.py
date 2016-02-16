@@ -178,6 +178,50 @@ def plot_percent_luminosity_ratio(detector_one_data, detector_two_data, luminosi
     wait(True)
 
 
+def plot_luminosity_log(detector_one_data, luminosity_blocks, style, run_name):
+    '''
+
+    :param detector_one_data: Data from one detector type, such as ATLAS' LUCID, in a list of lists, every entry is one
+    luminosity block, with the luminosity block being a list of BCID data
+    :param luminosity_blocks: A list of luminosity blocks
+    :param style: The ROOT style for the graph, generally 'ATLAS'
+    :return: ROOT plots of the ratio of luminosities over the luminosity, as percetnage difference from first data point
+    '''
+    # Set ROOT graph style
+    set_style(str(style))
+
+
+    print("Number of Luminosity Blocks included: " + str(len(detector_one_data)))
+    # Get ratio of the detectors
+    luminosity_ratio = []
+    for block in range(len(detector_one_data)):
+        for bcid in range(len(detector_one_data[block])):
+            detector_one_point = detector_one_data[block][bcid]
+            # Check if the blocks are zero
+            if detector_one_point != 0.0:
+                ratio = -math.log(1 - detector_one_point)
+                luminosity_ratio.append(ratio)
+
+    # create graph
+    graph = Graph(len(luminosity_blocks))
+    for i, (xx, yy) in enumerate(zip(luminosity_blocks, luminosity_ratio)):
+        graph.SetPoint(i, float(xx), float(yy))
+
+    # set visual attributes
+
+    graph.linecolor = 'white'  # Hides the lines at this time
+    graph.markercolor = 'blue'
+    graph.xaxis.SetTitle("Luminosity Block")
+    graph.yaxis.SetTitle("Luminosity [Single Detector]")
+    graph.SetTitle(str(run_name))
+    graph.xaxis.SetRangeUser(min(luminosity_blocks), max(luminosity_blocks))
+    graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
+
+    # plot with ROOT
+    canvas = Canvas()
+    graph.Draw("APL")
+    wait(True)
+
 # Functions to graph luminosity data
 def luminosity_vs_time(timing_list, luminosity_list, style):
     '''
@@ -203,6 +247,46 @@ def luminosity_vs_time(timing_list, luminosity_list, style):
     graph.yaxis.SetTitle("Luminosity")
     graph.xaxis.SetRangeUser(min(timing_list), max(timing_list))
     graph.yaxis.SetRangeUser(min(luminosity_list), max(luminosity_list))
+
+    # plot with ROOT
+    canvas = Canvas()
+    graph.Draw("APL")
+    wait(True)
+
+
+# Functions to graph luminosity data
+def luminosity_block_log_time(luminosity_list, style):
+    '''
+
+    :param timing_list: Python list containing the timing data
+    :param luminosity_list: Python list containing the luminosity data
+    :param style: ROOT style in string, such as 'ATLAS'
+    :return: Graph of the luminosity over a single block
+    '''
+    # Set ROOT graph style
+    set_style(str(style))
+
+    luminosity_ratio = []
+    for bcid in range(len(luminosity_list)):
+        detector_one_point = luminosity_list[bcid]
+        # Check if the blocks are zero
+        if detector_one_point != 0.0:
+            ratio = -math.log(1 - detector_one_point)
+            luminosity_ratio.append(ratio)
+
+    # create graph
+    graph = Graph(len(luminosity_ratio))
+    for i, (xx, yy) in enumerate(zip(range(len(luminosity_ratio)), luminosity_ratio)):
+        graph.SetPoint(i, xx, yy)
+
+        # set visual attributes
+
+    graph.linecolor = 'white'  # Hides the lines at this time
+    graph.markercolor = 'blue'
+    graph.xaxis.SetTitle("Time")
+    graph.yaxis.SetTitle("-Ln(1 - Rate) [Single Detector]")
+    graph.xaxis.SetRangeUser(0, 3564)
+    graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
 
     # plot with ROOT
     canvas = Canvas()

@@ -61,8 +61,6 @@ for file_name in data_files:
 
     for block in range(len(luminosity_block)):
         for bcid in range(3564):
-            # Get status by BCID, should have 3564 in it, so not by block
-            # Add better names to plots
             # Convert to simple luminsity plot, to try to get smooth drop off
             if luminosity_block_stable[block] > 0.0 and status[block][bcid] > 0.0:
                 if lucid_event_or_bi[block][bcid] > 0.0 and bcm_h_event_or[block][bcid] > 0.0 and bcm_v_event_or[block][bcid] > 0.0:
@@ -88,12 +86,20 @@ for file_name in data_files:
             new_luminosity_block.append(block)
 
     # Actually plot the luminosity ratios
+    luminosity_plotting.plot_luminosity_log(lucid_event_or_bi1, new_luminosity_block, 'ATLAS',
+                                            os.path.splitext(file_name[1]))
+    # Plot each Luminosity block as a run
+    for block in range(len(lucid_event_or_bi1)):
+        if len(lucid_event_or_bi1[block]) != 0:
+            luminosity_plotting.luminosity_block_log_time(lucid_event_or_bi1[block], 'ATLAS')
+    '''
     luminosity_plotting.plot_percent_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1, new_luminosity_block,
                                                       'ATLAS', os.path.splitext(file_name)[0])
     luminosity_plotting.plot_normalized_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1, new_luminosity_block,
                                                          'ATLAS', os.path.splitext(file_name)[0])
     luminosity_plotting.plot_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1, new_luminosity_block,
                                               'ATLAS', os.path.splitext(file_name)[0])
+    '''
 '''
     luminosity_plotting.plot_percent_luminosity_ratio(lucid_event_or_bi1, bcm_h_event_or1, new_luminosity_block,
                                                       'ATLAS', os.path.splitext(file_name)[0])
