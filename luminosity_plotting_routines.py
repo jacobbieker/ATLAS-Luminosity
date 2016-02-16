@@ -38,7 +38,7 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, luminosity_block
                 luminosity_ratio.append(ratio)
 
     # create graph
-    graph = Graph(len(luminosity_blocks))
+    graph = Graph(len(luminosity_blocks), title=run_name)
     for i, (xx, yy) in enumerate(zip(luminosity_blocks, luminosity_ratio)):
         graph.SetPoint(i, float(xx), float(yy))
 
@@ -48,13 +48,19 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, luminosity_block
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Ratio]")
-    graph.SetTitle(str(run_name))
     graph.xaxis.SetRangeUser(min(luminosity_blocks), max(luminosity_blocks))
     graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
 
     # plot with ROOT
     canvas = Canvas()
     graph.Draw("APL")
+    label = ROOT.TText(0.8, 0.9, str(run_name))
+    label.SetTextFont(43)
+    label.SetTextSize(25)
+    label.SetNDC()
+    label.Draw()
+    canvas.Modified()
+    canvas.Update()
     wait(True)
 
 
@@ -102,7 +108,7 @@ def plot_normalized_luminosity_ratio(detector_one_data, detector_two_data, lumin
         luminosity_ratio[ratio_entry] = normalize(luminosity_ratio[ratio_entry], x_max=max_ratio, x_min=min_ratio)
 
     # create graph
-    graph = Graph(len(luminosity_blocks))
+    graph = Graph(len(luminosity_blocks), title=run_name)
     for i, (xx, yy) in enumerate(zip(luminosity_blocks, luminosity_ratio)):
         graph.SetPoint(i, float(xx), float(yy))
 
@@ -112,13 +118,19 @@ def plot_normalized_luminosity_ratio(detector_one_data, detector_two_data, lumin
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Normalized Ratio]")
-    graph.SetTitle(str(run_name))
     graph.xaxis.SetRangeUser(min(luminosity_blocks), max(luminosity_blocks))
     graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
 
     # plot with ROOT
     canvas = Canvas()
     graph.Draw("APL")
+    label = ROOT.TText(0.8, 0.9, str(run_name))
+    label.SetTextFont(43)
+    label.SetTextSize(25)
+    label.SetNDC()
+    label.Draw()
+    canvas.Modified()
+    canvas.Update()
     wait(True)
 
 
@@ -158,7 +170,7 @@ def plot_percent_luminosity_ratio(detector_one_data, detector_two_data, luminosi
         luminosity_ratio[index] = luminosity_ratio[index] / first_point
 
     # create graph
-    graph = Graph(len(luminosity_blocks))
+    graph = Graph(len(luminosity_blocks), title=run_name)
     for i, (xx, yy) in enumerate(zip(luminosity_blocks, luminosity_ratio)):
         graph.SetPoint(i, float(xx), float(yy))
 
@@ -168,13 +180,19 @@ def plot_percent_luminosity_ratio(detector_one_data, detector_two_data, luminosi
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Percent Ratio]")
-    graph.SetTitle(str(run_name))
     graph.xaxis.SetRangeUser(min(luminosity_blocks), max(luminosity_blocks))
     graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
 
     # plot with ROOT
     canvas = Canvas()
     graph.Draw("APL")
+    label = ROOT.TText(0.8, 0.9, str(run_name))
+    label.SetTextFont(43)
+    label.SetTextSize(25)
+    label.SetNDC()
+    label.Draw()
+    canvas.Modified()
+    canvas.Update()
     wait(True)
 
 
@@ -203,7 +221,7 @@ def plot_luminosity_log(detector_one_data, luminosity_blocks, style, run_name):
                 luminosity_ratio.append(ratio)
 
     # create graph
-    graph = Graph(len(luminosity_blocks))
+    graph = Graph(len(luminosity_blocks), title=run_name)
     for i, (xx, yy) in enumerate(zip(luminosity_blocks, luminosity_ratio)):
         graph.SetPoint(i, float(xx), float(yy))
 
@@ -213,18 +231,24 @@ def plot_luminosity_log(detector_one_data, luminosity_blocks, style, run_name):
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Single Detector]")
-    graph.SetTitle(str(run_name))
     graph.xaxis.SetRangeUser(min(luminosity_blocks), max(luminosity_blocks))
     graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
 
     # plot with ROOT
     canvas = Canvas()
     graph.Draw("APL")
+    label = ROOT.TText(0.8, 0.9, str(run_name))
+    label.SetTextFont(43)
+    label.SetTextSize(25)
+    label.SetNDC()
+    label.Draw()
+    canvas.Modified()
+    canvas.Update()
     wait(True)
 
 
 # Functions to graph luminosity data
-def luminosity_vs_time(timing_list, luminosity_list, style):
+def luminosity_vs_time(timing_list, luminosity_list, style, run_name):
     '''
 
     :param timing_list: Python list containing the timing data
@@ -252,6 +276,13 @@ def luminosity_vs_time(timing_list, luminosity_list, style):
     # plot with ROOT
     canvas = Canvas()
     graph.Draw("APL")
+    label = ROOT.TText(0.8, 0.9, str(run_name))
+    label.SetTextFont(43)
+    label.SetTextSize(25)
+    label.SetNDC()
+    label.Draw()
+    canvas.Modified()
+    canvas.Update()
     wait(True)
 
 

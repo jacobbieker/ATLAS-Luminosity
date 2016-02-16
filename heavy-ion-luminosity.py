@@ -12,6 +12,8 @@ import glob
 data_files = glob.iglob(os.path.join("data", "*.root"))
 for file_name in data_files:
     detector_array = root2array(file_name)
+    first_part_name = os.path.splitext(file_name)
+    display_name = first_part_name[0].split("/")[1]
 
     # Get LUCID and BCM EventOR data to graph
     luminosity_block = detector_array['LBDATA_LB'].tolist()
@@ -87,7 +89,7 @@ for file_name in data_files:
 
     # Actually plot the luminosity ratios
     luminosity_plotting.plot_luminosity_log(lucid_event_or_bi1, new_luminosity_block, 'ATLAS',
-                                            os.path.splitext(file_name[1]))
+                                            display_name)
     # Plot each Luminosity block as a run
     #for block in range(len(lucid_event_or_bi1)):
      #   if len(lucid_event_or_bi1[block]) != 0:
