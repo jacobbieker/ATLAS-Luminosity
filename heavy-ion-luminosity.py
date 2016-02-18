@@ -9,7 +9,7 @@ from root_numpy import root2array
 import luminosity_plotting_routines as luminosity_plotting
 import glob
 
-data_files = glob.iglob(os.path.join("data", "*.root"))
+data_files = glob.iglob(os.path.join("data", "r286474.root"))
 for file_name in data_files:
     detector_array = root2array(file_name)
     first_part_name = os.path.splitext(file_name)
@@ -61,6 +61,7 @@ for file_name in data_files:
     luminosity_ratio_lucid_v_sum = [[] for _ in xrange(len(luminosity_block))]
     new_luminosity_block = []
 
+    count_bunches = 0
     for block in range(len(luminosity_block)):
         for bcid in range(3564):
             # Convert to simple luminsity plot, to try to get smooth drop off
@@ -73,6 +74,7 @@ for file_name in data_files:
                     lucid_event_or_bi1[block].append(lucid)
                     bcm_h_event_or1[block].append(bcm_h)
                     bcm_v_event_or1[block].append(bcm_v)
+                    count_bunches += 1
                     # Add as the negative log of 1 - rate, as that should be linear to luminosity
                     lucid_sum += -math.log(1 - lucid)
                     bcm_h_sum += -math.log(1 - bcm_h)
@@ -86,9 +88,15 @@ for file_name in data_files:
                 luminosity_ratio_lucid_v_sum[block].append(luminosity_ratio_lucid_v)
                 luminosity_ratio_h_v_sum[block].append(luminosity_ratio_h_v)
                 new_luminosity_block.append(block)
+        print(count_bunches)
+        count_bunches = 0
 
     # Actually plot the luminosity ratios
-    luminosity_plotting.plot_luminosity_log(lucid_event_or_bi1, new_luminosity_block, 'ATLAS',
+    print(luminosity_block)
+    print(max(luminosity_block))
+    print(len(lucid_event_or_bi1))
+    print(len(new_luminosity_block))
+    luminosity_plotting.plot_luminosity_log(lucid_event_or_bi1, luminosity_block, 'ATLAS',
                                             display_name)
     # Plot each Luminosity block as a run
     #for block in range(len(lucid_event_or_bi1)):

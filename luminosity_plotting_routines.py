@@ -212,6 +212,7 @@ def plot_luminosity_log(detector_one_data, luminosity_blocks, style, run_name):
     print("Number of Luminosity Blocks included: " + str(len(detector_one_data)))
     # Get ratio of the detectors
     luminosity_ratio = []
+    lumi_blocks = []
     for block in range(len(detector_one_data)):
         for bcid in range(len(detector_one_data[block])):
             detector_one_point = detector_one_data[block][bcid]
@@ -219,10 +220,11 @@ def plot_luminosity_log(detector_one_data, luminosity_blocks, style, run_name):
             if detector_one_point != 0.0:
                 ratio = -math.log(1 - detector_one_point)
                 luminosity_ratio.append(ratio)
+                lumi_blocks.append(block)
 
     # create graph
-    graph = Graph(len(luminosity_blocks), title=run_name)
-    for i, (xx, yy) in enumerate(zip(luminosity_blocks, luminosity_ratio)):
+    graph = Graph(len(lumi_blocks), title=run_name)
+    for i, (xx, yy) in enumerate(zip(lumi_blocks, luminosity_ratio)):
         graph.SetPoint(i, float(xx), float(yy))
 
     # set visual attributes
@@ -231,7 +233,7 @@ def plot_luminosity_log(detector_one_data, luminosity_blocks, style, run_name):
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Single Detector]")
-    graph.xaxis.SetRangeUser(min(luminosity_blocks), max(luminosity_blocks))
+    graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
     graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
 
     # plot with ROOT
