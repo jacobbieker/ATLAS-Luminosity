@@ -168,7 +168,7 @@ def plot_percent_luminosity_ratio(detector_one_data, detector_two_data, style, r
     first_point = luminosity_ratio[0]
 
     for index in range(len(luminosity_ratio)):
-        luminosity_ratio[index] = luminosity_ratio[index] / first_point
+        luminosity_ratio[index] = (luminosity_ratio[index] / first_point) - 1
 
     # create graph
     graph = Graph(len(lumi_blocks), title=run_name)
