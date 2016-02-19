@@ -95,20 +95,13 @@ for file_name in data_files:
     print(luminosity_block)
     print(max(luminosity_block))
     print(len(lucid_event_or_bi1))
-    print(len(new_luminosity_block))
     luminosity_plotting.plot_luminosity_log(lucid_event_or_bi1, 'ATLAS', display_name)
-    # Plot each Luminosity block as a run
-    #for block in range(len(lucid_event_or_bi1)):
-     #   if len(lucid_event_or_bi1[block]) != 0:
-    #         luminosity_plotting.luminosity_block_log_time(lucid_event_or_bi1[block], 'ATLAS')
-    '''
-    luminosity_plotting.plot_percent_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1, new_luminosity_block,
-                                                      'ATLAS', os.path.splitext(file_name)[0])
-    luminosity_plotting.plot_normalized_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1, new_luminosity_block,
-                                                         'ATLAS', os.path.splitext(file_name)[0])
-    luminosity_plotting.plot_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1, new_luminosity_block,
-                                              'ATLAS', os.path.splitext(file_name)[0])
-    '''
+    luminosity_plotting.plot_percent_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1,
+                                                      'ATLAS', display_name)
+    luminosity_plotting.plot_normalized_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1,
+                                                         'ATLAS', display_name)
+    luminosity_plotting.plot_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1,
+                                              'ATLAS', display_name)
 '''
     luminosity_plotting.plot_percent_luminosity_ratio(lucid_event_or_bi1, bcm_h_event_or1, new_luminosity_block,
                                                       'ATLAS', os.path.splitext(file_name)[0])
