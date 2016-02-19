@@ -94,7 +94,8 @@ for file_name in data_files:
     # Actually plot the luminosity ratios
     print(luminosity_block)
     print(max(luminosity_block))
-    print(len(lucid_event_or_bi1))
+    print("Lucid Event Lumi Number: " + str(len(lucid_event_or_bi1)))
+    print("BCM V Event Lumi Number: " + str(len(bcm_v_event_or1)))
     luminosity_plotting.plot_luminosity_log(lucid_event_or_bi1, 'ATLAS', display_name)
     luminosity_plotting.plot_percent_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1,
                                                       'ATLAS', display_name)
