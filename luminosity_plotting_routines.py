@@ -17,13 +17,11 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, style, run_name)
     :param detector_two_data: Data from another detector type, such as ATLAS' LUCID, in a list of lists, every entry is
     one luminosity block, with the luminosity block being a list of BCID data, assumed to be same
     length as detector_one_data
-    :param luminosity_blocks: A list of luminosity blocks
     :param style: The ROOT style for the graph, generally 'ATLAS'
     :return: ROOT plots of the ratio of luminosities over the luminosity
     '''
     # Set ROOT graph style
     set_style(str(style))
-
 
     print("Number of Luminosity Blocks included: " + str(len(detector_one_data)))
     # Get ratio of the detectors
@@ -75,7 +73,6 @@ def plot_normalized_luminosity_ratio(detector_one_data, detector_two_data, style
     :param detector_two_data: Data from another detector type, such as ATLAS' LUCID, in a list of lists, every entry is
     one luminosity block, with the luminosity block being a list of BCID data, assumed to be same
     length as detector_one_data
-    :param luminosity_blocks: A list of luminosity blocks
     :param style: The ROOT style for the graph, generally 'ATLAS'
     :return: ROOT plots of the ratio of luminosities over the luminosity, normalized to one
     '''
@@ -147,13 +144,11 @@ def plot_percent_luminosity_ratio(detector_one_data, detector_two_data, style, r
     :param detector_two_data: Data from another detector type, such as ATLAS' LUCID, in a list of lists, every entry is
     one luminosity block, with the luminosity block being a list of BCID data, assumed to be same
     length as detector_one_data
-    :param luminosity_blocks: A list of luminosity blocks
     :param style: The ROOT style for the graph, generally 'ATLAS'
     :return: ROOT plots of the ratio of luminosities over the luminosity, as percetnage difference from first data point
     '''
     # Set ROOT graph style
     set_style(str(style))
-
 
     print("Number of Luminosity Blocks included: " + str(len(detector_one_data)))
     # Get ratio of the detectors
@@ -207,13 +202,11 @@ def plot_luminosity_log(detector_one_data, style, run_name):
 
     :param detector_one_data: Data from one detector type, such as ATLAS' LUCID, in a list of lists, every entry is one
     luminosity block, with the luminosity block being a list of BCID data
-    :param luminosity_blocks: A list of luminosity blocks
     :param style: The ROOT style for the graph, generally 'ATLAS'
     :return: ROOT plots of the ratio of luminosities over the luminosity, as percetnage difference from first data point
     '''
     # Set ROOT graph style
     set_style(str(style))
-
 
     print("Number of Luminosity Blocks included: " + str(len(detector_one_data)))
     # Get ratio of the detectors
