@@ -9,7 +9,7 @@ from root_numpy import root2array
 import luminosity_plotting_routines as luminosity_plotting
 import glob
 
-data_files = glob.iglob(os.path.join("data", "r286474.root"))
+data_files = glob.iglob(os.path.join("data", "*.root"))
 for file_name in data_files:
     detector_array = root2array(file_name)
     first_part_name = os.path.splitext(file_name)
@@ -96,8 +96,7 @@ for file_name in data_files:
     print(max(luminosity_block))
     print(len(lucid_event_or_bi1))
     print(len(new_luminosity_block))
-    luminosity_plotting.plot_luminosity_log(lucid_event_or_bi1, luminosity_block, 'ATLAS',
-                                            display_name)
+    luminosity_plotting.plot_luminosity_log(lucid_event_or_bi1, 'ATLAS', display_name)
     # Plot each Luminosity block as a run
     #for block in range(len(lucid_event_or_bi1)):
      #   if len(lucid_event_or_bi1[block]) != 0:

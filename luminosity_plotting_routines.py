@@ -8,7 +8,7 @@ from rootpy.interactive import wait
 import math
 
 
-def plot_luminosity_ratio(detector_one_data, detector_two_data, luminosity_blocks, style, run_name):
+def plot_luminosity_ratio(detector_one_data, detector_two_data, style, run_name):
     '''
 
     :param detector_one_data: Data from one detector type, such as ATLAS' LUCID, in a list of lists, every entry is one
@@ -28,6 +28,7 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, luminosity_block
     print("Number of Luminosity Blocks included: " + str(len(detector_one_data)))
     # Get ratio of the detectors
     luminosity_ratio = []
+    lumi_blocks = []
     for block in range(len(detector_one_data)):
         for bcid in range(len(detector_one_data[block])):
             detector_one_point = detector_one_data[block][bcid]
@@ -36,10 +37,11 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, luminosity_block
             if detector_one_point != 0.0 and detector_two_point != 0.0:
                 ratio = -math.log(1 - detector_one_point) / -math.log(1 - detector_two_point)
                 luminosity_ratio.append(ratio)
+                lumi_blocks.append(block)
 
     # create graph
-    graph = Graph(len(luminosity_blocks), title=run_name)
-    for i, (xx, yy) in enumerate(zip(luminosity_blocks, luminosity_ratio)):
+    graph = Graph(len(lumi_blocks), title=run_name)
+    for i, (xx, yy) in enumerate(zip(lumi_blocks, luminosity_ratio)):
         graph.SetPoint(i, float(xx), float(yy))
 
     # set visual attributes
@@ -48,7 +50,7 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, luminosity_block
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Ratio]")
-    graph.xaxis.SetRangeUser(min(luminosity_blocks), max(luminosity_blocks))
+    graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
     graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
 
     # plot with ROOT
@@ -64,7 +66,7 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, luminosity_block
     wait(True)
 
 
-def plot_normalized_luminosity_ratio(detector_one_data, detector_two_data, luminosity_blocks, style, run_name):
+def plot_normalized_luminosity_ratio(detector_one_data, detector_two_data, style, run_name):
     '''
 
     :param detector_one_data: Data from one detector type, such as ATLAS' LUCID, in a list of lists, every entry is one
@@ -85,6 +87,7 @@ def plot_normalized_luminosity_ratio(detector_one_data, detector_two_data, lumin
 
     # Get ratio of the detectors
     luminosity_ratio = []
+    lumi_blocks = []
     for block in range(len(detector_one_data)):
         for bcid in range(len(detector_one_data[block])):
             detector_one_point = detector_one_data[block][bcid]
@@ -93,6 +96,7 @@ def plot_normalized_luminosity_ratio(detector_one_data, detector_two_data, lumin
             if detector_one_point != 0.0 and detector_two_point != 0.0:
                 ratio = -math.log(1 - detector_one_point) / -math.log(1 - detector_two_point)
                 luminosity_ratio.append(ratio)
+                lumi_blocks.append(block)
 
     # Normalize the ratios
     def normalize(x, x_min, x_max):
@@ -108,8 +112,8 @@ def plot_normalized_luminosity_ratio(detector_one_data, detector_two_data, lumin
         luminosity_ratio[ratio_entry] = normalize(luminosity_ratio[ratio_entry], x_max=max_ratio, x_min=min_ratio)
 
     # create graph
-    graph = Graph(len(luminosity_blocks), title=run_name)
-    for i, (xx, yy) in enumerate(zip(luminosity_blocks, luminosity_ratio)):
+    graph = Graph(len(lumi_blocks), title=run_name)
+    for i, (xx, yy) in enumerate(zip(lumi_blocks, luminosity_ratio)):
         graph.SetPoint(i, float(xx), float(yy))
 
     # set visual attributes
@@ -118,7 +122,7 @@ def plot_normalized_luminosity_ratio(detector_one_data, detector_two_data, lumin
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Normalized Ratio]")
-    graph.xaxis.SetRangeUser(min(luminosity_blocks), max(luminosity_blocks))
+    graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
     graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
 
     # plot with ROOT
@@ -134,7 +138,7 @@ def plot_normalized_luminosity_ratio(detector_one_data, detector_two_data, lumin
     wait(True)
 
 
-def plot_percent_luminosity_ratio(detector_one_data, detector_two_data, luminosity_blocks, style, run_name):
+def plot_percent_luminosity_ratio(detector_one_data, detector_two_data, style, run_name):
     '''
 
     :param detector_one_data: Data from one detector type, such as ATLAS' LUCID, in a list of lists, every entry is one
@@ -154,6 +158,7 @@ def plot_percent_luminosity_ratio(detector_one_data, detector_two_data, luminosi
     print("Number of Luminosity Blocks included: " + str(len(detector_one_data)))
     # Get ratio of the detectors
     luminosity_ratio = []
+    lumi_blocks = []
     for block in range(len(detector_one_data)):
         for bcid in range(len(detector_one_data[block])):
             detector_one_point = detector_one_data[block][bcid]
@@ -162,6 +167,7 @@ def plot_percent_luminosity_ratio(detector_one_data, detector_two_data, luminosi
             if detector_one_point != 0.0 and detector_two_point != 0.0:
                 ratio = -math.log(1 - detector_one_point) / -math.log(1 - detector_two_point)
                 luminosity_ratio.append(ratio)
+                lumi_blocks.append(block)
 
     # Get percentage difference based off the first block and BCID
     first_point = luminosity_ratio[0]
@@ -170,8 +176,8 @@ def plot_percent_luminosity_ratio(detector_one_data, detector_two_data, luminosi
         luminosity_ratio[index] = luminosity_ratio[index] / first_point
 
     # create graph
-    graph = Graph(len(luminosity_blocks), title=run_name)
-    for i, (xx, yy) in enumerate(zip(luminosity_blocks, luminosity_ratio)):
+    graph = Graph(len(lumi_blocks), title=run_name)
+    for i, (xx, yy) in enumerate(zip(lumi_blocks, luminosity_ratio)):
         graph.SetPoint(i, float(xx), float(yy))
 
     # set visual attributes
@@ -180,7 +186,7 @@ def plot_percent_luminosity_ratio(detector_one_data, detector_two_data, luminosi
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Percent Ratio]")
-    graph.xaxis.SetRangeUser(min(luminosity_blocks), max(luminosity_blocks))
+    graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
     graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
 
     # plot with ROOT
@@ -196,7 +202,7 @@ def plot_percent_luminosity_ratio(detector_one_data, detector_two_data, luminosi
     wait(True)
 
 
-def plot_luminosity_log(detector_one_data, luminosity_blocks, style, run_name):
+def plot_luminosity_log(detector_one_data, style, run_name):
     '''
 
     :param detector_one_data: Data from one detector type, such as ATLAS' LUCID, in a list of lists, every entry is one
