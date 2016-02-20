@@ -268,7 +268,7 @@ def plot_percent_luminosity_ratio_sum(detector_one_data, detector_two_data, styl
     graph.linecolor = 'white'  # Hides the lines at this time
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
-    graph.yaxis.SetTitle("Luminosity [Percent Ratio]")
+    graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
     graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
     graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
 
