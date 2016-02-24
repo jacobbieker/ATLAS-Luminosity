@@ -99,6 +99,8 @@ for file_name in data_files:
     luminosity_plotting.plot_luminosity_log(lucid_event_or_bi1, 'ATLAS', display_name)
     luminosity_plotting.plot_percent_luminosity_ratio_sum(lucid_event_or_bi1, bcm_v_event_or1,
                                                       'ATLAS', display_name)
+    luminosity_plotting.plot_bcid_percent_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1,
+                                                          'ATLAS', display_name)
     '''luminosity_plotting.plot_normalized_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1,
                                                          'ATLAS', display_name)
     luminosity_plotting.plot_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1,
