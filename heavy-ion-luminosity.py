@@ -105,7 +105,7 @@ for file_name in data_files:
     print(max(luminosity_block))
     print("Lucid Event Lumi Number: " + str(len(lucid_event_or_bi1)))
     print("BCM V Event Lumi Number: " + str(len(bcm_v_event_or1)))
-    luminosity_plotting.plot_raw_detector_vs_detector(lucid_event_or_bi1, bcm_v_event_or1, 'ATLAS', 'LUCID vs BCM V')
+    luminosity_plotting.plot_raw_detector_vs_detector(lucid_event_or_bi1, bcm_v_event_or1, 'ATLAS', str(display_name) + ' LUCID vs BCM V')
     #luminosity_plotting.plot_luminosity_log(lucid_event_or_bi1, 'ATLAS', display_name)
     #luminosity_plotting.plot_percent_luminosity_ratio_sum(lucid_event_or_bi1, bcm_v_event_or1,
      #                                                 'ATLAS', display_name)

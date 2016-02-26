@@ -598,7 +598,7 @@ def plot_raw_detector_vs_detector(detector_one_data, detector_two_data, style, n
     # plot with ROOT
     canvas = Canvas()
     graph.Draw("APL")
-    label = ROOT.TText(0.8, 0.9, str(name))
+    label = ROOT.TText(0.6, 0.9, str(name))
     label.SetTextFont(43)
     label.SetTextSize(25)
     label.SetNDC()
