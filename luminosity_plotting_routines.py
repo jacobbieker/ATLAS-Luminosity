@@ -516,7 +516,9 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
                 print(len(temp_detector_one))
                 temp_detector_one[run][block_count - 1].append(detector_one_avg)
                 temp_detector_two[run][block_count - 1].append(detector_two_avg)
-
+        # Remove the last luminosity block from each run, the one that generally spikes
+        temp_detector_one[run] = temp_detector_one[run][:-1]
+        temp_detector_two[run] = temp_detector_two[run][:-1]
     # Reassign temp to the original lists
     all_detector_one_data = temp_detector_one
     all_detector_two_data = temp_detector_two
@@ -553,7 +555,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
     graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
-    graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
+    graph.yaxis.SetRangeUser(-0.3, 1)
 
     # plot with ROOT
     canvas = Canvas()
