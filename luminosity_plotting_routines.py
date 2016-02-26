@@ -491,7 +491,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
         block_count = 0
         temp_detector_one[run] = [[] for _ in xrange(len(all_detector_one_data[run]))]
         temp_detector_two[run] = [[] for _ in xrange(len(all_detector_one_data[run]))]
-        for block in range(len(all_detector_one_data[run])):
+        for block in range(len(all_detector_one_data[run]) - 1):
             block_count += 1
             detector_one_avg = 0
             one_count = 0
@@ -507,8 +507,12 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
             if one_count != 0:
                 detector_one_avg = detector_one_avg / one_count
                 detector_two_avg = detector_two_avg / two_count
-                temp_detector_one[run][block_count].append(detector_one_avg)
-                temp_detector_two[run][block_count].append(detector_two_avg)
+                print(len(temp_detector_one[run]))
+                print(block)
+                print(block_count)
+                print(len(temp_detector_one))
+                temp_detector_one[run][block_count - 1].append(detector_one_avg)
+                temp_detector_two[run][block_count - 1].append(detector_two_avg)
 
     # Reassign temp to the original lists
     all_detector_one_data = temp_detector_one
@@ -551,7 +555,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     # plot with ROOT
     canvas = Canvas()
     graph.Draw("APL")
-    label = ROOT.TText(0.8, 0.9, str(run_name))
+    label = ROOT.TText(0.8, 0.9, str("All Runs"))
     label.SetTextFont(43)
     label.SetTextSize(25)
     label.SetNDC()
