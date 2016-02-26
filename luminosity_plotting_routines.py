@@ -570,3 +570,78 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     canvas.Modified()
     canvas.Update()
     wait(True)
+
+
+def plot_raw_detector_vs_detector(detector_one_data, detector_two_data, style, name):
+    # Set ROOT graph style
+    set_style(str(style))
+    detector_one_list = []
+    detector_two_list = []
+    for block in range(len(detector_one_data)):
+        for bcid in range(len(detector_one_data[block])):
+            detector_one_list.append(detector_one_data[block][bcid])
+            detector_two_list.append(detector_two_data[block][bcid])
+    # create graph
+    graph = Graph(len(detector_one_list))
+    for i, (xx, yy) in enumerate(zip(detector_one_list, detector_two_list)):
+        graph.SetPoint(i, float(xx), float(yy))
+
+    # set visual attributes
+
+    graph.linecolor = 'white'  # Hides the lines at this time
+    graph.markercolor = 'blue'
+    graph.xaxis.SetTitle("BCM V")
+    graph.yaxis.SetTitle("LUCID BI")
+    graph.xaxis.SetRangeUser(min(detector_two_list), max(detector_two_list))
+    graph.yaxis.SetRangeUser(min(detector_one_list), max(detector_one_list))
+
+    # plot with ROOT
+    canvas = Canvas()
+    graph.Draw("APL")
+    label = ROOT.TText(0.8, 0.9, str(name))
+    label.SetTextFont(43)
+    label.SetTextSize(25)
+    label.SetNDC()
+    label.Draw()
+    canvas.Modified()
+    canvas.Update()
+    wait(True)
+
+
+def plot_detector_vs_detector_ratio(detector_one_data, detector_two_data, style, name):
+    # Set ROOT graph style
+    set_style(str(style))
+    detector_one_list = []
+    detector_two_list = []
+    lumi_blocks = []
+    for block in range(len(detector_one_data)):
+        for bcid in range(len(detector_one_data[block])):
+            detector_one_list.append(detector_one_data[block][bcid])
+            detector_two_list.append(detector_two_data[block][bcid])
+
+
+    # create graph
+    graph = Graph(len(detector_one_list))
+    for i, (xx, yy) in enumerate(zip(detector_one_list, detector_two_list)):
+        graph.SetPoint(i, float(xx), float(yy))
+
+    # set visual attributes
+
+    graph.linecolor = 'white'  # Hides the lines at this time
+    graph.markercolor = 'blue'
+    graph.xaxis.SetTitle("BCM V")
+    graph.yaxis.SetTitle("LUCID BI")
+    graph.xaxis.SetRangeUser(min(detector_two_list), max(detector_two_list))
+    graph.yaxis.SetRangeUser(min(detector_one_list), max(detector_one_list))
+
+    # plot with ROOT
+    canvas = Canvas()
+    graph.Draw("APL")
+    label = ROOT.TText(0.8, 0.9, str(name))
+    label.SetTextFont(43)
+    label.SetTextSize(25)
+    label.SetNDC()
+    label.Draw()
+    canvas.Modified()
+    canvas.Update()
+    wait(True)
