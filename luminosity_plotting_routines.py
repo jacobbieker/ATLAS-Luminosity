@@ -415,7 +415,7 @@ def luminosity_block_log_time(luminosity_list, style):
     wait(True)
 
 
-# Funtions to graph BCID events
+# Functions to graph BCID events
 def plot_bcid_percent_luminosity_ratio(detector_one_data, detector_two_data, style, run_name):
     '''
 
@@ -435,15 +435,14 @@ def plot_bcid_percent_luminosity_ratio(detector_one_data, detector_two_data, sty
     # Get ratio of the detectors
     luminosity_ratio = []
     lumi_blocks = []
-    for block in range(len(detector_one_data)):
-        for bcid in range(len(detector_one_data[block])):
-            detector_one_point = detector_one_data[block][bcid]
-            detector_two_point = detector_two_data[block][bcid]
-            # Check if the blocks are zero
-            if detector_one_point != 0.0 and detector_two_point != 0.0:
-                ratio = -math.log(1 - detector_one_point) / -math.log(1 - detector_two_point)
-                luminosity_ratio.append(ratio)
-                lumi_blocks.append(bcid)
+    for bcid in range(len(detector_one_data[0])):
+        detector_one_point = detector_one_data[0][bcid]
+        detector_two_point = detector_two_data[0][bcid]
+        # Check if the blocks are zero
+        if detector_one_point != 0.0 and detector_two_point != 0.0:
+            ratio = -math.log(1 - detector_one_point) / -math.log(1 - detector_two_point)
+            luminosity_ratio.append(ratio)
+            lumi_blocks.append(bcid)
 
     # Get percentage difference based off the first block and BCID
     first_point = luminosity_ratio[0]
@@ -462,6 +461,90 @@ def plot_bcid_percent_luminosity_ratio(detector_one_data, detector_two_data, sty
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("BCID")
     graph.yaxis.SetTitle("Luminosity [Percent Ratio]")
+    graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
+    graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
+
+    # plot with ROOT
+    canvas = Canvas()
+    graph.Draw("APL")
+    label = ROOT.TText(0.8, 0.9, str(run_name))
+    label.SetTextFont(43)
+    label.SetTextSize(25)
+    label.SetNDC()
+    label.Draw()
+    canvas.Modified()
+    canvas.Update()
+    wait(True)
+
+
+# Functions with all the runs
+def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data, style, names):
+    # Set ROOT graph style
+    set_style(str(style))
+
+    print("Number of Runs included: " + str(len(all_detector_one_data)))
+
+    # Get average value of the rate for each luminosity block
+    temp_detector_one = [[] for _ in xrange(len(all_detector_one_data))]
+    temp_detector_two = [[] for _ in xrange(len(all_detector_one_data))]
+    for run in range(len(all_detector_one_data)):
+        block_count = 0
+        temp_detector_one[run] = [[] for _ in xrange(len(all_detector_one_data[run]))]
+        temp_detector_two[run] = [[] for _ in xrange(len(all_detector_one_data[run]))]
+        for block in range(len(all_detector_one_data[run])):
+            block_count += 1
+            detector_one_avg = 0
+            one_count = 0
+            detector_two_avg = 0
+            two_count = 0
+            for bcid in range(len(all_detector_one_data[run][block])):
+                detector_one_point = all_detector_one_data[run][block][bcid]
+                detector_two_point = all_detector_two_data[run][block][bcid]
+                detector_one_avg += detector_one_point
+                one_count += 1
+                detector_two_avg += detector_two_point
+                two_count += 1
+            if one_count != 0:
+                detector_one_avg = detector_one_avg / one_count
+                detector_two_avg = detector_two_avg / two_count
+                temp_detector_one[run][block_count].append(detector_one_avg)
+                temp_detector_two[run][block_count].append(detector_two_avg)
+
+    # Reassign temp to the original lists
+    all_detector_one_data = temp_detector_one
+    all_detector_two_data = temp_detector_two
+
+    # Get ratio of the detectors
+    luminosity_ratio = []
+    lumi_blocks = []
+    for run in range(len(all_detector_one_data)):
+        for block in range(len(all_detector_one_data[run])):
+            for bcid in range(len(all_detector_one_data[run][block])):
+                detector_one_point = all_detector_one_data[run][block][bcid]
+                detector_two_point = all_detector_two_data[run][block][bcid]
+                # Check if the blocks are zero
+                if detector_one_point != 0.0 and detector_two_point != 0.0:
+                    ratio = -math.log(1 - detector_one_point) / -math.log(1 - detector_two_point)
+                    luminosity_ratio.append(ratio)
+                    lumi_blocks.append(block)
+
+    # Get percentage difference based off the first block and BCID
+    first_point = luminosity_ratio[0]
+
+    for index in range(len(luminosity_ratio)):
+        luminosity_ratio[index] = (luminosity_ratio[index] / first_point) - 1
+
+    # create graph
+    graph = Graph(len(lumi_blocks))
+    for i, (xx, yy) in enumerate(zip(lumi_blocks, luminosity_ratio)):
+        graph.SetPoint(i, float(xx), float(yy))
+
+    # set visual attributes
+
+    graph.linecolor = 'white'  # Hides the lines at this time
+    graph.markercolor = 'blue'
+    graph.xaxis.SetTitle("Luminosity Block")
+    graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
     graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
     graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
 

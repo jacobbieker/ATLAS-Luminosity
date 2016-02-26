@@ -9,12 +9,16 @@ from root_numpy import root2array
 import luminosity_plotting_routines as luminosity_plotting
 import glob
 
+master_luminosity_lucid_bi = []
+master_luminosity_bcm_h = []
+master_luminosity_bcm_v = []
+names = []
 data_files = glob.iglob(os.path.join("data", "*.root"))
 for file_name in data_files:
     detector_array = root2array(file_name)
     first_part_name = os.path.splitext(file_name)
     display_name = first_part_name[0].split("/")[1]
-
+    names.append(display_name)
     # Get LUCID and BCM EventOR data to graph
     luminosity_block = detector_array['LBDATA_LB'].tolist()
     luminosity_block_stable = detector_array['LBDATA_stable'].tolist()
@@ -91,6 +95,11 @@ for file_name in data_files:
         print(count_bunches)
         count_bunches = 0
 
+    # Add to master ones for plotting later
+    master_luminosity_lucid_bi.append(lucid_event_or_bi1)
+    master_luminosity_bcm_h.append(bcm_h_event_or1)
+    master_luminosity_bcm_v.append(bcm_v_event_or1)
+
     # Actually plot the luminosity ratios
     print(luminosity_block)
     print(max(luminosity_block))
@@ -120,3 +129,6 @@ for file_name in data_files:
     luminosity_plotting.plot_luminosity_ratio(bcm_h_event_or1, bcm_v_event_or1, new_luminosity_block,
                                              'ATLAS', os.path.splitext(file_name)[0])
 '''
+
+# Plotting methods for plotting all the runs
+luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi, master_luminosity_bcm_h, 'ATLAS', names)
