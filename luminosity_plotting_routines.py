@@ -526,8 +526,10 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     # Get ratio of the detectors
     luminosity_ratio = []
     lumi_blocks = []
+    block_count1 = 0
     for run in range(len(all_detector_one_data)):
         for block in range(len(all_detector_one_data[run])):
+            block_count1 += 1
             for bcid in range(len(all_detector_one_data[run][block])):
                 detector_one_point = all_detector_one_data[run][block][bcid]
                 detector_two_point = all_detector_two_data[run][block][bcid]
@@ -535,7 +537,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
                 if detector_one_point != 0.0 and detector_two_point != 0.0:
                     ratio = -math.log(1 - detector_one_point) / -math.log(1 - detector_two_point)
                     luminosity_ratio.append(ratio)
-                    lumi_blocks.append(block)
+                    lumi_blocks.append(block_count1)
 
     # Get percentage difference based off the first block and BCID
     first_point = luminosity_ratio[0]
