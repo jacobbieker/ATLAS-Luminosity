@@ -590,10 +590,10 @@ def plot_raw_detector_vs_detector(detector_one_data, detector_two_data, style, n
 
     graph.linecolor = 'white'  # Hides the lines at this time
     graph.markercolor = 'blue'
-    graph.xaxis.SetTitle("BCM V")
-    graph.yaxis.SetTitle("LUCID BI")
-    graph.xaxis.SetRangeUser(min(detector_two_list), max(detector_two_list))
-    graph.yaxis.SetRangeUser(min(detector_one_list), max(detector_one_list))
+    graph.xaxis.SetTitle("BCM V [Raw Rate]")
+    graph.yaxis.SetTitle("LUCID BI [Raw Rate]")
+    graph.xaxis.SetRangeUser(0, 1)
+    graph.yaxis.SetRangeUser(0, 1)
 
     # plot with ROOT
     canvas = Canvas()
