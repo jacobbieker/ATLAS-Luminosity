@@ -258,6 +258,9 @@ def plot_percent_luminosity_ratio_sum(detector_one_data, detector_two_data, styl
     for index in range(len(luminosity_ratio)):
         luminosity_ratio[index] = (luminosity_ratio[index] / first_point) - 1
 
+    # Delete last point, when the beams are being shut down and there are massive spikes
+    luminosity_ratio = luminosity_ratio[:-1]
+    lumi_blocks = lumi_blocks[:-1]
     # create graph
     graph = Graph(len(lumi_blocks), title=run_name)
     for i, (xx, yy) in enumerate(zip(lumi_blocks, luminosity_ratio)):
