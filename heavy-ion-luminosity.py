@@ -11,10 +11,12 @@ import glob
 
 names = []
 data_files = glob.iglob(os.path.join("data", "*.root"))
+data_list = list(data_files)
+data_list.sort()
 master_luminosity_lucid_bi = []
 master_luminosity_bcm_h = []
 master_luminosity_bcm_v = []
-for file_name in data_files:
+for file_name in data_list:
     detector_array = root2array(file_name)
     first_part_name = os.path.splitext(file_name)
     display_name = first_part_name[0].split("/")[1]

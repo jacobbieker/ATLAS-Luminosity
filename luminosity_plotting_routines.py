@@ -521,13 +521,9 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
         temp_detector_one[run] = temp_detector_one[run][:-1]
         temp_detector_two[run] = temp_detector_two[run][:-1]
     # Reassign temp to the original lists
+    all_detector_one_data = temp_detector_one
     all_detector_two_data = temp_detector_two
-    print(names)
-    print(all_detector_one_data)
-    all_detector_one_data = [x for (y,x) in sorted(zip(names,temp_detector_one), key=lambda pair: pair[0])]
-    print(all_detector_one_data)
-    print(names)
-    all_detector_two_data = [x for (y,x) in sorted(zip(names,temp_detector_two), key=lambda pair: pair[0])]
+
     # Get ratio of the detectors
     luminosity_ratio = []
     lumi_blocks = []
@@ -548,7 +544,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     first_point = luminosity_ratio[0]
 
     for index in range(len(luminosity_ratio)):
-        luminosity_ratio[index] = (luminosity_ratio[index] / first_point) - 1
+        luminosity_ratio[index] = 100*((luminosity_ratio[index] / first_point) - 1)
 
     # create graph
     graph = Graph(len(lumi_blocks))
