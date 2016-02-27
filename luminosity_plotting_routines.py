@@ -558,7 +558,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
     graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
-    graph.yaxis.SetRangeUser(-0.3, 1)
+    graph.yaxis.SetRangeUser(-5, 5)
 
     # plot with ROOT
     canvas = Canvas()
