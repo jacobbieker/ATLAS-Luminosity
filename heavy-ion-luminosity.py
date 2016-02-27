@@ -9,16 +9,17 @@ from root_numpy import root2array
 import luminosity_plotting_routines as luminosity_plotting
 import glob
 
+names = []
+data_files = glob.iglob(os.path.join("data", "*.root"))
 master_luminosity_lucid_bi = []
 master_luminosity_bcm_h = []
 master_luminosity_bcm_v = []
-names = []
-data_files = glob.iglob(os.path.join("data", "*.root"))
 for file_name in data_files:
     detector_array = root2array(file_name)
     first_part_name = os.path.splitext(file_name)
     display_name = first_part_name[0].split("/")[1]
     names.append(display_name)
+    print(names)
     # Get LUCID and BCM EventOR data to graph
     luminosity_block = detector_array['LBDATA_LB'].tolist()
     luminosity_block_stable = detector_array['LBDATA_stable'].tolist()
@@ -105,7 +106,7 @@ for file_name in data_files:
     print(max(luminosity_block))
     print("Lucid Event Lumi Number: " + str(len(lucid_event_or_bi1)))
     print("BCM V Event Lumi Number: " + str(len(bcm_v_event_or1)))
-    luminosity_plotting.plot_raw_detector_vs_detector(lucid_event_or_bi1, bcm_v_event_or1, 'ATLAS', str(display_name) + ' LUCID vs BCM V')
+   # luminosity_plotting.plot_raw_detector_vs_detector(lucid_event_or_bi1, bcm_v_event_or1, 'ATLAS', str(display_name) + ' LUCID vs BCM V')
     #luminosity_plotting.plot_luminosity_log(lucid_event_or_bi1, 'ATLAS', display_name)
     #luminosity_plotting.plot_percent_luminosity_ratio_sum(lucid_event_or_bi1, bcm_v_event_or1,
      #                                                 'ATLAS', display_name)
@@ -130,6 +131,7 @@ for file_name in data_files:
     luminosity_plotting.plot_luminosity_ratio(bcm_h_event_or1, bcm_v_event_or1, new_luminosity_block,
                                              'ATLAS', os.path.splitext(file_name)[0])
 '''
+
 
 # Plotting methods for plotting all the runs
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi, master_luminosity_bcm_h, 'ATLAS', names)

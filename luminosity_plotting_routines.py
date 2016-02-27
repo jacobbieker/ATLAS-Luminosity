@@ -484,7 +484,12 @@ def plot_bcid_percent_luminosity_ratio(detector_one_data, detector_two_data, sty
 def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data, style, names):
     # Set ROOT graph style
     set_style(str(style))
-
+    print(names)
+    names_true = []
+    names_true = names
+    print(names_true)
+    names_true.sort()
+    print(names_true)
     print("Number of Runs included: " + str(len(all_detector_one_data)))
 
     # Get average value of the rate for each luminosity block
@@ -510,19 +515,19 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
             if one_count != 0:
                 detector_one_avg = detector_one_avg / one_count
                 detector_two_avg = detector_two_avg / two_count
-                print(len(temp_detector_one[run]))
-                print(block)
-                print(block_count)
-                print(len(temp_detector_one))
                 temp_detector_one[run][block_count - 1].append(detector_one_avg)
                 temp_detector_two[run][block_count - 1].append(detector_two_avg)
         # Remove the last luminosity block from each run, the one that generally spikes
         temp_detector_one[run] = temp_detector_one[run][:-1]
         temp_detector_two[run] = temp_detector_two[run][:-1]
     # Reassign temp to the original lists
-    all_detector_one_data = temp_detector_one
     all_detector_two_data = temp_detector_two
-
+    print(names)
+    print(all_detector_one_data)
+    all_detector_one_data = [x for (y,x) in sorted(zip(names,temp_detector_one), key=lambda pair: pair[0])]
+    print(all_detector_one_data)
+    print(names)
+    all_detector_two_data = [x for (y,x) in sorted(zip(names,temp_detector_two), key=lambda pair: pair[0])]
     # Get ratio of the detectors
     luminosity_ratio = []
     lumi_blocks = []
