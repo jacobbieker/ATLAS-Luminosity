@@ -481,33 +481,33 @@ def plot_bcid_percent_luminosity_ratio(detector_one_data, detector_two_data, sty
 
 
 # Functions with all the runs
-def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data, style, names):
+def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data, style):
+    '''
+
+    :param all_detector_one_data: A dictionary of the run name to a list of lists of luminosity blocks
+    :param all_detector_two_data: A dictionary of the run name to a list of lists of luminosity blocks
+    :param style: a string corresponding to a ROOT graphing style, e.g. 'ATLAS'
+    :return: Plot of all the detector data on a graph chronologically according to run number
+    '''
     # Set ROOT graph style
     set_style(str(style))
-    print(names)
-    names_true = []
-    names_true = names
-    print(names_true)
-    names_true.sort()
-    print(names_true)
+
     print("Number of Runs included: " + str(len(all_detector_one_data)))
 
     # Get average value of the rate for each luminosity block
-    temp_detector_one = [[] for _ in xrange(len(all_detector_one_data))]
-    temp_detector_two = [[] for _ in xrange(len(all_detector_one_data))]
-    for run in range(len(all_detector_one_data)):
+    temp_detector_one = all_detector_one_data
+    temp_detector_two = all_detector_two_data
+    for run in sorted(all_detector_one_data.keys()):
         block_count = 0
-        temp_detector_one[run] = [[] for _ in xrange(len(all_detector_one_data[run]))]
-        temp_detector_two[run] = [[] for _ in xrange(len(all_detector_one_data[run]))]
-        for block in range(len(all_detector_one_data[run]) - 1):
+        for block in range(len(all_detector_one_data.get(run)) - 1):
             block_count += 1
             detector_one_avg = 0
             one_count = 0
             detector_two_avg = 0
             two_count = 0
-            for bcid in range(len(all_detector_one_data[run][block])):
-                detector_one_point = all_detector_one_data[run][block][bcid]
-                detector_two_point = all_detector_two_data[run][block][bcid]
+            for bcid in range(len(all_detector_one_data.get(run)[block])):
+                detector_one_point = all_detector_one_data.get(run)[block][bcid]
+                detector_two_point = all_detector_two_data.get(run)[block][bcid]
                 detector_one_avg += detector_one_point
                 one_count += 1
                 detector_two_avg += detector_two_point
@@ -515,8 +515,8 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
             if one_count != 0:
                 detector_one_avg = detector_one_avg / one_count
                 detector_two_avg = detector_two_avg / two_count
-                temp_detector_one[run][block_count - 1].append(detector_one_avg)
-                temp_detector_two[run][block_count - 1].append(detector_two_avg)
+                temp_detector_one.get(run)[block_count - 1].append(detector_one_avg)
+                temp_detector_two.get(run)[block_count - 1].append(detector_two_avg)
         # Remove the last luminosity block from each run, the one that generally spikes
         temp_detector_one[run] = temp_detector_one[run][:-1]
         temp_detector_two[run] = temp_detector_two[run][:-1]
@@ -528,12 +528,12 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     luminosity_ratio = []
     lumi_blocks = []
     block_count1 = 0
-    for run in range(len(all_detector_one_data)):
-        for block in range(len(all_detector_one_data[run])):
+    for run in sorted(all_detector_one_data.keys()):
+        for block in range(len(all_detector_one_data.get(run))):
             block_count1 += 1
-            for bcid in range(len(all_detector_one_data[run][block])):
-                detector_one_point = all_detector_one_data[run][block][bcid]
-                detector_two_point = all_detector_two_data[run][block][bcid]
+            for bcid in range(len(all_detector_one_data.get(run)[block])):
+                detector_one_point = all_detector_one_data.get(run)[block][bcid]
+                detector_two_point = all_detector_two_data.get(run)[block][bcid]
                 # Check if the blocks are zero
                 if detector_one_point != 0.0 and detector_two_point != 0.0:
                     ratio = -math.log(1 - detector_one_point) / -math.log(1 - detector_two_point)

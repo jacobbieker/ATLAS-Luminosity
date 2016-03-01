@@ -9,19 +9,18 @@ from root_numpy import root2array
 import luminosity_plotting_routines as luminosity_plotting
 import glob
 
-names = []
 data_files = glob.iglob(os.path.join("data", "*.root"))
 data_list = list(data_files)
 data_list.sort()
-master_luminosity_lucid_bi = []
-master_luminosity_bcm_h = []
-master_luminosity_bcm_v = []
+master_luminosity_lucid_bi = {}
+master_luminosity_bcm_h = {}
+master_luminosity_bcm_v = {}
 for file_name in data_list:
     detector_array = root2array(file_name)
     first_part_name = os.path.splitext(file_name)
-    display_name = first_part_name[0].split("/")[1]
-    names.append(display_name)
-    print(names)
+    second_name = first_part_name[0].split("/")[1]
+    display_name = second_name.split("r")[1]
+
     # Get LUCID and BCM EventOR data to graph
     luminosity_block = detector_array['LBDATA_LB'].tolist()
     luminosity_block_stable = detector_array['LBDATA_stable'].tolist()
@@ -99,9 +98,9 @@ for file_name in data_list:
         count_bunches = 0
 
     # Add to master ones for plotting later
-    master_luminosity_lucid_bi.append(lucid_event_or_bi1)
-    master_luminosity_bcm_h.append(bcm_h_event_or1)
-    master_luminosity_bcm_v.append(bcm_v_event_or1)
+    master_luminosity_lucid_bi[display_name] = lucid_event_or_bi1
+    master_luminosity_bcm_h[display_name] = bcm_h_event_or1
+    master_luminosity_bcm_v[display_name] = bcm_v_event_or1
 
     # Actually plot the luminosity ratios
     print(luminosity_block)
@@ -136,4 +135,4 @@ for file_name in data_list:
 
 
 # Plotting methods for plotting all the runs
-luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi, master_luminosity_bcm_h, 'ATLAS', names)
+luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi, master_luminosity_bcm_h, 'ATLAS')
