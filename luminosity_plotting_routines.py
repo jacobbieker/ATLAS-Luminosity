@@ -492,8 +492,6 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     # Set ROOT graph style
     set_style(str(style))
 
-    print("Number of Runs included: " + str(len(all_detector_one_data)))
-
     # Get average value of the rate for each luminosity block
     temp_detector_one = all_detector_one_data
     temp_detector_two = all_detector_two_data
@@ -527,8 +525,11 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     # Get ratio of the detectors
     luminosity_ratio = []
     lumi_blocks = []
+    run_length = {}
     block_count1 = 0
     for run in sorted(all_detector_one_data.keys()):
+        print(run)
+        print(len(all_detector_one_data.get(run)))
         for block in range(len(all_detector_one_data.get(run))):
             block_count1 += 1
             for bcid in range(len(all_detector_one_data.get(run)[block])):
@@ -558,16 +559,26 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
     graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
-    graph.yaxis.SetRangeUser(-5, 5)
+    graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
 
     # plot with ROOT
     canvas = Canvas()
+
     graph.Draw("APL")
     label = ROOT.TText(0.8, 0.9, str("All Runs"))
     label.SetTextFont(43)
     label.SetTextSize(25)
     label.SetNDC()
     label.Draw()
+    # Draw lines for different runs
+    run_length = 0
+    for run in sorted(all_detector_one_data.keys()):
+        print("Run: " + str(run))
+        print(len(all_detector_one_data.get(run)))
+        run_length += len(all_detector_one_data.get(run))
+        line = ROOT.TLine(run_length, min(luminosity_ratio),
+                          run_length, max(luminosity_ratio))
+        line.Draw()
     canvas.Modified()
     canvas.Update()
     wait(True)
