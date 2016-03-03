@@ -6,6 +6,7 @@ from rootpy.plotting import Canvas, Graph
 from rootpy.plotting.style import get_style, set_style
 from rootpy.interactive import wait
 import math
+import copy
 
 
 def plot_luminosity_ratio(detector_one_data, detector_two_data, style, run_name):
@@ -493,11 +494,14 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     set_style(str(style))
 
     # Get average value of the rate for each luminosity block
-    temp_detector_one = all_detector_one_data
-    temp_detector_two = all_detector_two_data
+    temp_detector_one = copy.deepcopy(all_detector_one_data)
+    temp_detector_two = copy.deepcopy(all_detector_two_data)
+    print(sorted(all_detector_one_data.keys()))
     for run in sorted(all_detector_one_data.keys()):
         block_count = 0
         for block in range(len(all_detector_one_data.get(run)) - 1):
+            del temp_detector_one.get(run)[block][:]
+            del temp_detector_two.get(run)[block][:]
             block_count += 1
             detector_one_avg = 0
             one_count = 0
@@ -516,8 +520,8 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
                 temp_detector_one.get(run)[block_count - 1].append(detector_one_avg)
                 temp_detector_two.get(run)[block_count - 1].append(detector_two_avg)
         # Remove the last luminosity block from each run, the one that generally spikes
-        temp_detector_one[run] = temp_detector_one[run][:-1]
-        temp_detector_two[run] = temp_detector_two[run][:-1]
+        temp_detector_one[run] = temp_detector_one[run][:-2]
+        temp_detector_two[run] = temp_detector_two[run][:-2]
     # Reassign temp to the original lists
     all_detector_one_data = temp_detector_one
     all_detector_two_data = temp_detector_two
@@ -525,11 +529,8 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     # Get ratio of the detectors
     luminosity_ratio = []
     lumi_blocks = []
-    run_length = {}
     block_count1 = 0
     for run in sorted(all_detector_one_data.keys()):
-        print(run)
-        print(len(all_detector_one_data.get(run)))
         for block in range(len(all_detector_one_data.get(run))):
             block_count1 += 1
             for bcid in range(len(all_detector_one_data.get(run)[block])):
@@ -559,7 +560,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
     graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
-    graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
+    graph.yaxis.SetRangeUser(-4.1, 6)
 
     # plot with ROOT
     canvas = Canvas()
@@ -573,8 +574,6 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     # Draw lines for different runs
     run_length = 0
     for run in sorted(all_detector_one_data.keys()):
-        print("Run: " + str(run))
-        print(len(all_detector_one_data.get(run)))
         run_length += len(all_detector_one_data.get(run))
         line = ROOT.TLine(run_length, min(luminosity_ratio),
                           run_length, max(luminosity_ratio))
