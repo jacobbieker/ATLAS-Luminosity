@@ -578,7 +578,161 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
         line_label.SetTextSize(18)
         line_label.SetTextFont(43)
         line_label.Draw()
-    label = ROOT.TText(0.7, 1.0, str(name))
+    label = ROOT.TText(0.7, 0.8, str(name))
+    label.SetTextFont(43)
+    label.SetTextSize(25)
+    label.SetNDC()
+    label.Draw()
+    canvas.Modified()
+    canvas.Update()
+    wait(True)
+
+
+def plot_multiple_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data, all_detector_three_data, style, name):
+    '''
+
+    :param all_detector_one_data: A dictionary of the run name to a list of lists of luminosity blocks
+    :param all_detector_two_data: A dictionary of the run name to a list of lists of luminosity blocks
+    :param style: a string corresponding to a ROOT graphing style, e.g. 'ATLAS'
+    :return: Plot of all the detector data on a graph chronologically according to run number
+    '''
+    # Set ROOT graph style
+    set_style(str(style))
+
+    # Get average value of the rate for each luminosity block
+    temp_detector_one = copy.deepcopy(all_detector_one_data)
+    temp_detector_two = copy.deepcopy(all_detector_two_data)
+    temp_detector_three = copy.deepcopy(all_detector_three_data)
+    print(sorted(all_detector_one_data.keys()))
+    for run in sorted(all_detector_one_data.keys()):
+        block_count = 0
+        for block in range(len(all_detector_one_data.get(run)) - 1):
+            del temp_detector_one.get(run)[block][:]
+            del temp_detector_two.get(run)[block][:]
+            del temp_detector_three.get(run)[block][:]
+            block_count += 1
+            detector_one_avg = 0
+            one_count = 0
+            detector_two_avg = 0
+            two_count = 0
+            detector_three_avg = 0
+            three_count = 0
+            for bcid in range(len(all_detector_one_data.get(run)[block])):
+                detector_one_point = all_detector_one_data.get(run)[block][bcid]
+                detector_two_point = all_detector_two_data.get(run)[block][bcid]
+                detector_three_point = all_detector_three_data.get(run)[block][bcid]
+                detector_one_avg += detector_one_point
+                one_count += 1
+                detector_two_avg += detector_two_point
+                two_count += 1
+                detector_three_avg += detector_three_point
+                three_count += 1
+            if one_count != 0:
+                detector_one_avg = detector_one_avg / one_count
+                detector_two_avg = detector_two_avg / two_count
+                detector_three_avg = detector_three_avg / three_count
+                temp_detector_one.get(run)[block_count - 1].append(detector_one_avg)
+                temp_detector_two.get(run)[block_count - 1].append(detector_two_avg)
+                temp_detector_three.get(run)[block_count - 1].append(detector_three_avg)
+        # Remove the last luminosity block from each run, the one that generally spikes
+        temp_detector_one[run] = temp_detector_one[run][:-10]
+        temp_detector_two[run] = temp_detector_two[run][:-10]
+        temp_detector_three[run] = temp_detector_three[run][:-10]
+    # Reassign temp to the original lists
+    all_detector_one_data = temp_detector_one
+    all_detector_two_data = temp_detector_two
+    all_detector_three_data = temp_detector_three
+
+    # Get ratio of the detectors 1 and 2
+    luminosity_ratio = []
+    lumi_blocks = []
+    block_count1 = 0
+    for run in sorted(all_detector_one_data.keys()):
+        for block in range(len(all_detector_one_data.get(run))):
+            block_count1 += 1
+            for bcid in range(len(all_detector_one_data.get(run)[block])):
+                detector_one_point = all_detector_one_data.get(run)[block][bcid]
+                detector_two_point = all_detector_two_data.get(run)[block][bcid]
+                # Check if the blocks are zero
+                if detector_one_point != 0.0 and detector_two_point != 0.0:
+                    ratio = -math.log(1 - detector_one_point) / -math.log(1 - detector_two_point)
+                    luminosity_ratio.append(ratio)
+                    lumi_blocks.append(block_count1)
+
+    # Get ratio of the detectors 1 and 3
+    luminosity_ratio_1 = []
+    lumi_blocks_1 = []
+    block_count2 = 0
+    for run in sorted(all_detector_one_data.keys()):
+        for block in range(len(all_detector_one_data.get(run))):
+            block_count2 += 1
+            for bcid in range(len(all_detector_one_data.get(run)[block])):
+                detector_one_point = all_detector_one_data.get(run)[block][bcid]
+                detector_three_point = all_detector_three_data.get(run)[block][bcid]
+                # Check if the blocks are zero
+                if detector_one_point != 0.0 and detector_three_point != 0.0:
+                    ratio = -math.log(1 - detector_one_point) / -math.log(1 - detector_three_point)
+                    luminosity_ratio_1.append(ratio)
+                    lumi_blocks_1.append(block_count2)
+
+    # Get percentage difference based off the first block and BCID
+    first_point = luminosity_ratio[0]
+    first_point_1 = luminosity_ratio_1[0]
+
+    for index in range(len(luminosity_ratio)):
+        luminosity_ratio[index] = 100*((luminosity_ratio[index] / first_point) - 1)
+
+    for index in range(len(luminosity_ratio_1)):
+        luminosity_ratio_1[index] = 100*((luminosity_ratio_1[index] / first_point_1) - 1)
+
+    # create graph
+    graph = Graph(len(lumi_blocks))
+    for i, (xx, yy) in enumerate(zip(lumi_blocks, luminosity_ratio)):
+        graph.SetPoint(i, float(xx), float(yy))
+
+    # set visual attributes
+
+    graph.linecolor = 'white'  # Hides the lines at this time
+    graph.markercolor = 'blue'
+    graph.xaxis.SetTitle("Luminosity Block")
+    graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
+    graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
+    graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
+
+    # plot with ROOT
+    canvas = Canvas()
+
+    graph.Draw()
+    canvas.Update()
+
+    # add points from detectors 1 and 3
+    # create graph
+    graph1 = Graph(len(lumi_blocks_1))
+    for i, (xx, yy) in enumerate(zip(lumi_blocks_1, luminosity_ratio_1)):
+        graph1.SetPoint(i, float(xx), float(yy))
+
+    # set visual attributes
+
+    graph1.linecolor = 'white'  # Hides the lines at this time
+    graph1.markercolor = 'pink'
+    graph1.xaxis.SetRangeUser(min(lumi_blocks_1), max(lumi_blocks_1))
+    graph1.yaxis.SetRangeUser(min(luminosity_ratio_1), max(luminosity_ratio_1))
+
+    graph1.Draw()
+    canvas.Update()
+    # Draw lines for different runs
+    run_length = 0
+    for run in sorted(all_detector_one_data.keys()):
+        run_length += len(all_detector_one_data.get(run))
+        line = ROOT.TLine(run_length, min(luminosity_ratio),
+                          run_length, max(luminosity_ratio))
+        line.Draw()
+        line_label = ROOT.TText(run_length - 30, max(luminosity_ratio) - 1.5, str(run))
+        line_label.SetTextAngle(90)
+        line_label.SetTextSize(18)
+        line_label.SetTextFont(43)
+        line_label.Draw()
+    label = ROOT.TText(0.7, 0.8, str(name))
     label.SetTextFont(43)
     label.SetTextSize(25)
     label.SetNDC()
@@ -693,6 +847,7 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
     canvas.Modified()
     canvas.Update()
     wait(True)
+
 
 def plot_raw_detector_vs_detector(detector_one_data, detector_two_data, style, name):
     # Set ROOT graph style
