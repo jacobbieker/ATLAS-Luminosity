@@ -135,7 +135,7 @@ for file_name in data_list:
 
 # Plotting methods for plotting all the runs
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi, master_luminosity_bcm_h, 'ATLAS',
-                                                    'LUCID BI vs BCM H')
+                                                    'LUCID BI / BCM H')
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi, master_luminosity_bcm_v, 'ATLAS',
-                                                    'LUCID BI vs BCM V')
+                                                    'LUCID BI / BCM V')
 

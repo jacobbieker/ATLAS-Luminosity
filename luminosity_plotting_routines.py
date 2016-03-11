@@ -578,7 +578,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
         line_label.SetTextSize(18)
         line_label.SetTextFont(43)
         line_label.Draw()
-    label = ROOT.TText(0.7, 0.9, str(name))
+    label = ROOT.TText(0.7, 1.0, str(name))
     label.SetTextFont(43)
     label.SetTextSize(25)
     label.SetNDC()
@@ -633,8 +633,8 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
     all_detector_one_data = temp_detector_one
     all_detector_two_data = temp_detector_two
 
-    # Get ratio of the detectors
-    luminosity_ratio = []
+    # Get integrated luminosity of the detectors
+    integrated_luminosity = []
     lumi_blocks = []
     block_count1 = 0
     for run in sorted(all_detector_one_data.keys()):
@@ -643,21 +643,21 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
             for bcid in range(len(all_detector_one_data.get(run)[block])):
                 detector_one_point = all_detector_one_data.get(run)[block][bcid]
                 detector_two_point = all_detector_two_data.get(run)[block][bcid]
-                # Check if the blocks are zero
+                # TODO Transform raw instantaneous rate to actual rate to then append to list
                 if detector_one_point != 0.0 and detector_two_point != 0.0:
                     ratio = -math.log(1 - detector_one_point) / -math.log(1 - detector_two_point)
-                    luminosity_ratio.append(ratio)
+                    integrated_luminosity.append(ratio)
                     lumi_blocks.append(block_count1)
 
     # Get percentage difference based off the first block and BCID
-    first_point = luminosity_ratio[0]
+    first_point = integrated_luminosity[0]
 
-    for index in range(len(luminosity_ratio)):
-        luminosity_ratio[index] = 100*((luminosity_ratio[index] / first_point) - 1)
+    for index in range(len(integrated_luminosity)):
+        integrated_luminosity[index] = 100*((integrated_luminosity[index] / first_point) - 1)
 
     # create graph
     graph = Graph(len(lumi_blocks))
-    for i, (xx, yy) in enumerate(zip(lumi_blocks, luminosity_ratio)):
+    for i, (xx, yy) in enumerate(zip(lumi_blocks, integrated_luminosity)):
         graph.SetPoint(i, float(xx), float(yy))
 
     # set visual attributes
@@ -667,7 +667,7 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
     graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
-    graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
+    graph.yaxis.SetRangeUser(min(integrated_luminosity), max(integrated_luminosity))
 
     # plot with ROOT
     canvas = Canvas()
@@ -677,15 +677,15 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
     run_length = 0
     for run in sorted(all_detector_one_data.keys()):
         run_length += len(all_detector_one_data.get(run))
-        line = ROOT.TLine(run_length, min(luminosity_ratio),
-                          run_length, max(luminosity_ratio))
+        line = ROOT.TLine(run_length, min(integrated_luminosity),
+                          run_length, max(integrated_luminosity))
         line.Draw()
-        line_label = ROOT.TText(run_length - 30, max(luminosity_ratio) - 1.5, str(run))
+        line_label = ROOT.TText(run_length - 30, max(integrated_luminosity) - 1.5, str(run))
         line_label.SetTextAngle(90)
         line_label.SetTextSize(18)
         line_label.SetTextFont(43)
         line_label.Draw()
-    label = ROOT.TText(0.7, 0.9, str(name))
+    label = ROOT.TText(0.7, 1.0, str(name))
     label.SetTextFont(43)
     label.SetTextSize(25)
     label.SetNDC()
