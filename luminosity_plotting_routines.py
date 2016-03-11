@@ -702,7 +702,7 @@ def plot_multiple_all_luminosity_block_ratio(all_detector_one_data, all_detector
     # plot with ROOT
     canvas = Canvas()
 
-    graph.Draw()
+    graph.Draw("AP")
     canvas.Update()
 
     # add points from detectors 1 and 3
@@ -715,10 +715,10 @@ def plot_multiple_all_luminosity_block_ratio(all_detector_one_data, all_detector
 
     graph1.linecolor = 'white'  # Hides the lines at this time
     graph1.markercolor = 'pink'
-    graph1.xaxis.SetRangeUser(min(lumi_blocks_1), max(lumi_blocks_1))
-    graph1.yaxis.SetRangeUser(min(luminosity_ratio_1), max(luminosity_ratio_1))
+    #graph1.xaxis.SetRangeUser(min(lumi_blocks_1), max(lumi_blocks_1))
+    #graph1.yaxis.SetRangeUser(min(luminosity_ratio_1), max(luminosity_ratio_1))
 
-    graph1.Draw()
+    graph1.Draw("P")
     canvas.Update()
     # Draw lines for different runs
     run_length = 0
