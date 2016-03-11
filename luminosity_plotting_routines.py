@@ -45,7 +45,6 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, style, run_name)
 
     # set visual attributes
 
-    graph.linecolor = 'white'  # Hides the lines at this time
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Ratio]")
@@ -54,7 +53,7 @@ def plot_luminosity_ratio(detector_one_data, detector_two_data, style, run_name)
 
     # plot with ROOT
     canvas = Canvas()
-    graph.Draw("APL")
+    graph.Draw("AP")
     label = ROOT.TText(0.8, 0.9, str(run_name))
     label.SetTextFont(43)
     label.SetTextSize(25)
@@ -116,7 +115,6 @@ def plot_normalized_luminosity_ratio(detector_one_data, detector_two_data, style
 
     # set visual attributes
 
-    graph.linecolor = 'white'  # Hides the lines at this time
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Normalized Ratio]")
@@ -125,7 +123,7 @@ def plot_normalized_luminosity_ratio(detector_one_data, detector_two_data, style
 
     # plot with ROOT
     canvas = Canvas()
-    graph.Draw("APL")
+    graph.Draw("AP")
     label = ROOT.TText(0.8, 0.9, str(run_name))
     label.SetTextFont(43)
     label.SetTextSize(25)
@@ -178,7 +176,6 @@ def plot_percent_luminosity_ratio(detector_one_data, detector_two_data, style, r
 
     # set visual attributes
 
-    graph.linecolor = 'white'  # Hides the lines at this time
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Percent Ratio]")
@@ -187,7 +184,7 @@ def plot_percent_luminosity_ratio(detector_one_data, detector_two_data, style, r
 
     # plot with ROOT
     canvas = Canvas()
-    graph.Draw("APL")
+    graph.Draw("AP")
     label = ROOT.TText(0.8, 0.9, str(run_name))
     label.SetTextFont(43)
     label.SetTextSize(25)
@@ -269,7 +266,6 @@ def plot_percent_luminosity_ratio_sum(detector_one_data, detector_two_data, styl
 
     # set visual attributes
 
-    graph.linecolor = 'white'  # Hides the lines at this time
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
@@ -278,7 +274,7 @@ def plot_percent_luminosity_ratio_sum(detector_one_data, detector_two_data, styl
 
     # plot with ROOT
     canvas = Canvas()
-    graph.Draw("APL")
+    graph.Draw("AP")
     label = ROOT.TText(0.8, 0.9, str(run_name))
     label.SetTextFont(43)
     label.SetTextSize(25)
@@ -320,7 +316,6 @@ def plot_luminosity_log(detector_one_data, style, run_name):
 
     # set visual attributes
 
-    graph.linecolor = 'white'  # Hides the lines at this time
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Single Detector]")
@@ -329,7 +324,7 @@ def plot_luminosity_log(detector_one_data, style, run_name):
 
     # plot with ROOT
     canvas = Canvas()
-    graph.Draw("APL")
+    graph.Draw("AP")
     label = ROOT.TText(0.8, 0.9, str(run_name))
     label.SetTextFont(43)
     label.SetTextSize(25)
@@ -359,7 +354,6 @@ def luminosity_vs_time(timing_list, luminosity_list, style, run_name):
 
         # set visual attributes
 
-    graph.linecolor = 'white'  # Hides the lines at this time
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Time")
     graph.yaxis.SetTitle("Luminosity")
@@ -368,7 +362,7 @@ def luminosity_vs_time(timing_list, luminosity_list, style, run_name):
 
     # plot with ROOT
     canvas = Canvas()
-    graph.Draw("APL")
+    graph.Draw("AP")
     label = ROOT.TText(0.8, 0.9, str(run_name))
     label.SetTextFont(43)
     label.SetTextSize(25)
@@ -406,7 +400,6 @@ def luminosity_block_log_time(luminosity_list, style):
 
         # set visual attributes
 
-    graph.linecolor = 'white'  # Hides the lines at this time
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Time")
     graph.yaxis.SetTitle("-Ln(1 - Rate) [Single Detector]")
@@ -415,7 +408,7 @@ def luminosity_block_log_time(luminosity_list, style):
 
     # plot with ROOT
     canvas = Canvas()
-    graph.Draw("APL")
+    graph.Draw("AP")
     wait(True)
 
 
@@ -461,7 +454,6 @@ def plot_bcid_percent_luminosity_ratio(detector_one_data, detector_two_data, sty
 
     # set visual attributes
 
-    graph.linecolor = 'white'  # Hides the lines at this time
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("BCID")
     graph.yaxis.SetTitle("Luminosity [Percent Ratio]")
@@ -470,7 +462,7 @@ def plot_bcid_percent_luminosity_ratio(detector_one_data, detector_two_data, sty
 
     # plot with ROOT
     canvas = Canvas()
-    graph.Draw("APL")
+    graph.Draw("AP")
     label = ROOT.TText(0.8, 0.9, str(run_name))
     label.SetTextFont(43)
     label.SetTextSize(25)
@@ -555,7 +547,6 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
 
     # set visual attributes
 
-    graph.linecolor = 'white'  # Hides the lines at this time
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
@@ -565,7 +556,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     # plot with ROOT
     canvas = Canvas()
 
-    graph.Draw("APL")
+    graph.Draw("AP")
     # Draw lines for different runs
     run_length = 0
     for run in sorted(all_detector_one_data.keys()):
@@ -692,7 +683,6 @@ def plot_multiple_all_luminosity_block_ratio(all_detector_one_data, all_detector
 
     # set visual attributes
 
-    graph.linecolor = 'white'  # Hides the lines at this time
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
@@ -714,7 +704,7 @@ def plot_multiple_all_luminosity_block_ratio(all_detector_one_data, all_detector
     # set visual attributes
 
     graph1.linecolor = 'white'  # Hides the lines at this time
-    graph1.markercolor = 'pink'
+    graph1.markercolor = 'red'
     #graph1.xaxis.SetRangeUser(min(lumi_blocks_1), max(lumi_blocks_1))
     #graph1.yaxis.SetRangeUser(min(luminosity_ratio_1), max(luminosity_ratio_1))
 
@@ -816,7 +806,6 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
 
     # set visual attributes
 
-    graph.linecolor = 'white'  # Hides the lines at this time
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
@@ -826,7 +815,7 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
     # plot with ROOT
     canvas = Canvas()
 
-    graph.Draw("APL")
+    graph.Draw("AP")
     # Draw lines for different runs
     run_length = 0
     for run in sorted(all_detector_one_data.keys()):
@@ -865,7 +854,6 @@ def plot_raw_detector_vs_detector(detector_one_data, detector_two_data, style, n
 
     # set visual attributes
 
-    graph.linecolor = 'white'  # Hides the lines at this time
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("BCM V [Raw Rate]")
     graph.yaxis.SetTitle("LUCID BI [Raw Rate]")
@@ -874,7 +862,7 @@ def plot_raw_detector_vs_detector(detector_one_data, detector_two_data, style, n
 
     # plot with ROOT
     canvas = Canvas()
-    graph.Draw("APL")
+    graph.Draw("AP")
     label = ROOT.TText(0.6, 0.9, str(name))
     label.SetTextFont(43)
     label.SetTextSize(25)
@@ -904,7 +892,6 @@ def plot_detector_vs_detector_ratio(detector_one_data, detector_two_data, style,
 
     # set visual attributes
 
-    graph.linecolor = 'white'  # Hides the lines at this time
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("BCM V")
     graph.yaxis.SetTitle("LUCID BI")
@@ -913,7 +900,7 @@ def plot_detector_vs_detector_ratio(detector_one_data, detector_two_data, style,
 
     # plot with ROOT
     canvas = Canvas()
-    graph.Draw("APL")
+    graph.Draw("AP")
     label = ROOT.TText(0.8, 0.9, str(name))
     label.SetTextFont(43)
     label.SetTextSize(25)
