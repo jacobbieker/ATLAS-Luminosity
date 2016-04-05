@@ -500,12 +500,16 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
             detector_two_avg = 0
             two_count = 0
             for bcid in range(len(all_detector_one_data.get(run)[block])):
-                detector_one_point = all_detector_one_data.get(run)[block][bcid]
-                detector_two_point = all_detector_two_data.get(run)[block][bcid]
-                detector_one_avg += detector_one_point
-                one_count += 1
-                detector_two_avg += detector_two_point
-                two_count += 1
+                # Gets the previous BCID luminosity to subtract as the background
+                if bcid != 0:
+                    detector_one_point_background = all_detector_one_data.get(run)[block][bcid - 1]
+                    detector_two_point_background = all_detector_two_data.get(run)[block][bcid - 1]
+                    detector_one_point = all_detector_one_data.get(run)[block][bcid] - detector_one_point_background
+                    detector_two_point = all_detector_two_data.get(run)[block][bcid] - detector_two_point_background
+                    detector_one_avg += detector_one_point
+                    one_count += 1
+                    detector_two_avg += detector_two_point
+                    two_count += 1
             if one_count != 0:
                 detector_one_avg = detector_one_avg / one_count
                 detector_two_avg = detector_two_avg / two_count
@@ -552,6 +556,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
     graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
     graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
+    #graph.yaxis.SetRangeUser(-15, 15)
 
     # plot with ROOT
     canvas = Canvas()
