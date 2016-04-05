@@ -790,6 +790,8 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
                 # TODO Transform raw instantaneous rate to actual rate to then append to list
                 if detector_one_point != 0.0 and detector_two_point != 0.0:
                     ratio = -math.log(1 - detector_one_point) / -math.log(1 - detector_two_point)
+                    length = block_length.get(run)[block][bcid]
+                    ratio = ratio * length
                     integrated_luminosity.append(ratio)
                     lumi_blocks.append(block_count1)
 
@@ -808,7 +810,7 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
 
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
-    graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
+    graph.yaxis.SetTitle("Luminosity [Integrated Average Ratio]")
     graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
     graph.yaxis.SetRangeUser(min(integrated_luminosity), max(integrated_luminosity))
 
