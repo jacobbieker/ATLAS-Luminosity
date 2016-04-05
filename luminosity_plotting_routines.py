@@ -783,9 +783,12 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
     all_detector_two_data = temp_detector_two
 
     # Get integrated luminosity of the detectors
-    integrated_luminosity = []
+    integrated_luminosity_one = []
+    integrated_luminosity_two = []
     lumi_blocks = []
     block_count1 = 0
+    lumi_total = 0
+    lumi_total_two = 0
     for run in sorted(all_detector_one_data.keys()):
         for block in range(len(all_detector_one_data.get(run))):
             block_count1 += 1
@@ -794,43 +797,63 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
                 detector_two_point = all_detector_two_data.get(run)[block][bcid]
                 # TODO Transform raw instantaneous rate to actual rate to then append to list
                 if detector_one_point != 0.0 and detector_two_point != 0.0:
-                    ratio = -math.log(1 - detector_one_point) / -math.log(1 - detector_two_point)
+                    converted_point_one = -math.log(1 - detector_one_point)
+                    converted_point_two = -math.log(1 - detector_two_point)
                     length = block_length.get(run)[block][bcid]
-                    ratio = ratio * length
-                    integrated_luminosity.append(ratio)
+                    lumi_total += converted_point_one * length
+                    lumi_total_two += converted_point_two * length
+                    integrated_luminosity_one.append(lumi_total)
+                    integrated_luminosity_two.append(lumi_total_two)
                     lumi_blocks.append(block_count1)
 
     # Get percentage difference based off the first block and BCID
-    first_point = integrated_luminosity[0]
+    #first_point = integrated_luminosity_one[0]
 
-    for index in range(len(integrated_luminosity)):
-        integrated_luminosity[index] = 100*((integrated_luminosity[index] / first_point) - 1)
+    #for index in range(len(integrated_luminosity_one)):
+    #    integrated_luminosity[index] = 100*((integrated_luminosity[index] / first_point) - 1)
 
     # create graph
     graph = Graph(len(lumi_blocks))
-    for i, (xx, yy) in enumerate(zip(lumi_blocks, integrated_luminosity)):
+    for i, (xx, yy) in enumerate(zip(lumi_blocks, integrated_luminosity_one)):
         graph.SetPoint(i, float(xx), float(yy))
 
     # set visual attributes
 
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
-    graph.yaxis.SetTitle("Luminosity [Integrated Average Ratio]")
+    graph.yaxis.SetTitle("Luminosity [Integrated]")
     graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
-    graph.yaxis.SetRangeUser(min(integrated_luminosity), max(integrated_luminosity))
+    graph.yaxis.SetRangeUser(min(integrated_luminosity_one), max(integrated_luminosity_one))
 
     # plot with ROOT
     canvas = Canvas()
 
     graph.Draw("AP")
+    canvas.Update()
+
+    # add points from detectors 1 and 3
+    # create graph
+    graph1 = Graph(len(lumi_blocks))
+    for i, (xx, yy) in enumerate(zip(lumi_blocks, integrated_luminosity_two)):
+        graph1.SetPoint(i, float(xx), float(yy))
+
+    # set visual attributes
+
+    graph1.linecolor = 'white'  # Hides the lines at this time
+    graph1.markercolor = 'red'
+    #graph1.xaxis.SetRangeUser(min(lumi_blocks_1), max(lumi_blocks_1))
+    #graph1.yaxis.SetRangeUser(min(luminosity_ratio_1), max(luminosity_ratio_1))
+
+    graph1.Draw("P")
+    canvas.Update()
     # Draw lines for different runs
     run_length = 0
     for run in sorted(all_detector_one_data.keys()):
         run_length += len(all_detector_one_data.get(run))
-        line = ROOT.TLine(run_length, min(integrated_luminosity),
-                          run_length, max(integrated_luminosity))
+        line = ROOT.TLine(run_length, min(integrated_luminosity_one),
+                          run_length, max(integrated_luminosity_one))
         line.Draw()
-        line_label = ROOT.TText(run_length - 30, max(integrated_luminosity) - 1.5, str(run))
+        line_label = ROOT.TText(run_length - 30, max(integrated_luminosity_one) - 1.5, str(run))
         line_label.SetTextAngle(90)
         line_label.SetTextSize(18)
         line_label.SetTextFont(43)
