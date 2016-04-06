@@ -813,17 +813,17 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
     #    integrated_luminosity[index] = 100*((integrated_luminosity[index] / first_point) - 1)
 
     # create graph
-    graph = Graph(len(lumi_blocks))
-    for i, (xx, yy) in enumerate(zip(lumi_blocks, integrated_luminosity_one)):
+    graph = Graph(len(integrated_luminosity_one))
+    for i, (xx, yy) in enumerate(zip(integrated_luminosity_one, lumi_blocks)):
         graph.SetPoint(i, float(xx), float(yy))
 
     # set visual attributes
 
     graph.markercolor = 'blue'
-    graph.xaxis.SetTitle("Luminosity Block")
-    graph.yaxis.SetTitle("Luminosity [Integrated]")
-    graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
-    graph.yaxis.SetRangeUser(min(integrated_luminosity_one), max(integrated_luminosity_one))
+    graph.yaxis.SetTitle("Luminosity Block")
+    graph.xaxis.SetTitle("Luminosity [Integrated]")
+    graph.yaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
+    graph.xaxis.SetRangeUser(min(integrated_luminosity_one), max(integrated_luminosity_one))
 
     # plot with ROOT
     canvas = Canvas()
@@ -834,15 +834,13 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
     # add points from detectors 1 and 3
     # create graph
     graph1 = Graph(len(lumi_blocks))
-    for i, (xx, yy) in enumerate(zip(lumi_blocks, integrated_luminosity_two)):
+    for i, (xx, yy) in enumerate(zip(integrated_luminosity_two, lumi_blocks)):
         graph1.SetPoint(i, float(xx), float(yy))
 
     # set visual attributes
 
     graph1.linecolor = 'white'  # Hides the lines at this time
     graph1.markercolor = 'red'
-    #graph1.xaxis.SetRangeUser(min(lumi_blocks_1), max(lumi_blocks_1))
-    #graph1.yaxis.SetRangeUser(min(luminosity_ratio_1), max(luminosity_ratio_1))
 
     graph1.Draw("P")
     canvas.Update()
