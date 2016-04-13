@@ -504,8 +504,12 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
                 if bcid != 0:
                     detector_one_point_background = all_detector_one_data.get(run)[block][bcid - 1]
                     detector_two_point_background = all_detector_two_data.get(run)[block][bcid - 1]
-                    detector_one_point = all_detector_one_data.get(run)[block][bcid] - detector_one_point_background
-                    detector_two_point = all_detector_two_data.get(run)[block][bcid] - detector_two_point_background
+                    print("BCID [N-1]: " + str(detector_one_point_background))
+                    print("BCID [N]: " + str(all_detector_one_data.get(run)[block][bcid]))
+                    detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid]) \
+                                         - math.log(1 - detector_one_point_background)
+                    detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid]) \
+                                         - math.log(1 - detector_two_point_background)
                     detector_one_avg += detector_one_point
                     one_count += 1
                     detector_two_avg += detector_two_point
@@ -534,7 +538,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
                 detector_two_point = all_detector_two_data.get(run)[block][bcid]
                 # Check if the blocks are zero
                 if detector_one_point != 0.0 and detector_two_point != 0.0:
-                    ratio = -math.log(1 - detector_one_point) / -math.log(1 - detector_two_point)
+                    ratio = detector_one_point / detector_two_point
                     luminosity_ratio.append(ratio)
                     lumi_blocks.append(block_count1)
 
@@ -555,7 +559,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
     graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
-    graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
+    graph.yaxis.SetRangeUser(-10, 10)
     #graph.yaxis.SetRangeUser(-15, 15)
 
     # plot with ROOT
