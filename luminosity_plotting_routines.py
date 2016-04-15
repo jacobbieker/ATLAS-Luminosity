@@ -507,10 +507,10 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
                     print("BCID [N-1]: " + str(detector_one_point_background))
                     print("BCID [N]: " + str(all_detector_one_data.get(run)[block][bcid]))
                     detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid]) \
-                                         - math.log(1 - detector_one_point_background)
+                                         + math.log(1 - detector_one_point_background)
                     print("Detector 1 Point: " + str(detector_one_point))
                     detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid]) \
-                                         - math.log(1 - detector_two_point_background)
+                                         + math.log(1 - detector_two_point_background)
                     detector_one_avg += detector_one_point
                     one_count += 1
                     detector_two_avg += detector_two_point
@@ -566,7 +566,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
-    graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
+    graph.xaxis.SetRangeUser(0, max(lumi_blocks))
     graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
     #graph.yaxis.SetRangeUser(-15, 15)
 
@@ -577,6 +577,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     # Draw lines for different runs
     run_length = 0
     for run in sorted(all_detector_one_data.keys()):
+        print("Length of Run " + str(run) + ": " + str(len(all_detector_one_data.get(run))))
         run_length += len(all_detector_one_data.get(run))
         line = ROOT.TLine(run_length, min(luminosity_ratio),
                           run_length, max(luminosity_ratio))
@@ -797,6 +798,7 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
     # Get integrated luminosity of the detectors
     integrated_luminosity_one = []
     integrated_luminosity_two = []
+    luminosity_ratio = []
     lumi_blocks = []
     block_count1 = 0
     lumi_total = 0
@@ -810,6 +812,8 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
                 if detector_one_point != 0.0 and detector_two_point != 0.0:
                     converted_point_one = -math.log(1 - detector_one_point)
                     converted_point_two = -math.log(1 - detector_two_point)
+                    ratio = converted_point_one / converted_point_two
+                    luminosity_ratio.append(ratio)
                     length = block_length.get(run)[block][bcid]
                     lumi_total += converted_point_one * length
                     lumi_total_two += converted_point_two * length
@@ -818,23 +822,23 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
                     lumi_blocks.append(block_count1)
 
     # Get percentage difference based off the first block and BCID
-    #first_point = integrated_luminosity_one[0]
+    first_point = luminosity_ratio[0]
 
-    #for index in range(len(integrated_luminosity_one)):
-    #    integrated_luminosity[index] = 100*((integrated_luminosity[index] / first_point) - 1)
+    for index in range(len(integrated_luminosity_one)):
+        luminosity_ratio[index] = 100*((luminosity_ratio[index] / first_point) - 1)
 
     # create graph
-    graph = Graph(len(lumi_blocks))
-    for i, (xx, yy) in enumerate(zip(lumi_blocks, integrated_luminosity_one)):
+    graph = Graph(len(integrated_luminosity_one))
+    for i, (xx, yy) in enumerate(zip(integrated_luminosity_one, luminosity_ratio)):
         graph.SetPoint(i, float(xx), float(yy))
 
     # set visual attributes
 
     graph.markercolor = 'blue'
-    graph.xaxis.SetTitle("Luminosity Block")
-    graph.yaxis.SetTitle("Luminosity [Integrated]")
-    graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
-    graph.yaxis.SetRangeUser(min(integrated_luminosity_one), max(integrated_luminosity_one))
+    graph.yaxis.SetTitle("Luminosity Ratio [Percent]")
+    graph.xaxis.SetTitle("Luminosity [Integrated]")
+    graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
+    graph.xaxis.SetRangeUser(min(integrated_luminosity_one), max(integrated_luminosity_one))
 
     # plot with ROOT
     canvas = Canvas()
@@ -844,8 +848,8 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
 
     # add points from detectors 1 and 3
     # create graph
-    graph1 = Graph(len(lumi_blocks))
-    for i, (xx, yy) in enumerate(zip(lumi_blocks, integrated_luminosity_two)):
+    graph1 = Graph(len(integrated_luminosity_two))
+    for i, (xx, yy) in enumerate(zip(integrated_luminosity_two, luminosity_ratio)):
         graph1.SetPoint(i, float(xx), float(yy))
 
     # set visual attributes
@@ -859,10 +863,10 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
     run_length = 0
     for run in sorted(all_detector_one_data.keys()):
         run_length += len(all_detector_one_data.get(run))
-        line = ROOT.TLine(run_length, min(integrated_luminosity_one),
-                          run_length, max(integrated_luminosity_one))
+        line = ROOT.TLine(run_length, min(luminosity_ratio),
+                          run_length, max(luminosity_ratio))
         line.Draw()
-        line_label = ROOT.TText(run_length - 30, max(integrated_luminosity_one) - 1.5, str(run))
+        line_label = ROOT.TText(run_length - 30, max(luminosity_ratio) - 1.5, str(run))
         line_label.SetTextAngle(90)
         line_label.SetTextSize(18)
         line_label.SetTextFont(43)
