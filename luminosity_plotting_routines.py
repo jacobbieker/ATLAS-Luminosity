@@ -501,15 +501,23 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
             two_count = 0
             for bcid in range(len(all_detector_one_data.get(run)[block])):
                 # Gets the previous BCID luminosity to subtract as the background
-                if bcid != 0:
+                if run == "286282":
                     detector_one_point_background = all_detector_one_data.get(run)[block][bcid - 1]
                     detector_two_point_background = all_detector_two_data.get(run)[block][bcid - 1]
                     print("BCID [N-1]: " + str(detector_one_point_background))
                     print("BCID [N]: " + str(all_detector_one_data.get(run)[block][bcid]))
                     detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid]) \
                                          - math.log(1 - detector_one_point_background)
+                    print("Detector 1 Point: " + str(detector_one_point))
                     detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid]) \
                                          - math.log(1 - detector_two_point_background)
+                    detector_one_avg += detector_one_point
+                    one_count += 1
+                    detector_two_avg += detector_two_point
+                    two_count += 1
+                else:
+                    detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid])
+                    detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid])
                     detector_one_avg += detector_one_point
                     one_count += 1
                     detector_two_avg += detector_two_point
@@ -559,7 +567,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
     graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
-    graph.yaxis.SetRangeUser(-10, 10)
+    graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
     #graph.yaxis.SetRangeUser(-15, 15)
 
     # plot with ROOT
@@ -799,7 +807,6 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
             for bcid in range(len(all_detector_one_data.get(run)[block])):
                 detector_one_point = all_detector_one_data.get(run)[block][bcid]
                 detector_two_point = all_detector_two_data.get(run)[block][bcid]
-                # TODO Transform raw instantaneous rate to actual rate to then append to list
                 if detector_one_point != 0.0 and detector_two_point != 0.0:
                     converted_point_one = -math.log(1 - detector_one_point)
                     converted_point_two = -math.log(1 - detector_two_point)
@@ -817,17 +824,17 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
     #    integrated_luminosity[index] = 100*((integrated_luminosity[index] / first_point) - 1)
 
     # create graph
-    graph = Graph(len(integrated_luminosity_one))
-    for i, (xx, yy) in enumerate(zip(integrated_luminosity_one, lumi_blocks)):
+    graph = Graph(len(lumi_blocks))
+    for i, (xx, yy) in enumerate(zip(lumi_blocks, integrated_luminosity_one)):
         graph.SetPoint(i, float(xx), float(yy))
 
     # set visual attributes
 
     graph.markercolor = 'blue'
-    graph.yaxis.SetTitle("Luminosity Block")
-    graph.xaxis.SetTitle("Luminosity [Integrated]")
-    graph.yaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
-    graph.xaxis.SetRangeUser(min(integrated_luminosity_one), max(integrated_luminosity_one))
+    graph.xaxis.SetTitle("Luminosity Block")
+    graph.yaxis.SetTitle("Luminosity [Integrated]")
+    graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
+    graph.yaxis.SetRangeUser(min(integrated_luminosity_one), max(integrated_luminosity_one))
 
     # plot with ROOT
     canvas = Canvas()
@@ -838,7 +845,7 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
     # add points from detectors 1 and 3
     # create graph
     graph1 = Graph(len(lumi_blocks))
-    for i, (xx, yy) in enumerate(zip(integrated_luminosity_two, lumi_blocks)):
+    for i, (xx, yy) in enumerate(zip(lumi_blocks, integrated_luminosity_two)):
         graph1.SetPoint(i, float(xx), float(yy))
 
     # set visual attributes
