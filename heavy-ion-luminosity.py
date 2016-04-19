@@ -22,6 +22,7 @@ for file_name in data_list:
     second_name = first_part_name[0].split("/")[1]
     display_name = second_name.split("r")[1]
 
+    print(detector_array.dtype)
     # Get LUCID and BCM EventOR data to graph
     luminosity_block = detector_array['LBDATA_LB'].tolist()
     luminosity_block_stable = detector_array['LBDATA_stable'].tolist()
@@ -32,13 +33,29 @@ for file_name in data_list:
 
     lucid_event_or_bi = detector_array['LUCID_EVENTOR_BI'].tolist()
 
+    lucid_event_or_bi_a = detector_array['LUCID_EVENTORA_BI'].tolist()
+    lucid_event_or_bi_c = detector_array['LUCID_EVENTORC_BI'].tolist()
+
     bcm_h_event_or = detector_array['BCM_H_EVENTOR'].tolist()
     bcm_v_event_or = detector_array['BCM_V_EVENTOR'].tolist()
+
+    bcm_h_event_or_a = detector_array['BCM_H_EVENTORA'].tolist()
+    bcm_h_event_or_c = detector_array['BCM_H_EVENTORC'].tolist()
+
+    bcm_v_event_or_a = detector_array['BCM_V_EVENTORA'].tolist()
+    bcm_v_event_or_c = detector_array['BCM_V_EVENTORC'].tolist()
+
 
     # Timing is named Status in the root file
     status = detector_array['Status'].tolist()
 
     print("Length of LUCID: " + str(len(lucid_event_or_bi)))
+    print(" Length of LUCID A: " + str(len(lucid_event_or_bi_a)))
+    print(" Length of LUCID C: " + str(len(lucid_event_or_bi_c)))
+    print(" Length of BCM H A: " + str(len(bcm_h_event_or_a)))
+    print(" Length of BCM H C: " + str(len(bcm_h_event_or_c)))
+    print(" Length of BCM V A: " + str(len(bcm_v_event_or_a)))
+    print(" Length of BCM V C: " + str(len(bcm_v_event_or_c)))
     print(" Length of BCM H: " + str(len(bcm_h_event_or)))
     print(" Length of BCM V: " + str(len(bcm_v_event_or)))
     print(" Length of Start: " + str(len(start_time)))
