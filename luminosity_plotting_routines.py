@@ -627,15 +627,36 @@ def plot_multiple_all_luminosity_block_ratio(all_detector_one_data, all_detector
             detector_three_avg = 0
             three_count = 0
             for bcid in range(len(all_detector_one_data.get(run)[block])):
-                detector_one_point = all_detector_one_data.get(run)[block][bcid]
-                detector_two_point = all_detector_two_data.get(run)[block][bcid]
-                detector_three_point = all_detector_three_data.get(run)[block][bcid]
-                detector_one_avg += detector_one_point
-                one_count += 1
-                detector_two_avg += detector_two_point
-                two_count += 1
-                detector_three_avg += detector_three_point
-                three_count += 1
+                # Gets the previous BCID luminosity to subtract as the background
+                if run == "286282":
+                    detector_one_point_background = all_detector_one_data.get(run)[block][bcid - 1]
+                    detector_two_point_background = all_detector_two_data.get(run)[block][bcid - 1]
+                    detector_three_point_background = all_detector_three_data.get(run)[block][bcid-1]
+                    print("BCID [N-1]: " + str(detector_one_point_background))
+                    print("BCID [N]: " + str(all_detector_one_data.get(run)[block][bcid]))
+                    detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid]) \
+                                         + math.log(1 - detector_one_point_background)
+                    detector_three_point = -math.log(1 - all_detector_three_data.get(run)[block][bcid]) \
+                                         + math.log(1 - detector_three_point_background)
+                    print("Detector 1 Point: " + str(detector_one_point))
+                    detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid]) \
+                                         + math.log(1 - detector_two_point_background)
+                    detector_one_avg += detector_one_point
+                    one_count += 1
+                    detector_two_avg += detector_two_point
+                    two_count += 1
+                    detector_three_avg += detector_three_point
+                    three_count += 1
+                else:
+                    detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid])
+                    detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid])
+                    detector_three_point = -math.log(1- all_detector_three_data.get(run)[block][bcid])
+                    detector_one_avg += detector_one_point
+                    one_count += 1
+                    detector_two_avg += detector_two_point
+                    two_count += 1
+                    detector_three_avg += detector_three_point
+                    three_count += 1
             if one_count != 0:
                 detector_one_avg = detector_one_avg / one_count
                 detector_two_avg = detector_two_avg / two_count
@@ -664,7 +685,7 @@ def plot_multiple_all_luminosity_block_ratio(all_detector_one_data, all_detector
                 detector_two_point = all_detector_two_data.get(run)[block][bcid]
                 # Check if the blocks are zero
                 if detector_one_point != 0.0 and detector_two_point != 0.0:
-                    ratio = -math.log(1 - detector_one_point) / -math.log(1 - detector_two_point)
+                    ratio = detector_one_point / detector_two_point
                     luminosity_ratio.append(ratio)
                     lumi_blocks.append(block_count1)
 
@@ -680,7 +701,7 @@ def plot_multiple_all_luminosity_block_ratio(all_detector_one_data, all_detector
                 detector_three_point = all_detector_three_data.get(run)[block][bcid]
                 # Check if the blocks are zero
                 if detector_one_point != 0.0 and detector_three_point != 0.0:
-                    ratio = -math.log(1 - detector_one_point) / -math.log(1 - detector_three_point)
+                    ratio = detector_one_point / detector_three_point
                     luminosity_ratio_1.append(ratio)
                     lumi_blocks_1.append(block_count2)
 
