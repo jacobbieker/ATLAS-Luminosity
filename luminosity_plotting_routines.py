@@ -9,6 +9,12 @@ import math
 import copy
 
 
+def convert_to_raw_luminosity(f_rev, sigma_vis, mu_vis):
+    converted = f_rev / sigma_vis
+    converted *= mu_vis
+    return converted
+
+
 def plot_luminosity_ratio(detector_one_data, detector_two_data, style, run_name):
     '''
 
@@ -556,7 +562,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     first_point = luminosity_ratio[0]
 
     for index in range(len(luminosity_ratio)):
-        luminosity_ratio[index] = 100*((luminosity_ratio[index] / first_point) - 1)
+        luminosity_ratio[index] = 100 * ((luminosity_ratio[index] / first_point) - 1)
 
     # create graph
     graph = Graph(len(lumi_blocks))
@@ -570,7 +576,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
     graph.xaxis.SetRangeUser(0, max(lumi_blocks))
     graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
-    #graph.yaxis.SetRangeUser(-15, 15)
+    # graph.yaxis.SetRangeUser(-15, 15)
 
     # plot with ROOT
     canvas = Canvas()
@@ -599,7 +605,8 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     wait(True)
 
 
-def plot_multiple_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data, all_detector_three_data, style, name):
+def plot_multiple_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data, all_detector_three_data,
+                                             style, name):
     '''
 
     :param all_detector_one_data: A dictionary of the run name to a list of lists of luminosity blocks
@@ -633,13 +640,13 @@ def plot_multiple_all_luminosity_block_ratio(all_detector_one_data, all_detector
                 if run == "286282":
                     detector_one_point_background = all_detector_one_data.get(run)[block][bcid - 1]
                     detector_two_point_background = all_detector_two_data.get(run)[block][bcid - 1]
-                    detector_three_point_background = all_detector_three_data.get(run)[block][bcid-1]
+                    detector_three_point_background = all_detector_three_data.get(run)[block][bcid - 1]
                     print("BCID [N-1]: " + str(detector_one_point_background))
                     print("BCID [N]: " + str(all_detector_one_data.get(run)[block][bcid]))
                     detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid]) \
                                          + math.log(1 - detector_one_point_background)
                     detector_three_point = -math.log(1 - all_detector_three_data.get(run)[block][bcid]) \
-                                         + math.log(1 - detector_three_point_background)
+                                           + math.log(1 - detector_three_point_background)
                     print("Detector 1 Point: " + str(detector_one_point))
                     detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid]) \
                                          + math.log(1 - detector_two_point_background)
@@ -652,7 +659,7 @@ def plot_multiple_all_luminosity_block_ratio(all_detector_one_data, all_detector
                 else:
                     detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid])
                     detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid])
-                    detector_three_point = -math.log(1- all_detector_three_data.get(run)[block][bcid])
+                    detector_three_point = -math.log(1 - all_detector_three_data.get(run)[block][bcid])
                     detector_one_avg += detector_one_point
                     one_count += 1
                     detector_two_avg += detector_two_point
@@ -712,10 +719,10 @@ def plot_multiple_all_luminosity_block_ratio(all_detector_one_data, all_detector
     first_point_1 = luminosity_ratio_1[0]
 
     for index in range(len(luminosity_ratio)):
-        luminosity_ratio[index] = 100*((luminosity_ratio[index] / first_point) - 1)
+        luminosity_ratio[index] = 100 * ((luminosity_ratio[index] / first_point) - 1)
 
     for index in range(len(luminosity_ratio_1)):
-        luminosity_ratio_1[index] = 100*((luminosity_ratio_1[index] / first_point_1) - 1)
+        luminosity_ratio_1[index] = 100 * ((luminosity_ratio_1[index] / first_point_1) - 1)
 
     # create graph
     graph = Graph(len(lumi_blocks))
@@ -746,8 +753,8 @@ def plot_multiple_all_luminosity_block_ratio(all_detector_one_data, all_detector
 
     graph1.linecolor = 'white'  # Hides the lines at this time
     graph1.markercolor = 'red'
-    #graph1.xaxis.SetRangeUser(min(lumi_blocks_1), max(lumi_blocks_1))
-    #graph1.yaxis.SetRangeUser(min(luminosity_ratio_1), max(luminosity_ratio_1))
+    # graph1.xaxis.SetRangeUser(min(lumi_blocks_1), max(lumi_blocks_1))
+    # graph1.yaxis.SetRangeUser(min(luminosity_ratio_1), max(luminosity_ratio_1))
 
     graph1.Draw("P")
     canvas.Update()
@@ -802,6 +809,9 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
             for bcid in range(len(all_detector_one_data.get(run)[block])):
                 detector_one_point = all_detector_one_data.get(run)[block][bcid]
                 detector_two_point = all_detector_two_data.get(run)[block][bcid]
+                # Use conversion factor
+                detector_one_point = convert_to_raw_luminosity(11.245, 20.8, detector_one_point)
+                detector_two_point = convert_to_raw_luminosity(11.245, 20.8, detector_two_point)
                 detector_one_avg += detector_one_point
                 one_count += 1
                 detector_two_avg += detector_two_point
@@ -848,7 +858,7 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
     first_point = luminosity_ratio[0]
 
     for index in range(len(integrated_luminosity_one)):
-        luminosity_ratio[index] = 100*((luminosity_ratio[index] / first_point) - 1)
+        luminosity_ratio[index] = 100 * ((luminosity_ratio[index] / first_point) - 1)
 
     # create graph
     graph = Graph(len(integrated_luminosity_one))
