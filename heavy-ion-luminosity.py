@@ -195,6 +195,7 @@ for file_name in data_list:
 # Plotting methods for plotting all the runs
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi, master_luminosity_bcm_h, 'ATLAS',
                                                     'LUCID BI / BCM H')
+'''
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi_a, master_luminosity_bcm_v_a, 'ATLAS',
                                                     'LUCID BI A / BCM V A')
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi_c, master_luminosity_bcm_h_c, 'ATLAS',
@@ -211,5 +212,6 @@ luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_bcm_v_a, m
                                                     'BCM V A / BCM V C')
 luminosity_plotting.plot_multiple_all_luminosity_block_ratio(master_luminosity_lucid_bi, master_luminosity_bcm_v, master_luminosity_bcm_h, 'ATLAS',
                                                              'LUCID BI /BCM V & LUCID BI / BCM H')
+'''
 luminosity_plotting.plot_all_integrated_luminosity(master_luminosity_lucid_bi, master_luminosity_bcm_v, master_lumi_block_length, 'ATLAS', 'LUCID BI vs BCM V Integrated Ratio')
 

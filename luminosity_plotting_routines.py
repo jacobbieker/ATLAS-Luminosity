@@ -809,9 +809,6 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
             for bcid in range(len(all_detector_one_data.get(run)[block])):
                 detector_one_point = all_detector_one_data.get(run)[block][bcid]
                 detector_two_point = all_detector_two_data.get(run)[block][bcid]
-                # Use conversion factor
-                detector_one_point = convert_to_raw_luminosity(11.245, 20.8, detector_one_point)
-                detector_two_point = convert_to_raw_luminosity(11.245, 20.8, detector_two_point)
                 detector_one_avg += detector_one_point
                 one_count += 1
                 detector_two_avg += detector_two_point
@@ -845,6 +842,9 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
                 if detector_one_point != 0.0 and detector_two_point != 0.0:
                     converted_point_one = -math.log(1 - detector_one_point)
                     converted_point_two = -math.log(1 - detector_two_point)
+                    # Use conversion factor
+                    converted_point_one = convert_to_raw_luminosity(11.245, 20.8, converted_point_one)
+                    converted_point_two = convert_to_raw_luminosity(11.245, 20.8, converted_point_two)
                     ratio = converted_point_one / converted_point_two
                     luminosity_ratio.append(ratio)
                     length = block_length.get(run)[block][bcid]
