@@ -516,6 +516,8 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
                     detector_two_avg += detector_two_point
                     two_count += 1
                 else:
+                    print("         RUN:     " + str(run) + "                    ENDt")
+                    print(all_detector_one_data.get(run)[block][bcid])
                     detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid])
                     detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid])
                     detector_one_avg += detector_one_point
