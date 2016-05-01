@@ -494,7 +494,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     # Get average value of the rate for each luminosity block
     temp_detector_one = copy.deepcopy(all_detector_one_data)
     temp_detector_two = copy.deepcopy(all_detector_two_data)
-    print(sorted(all_detector_one_data.keys()))
+    # print(sorted(all_detector_one_data.keys()))
     for run in sorted(all_detector_one_data.keys()):
         block_count = 0
         for block in range(len(all_detector_one_data.get(run)) - 1):
@@ -508,13 +508,14 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
             for bcid in range(len(all_detector_one_data.get(run)[block])):
                 # Gets the previous BCID luminosity to subtract as the background
                 if run == "286282":
+                    print("Run 286282 Going")
                     detector_one_point_background = all_detector_one_data.get(run)[block][bcid - 1]
                     detector_two_point_background = all_detector_two_data.get(run)[block][bcid - 1]
-                    print("BCID [N-1]: " + str(detector_one_point_background))
-                    print("BCID [N]: " + str(all_detector_one_data.get(run)[block][bcid]))
+                    # print("BCID [N-1]: " + str(detector_one_point_background))
+                    # print("BCID [N]: " + str(all_detector_one_data.get(run)[block][bcid]))
                     detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid]) \
                                          + math.log(1 - detector_one_point_background)
-                    print("Detector 1 Point: " + str(detector_one_point))
+                    # print("Detector 1 Point: " + str(detector_one_point))
                     detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid]) \
                                          + math.log(1 - detector_two_point_background)
                     detector_one_avg += detector_one_point
@@ -522,8 +523,8 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
                     detector_two_avg += detector_two_point
                     two_count += 1
                 else:
-                    print("         RUN:     " + str(run) + "                    ENDt")
-                    print(all_detector_one_data.get(run)[block][bcid])
+                    #print("         RUN:     " + str(run) + "                    END")
+                    #print(all_detector_one_data.get(run)[block][bcid])
                     detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid])
                     detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid])
                     detector_one_avg += detector_one_point
@@ -553,7 +554,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
                 detector_one_point = all_detector_one_data.get(run)[block][bcid]
                 detector_two_point = all_detector_two_data.get(run)[block][bcid]
                 # Check if the blocks are zero
-                if detector_one_point != 0.0 and detector_two_point != 0.0:
+                if detector_one_point != 0.0 or detector_two_point != 0.0:
                     ratio = detector_one_point / detector_two_point
                     luminosity_ratio.append(ratio)
                     lumi_blocks.append(block_count1)
@@ -567,6 +568,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     # create graph
     graph = Graph(len(lumi_blocks))
     for i, (xx, yy) in enumerate(zip(lumi_blocks, luminosity_ratio)):
+        print (xx, yy)
         graph.SetPoint(i, float(xx), float(yy))
 
     # set visual attributes
@@ -575,7 +577,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
     graph.xaxis.SetRangeUser(0, max(lumi_blocks))
-    graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
+    graph.yaxis.SetRangeUser(min(luminosity_ratio), 5)
     # graph.yaxis.SetRangeUser(-15, 15)
 
     # plot with ROOT
@@ -585,7 +587,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     # Draw lines for different runs
     run_length = 0
     for run in sorted(all_detector_one_data.keys()):
-        print("Length of Run " + str(run) + ": " + str(len(all_detector_one_data.get(run))))
+        #print("Length of Run " + str(run) + ": " + str(len(all_detector_one_data.get(run))))
         run_length += len(all_detector_one_data.get(run))
         line = ROOT.TLine(run_length, min(luminosity_ratio),
                           run_length, max(luminosity_ratio))
