@@ -508,16 +508,16 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
             for bcid in range(len(all_detector_one_data.get(run)[block])):
                 # Gets the previous BCID luminosity to subtract as the background
                 if run == "286282":
-                    print("Run 286282 Going")
                     detector_one_point_background = all_detector_one_data.get(run)[block][bcid - 1]
                     detector_two_point_background = all_detector_two_data.get(run)[block][bcid - 1]
-                    # print("BCID [N-1]: " + str(detector_one_point_background))
-                    # print("BCID [N]: " + str(all_detector_one_data.get(run)[block][bcid]))
+                    print("BCID [N-1]: " + str(detector_one_point_background))
+                    print("BCID [N]: " + str(all_detector_one_data.get(run)[block][bcid]))
                     detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid]) \
                                          + math.log(1 - detector_one_point_background)
-                    # print("Detector 1 Point: " + str(detector_one_point))
+                    print("Detector 1 Point: " + str(detector_one_point))
                     detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid]) \
                                          + math.log(1 - detector_two_point_background)
+                    print("Detector 2 Point: " + str(detector_two_point))
                     detector_one_avg += detector_one_point
                     one_count += 1
                     detector_two_avg += detector_two_point
@@ -534,6 +534,8 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
             if one_count != 0:
                 detector_one_avg = detector_one_avg / one_count
                 detector_two_avg = detector_two_avg / two_count
+                if run == "286282":
+                    print("One Average: " + str(detector_one_avg))
                 temp_detector_one.get(run)[block_count - 1].append(detector_one_avg)
                 temp_detector_two.get(run)[block_count - 1].append(detector_two_avg)
         # Remove the last luminosity block from each run, the one that generally spikes
@@ -558,6 +560,12 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
                     ratio = detector_one_point / detector_two_point
                     luminosity_ratio.append(ratio)
                     lumi_blocks.append(block_count1)
+                else:
+                    print("Run", str(run), " Block:", str(block), "One:", str(detector_one_point),
+                          "Two:", str(detector_two_point))
+
+    print("Length lumi_blocks: " + str(len(lumi_blocks)))
+    print("length lumi_ratio: " + str((len(luminosity_ratio))))
 
     # Get percentage difference based off the first block and BCID
     first_point = luminosity_ratio[0]
@@ -568,7 +576,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     # create graph
     graph = Graph(len(lumi_blocks))
     for i, (xx, yy) in enumerate(zip(lumi_blocks, luminosity_ratio)):
-        print (xx, yy)
+        #print (xx, yy)
         graph.SetPoint(i, float(xx), float(yy))
 
     # set visual attributes
