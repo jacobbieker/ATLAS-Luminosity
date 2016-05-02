@@ -480,7 +480,7 @@ def plot_bcid_percent_luminosity_ratio(detector_one_data, detector_two_data, sty
 
 
 # Functions with all the runs
-def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data, style, name):
+def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data, background_list, style, name):
     '''
 
     :param all_detector_one_data: A dictionary of the run name to a list of lists of luminosity blocks
@@ -616,7 +616,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
 
 
 def plot_multiple_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data, all_detector_three_data,
-                                             style, name):
+                                             background_list, style, name):
     '''
 
     :param all_detector_one_data: A dictionary of the run name to a list of lists of luminosity blocks
