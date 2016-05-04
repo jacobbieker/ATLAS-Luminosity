@@ -480,7 +480,7 @@ def plot_bcid_percent_luminosity_ratio(detector_one_data, detector_two_data, sty
 
 
 # Functions with all the runs
-def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data, background_list, style, name):
+def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data, background_list, status_data, style, name):
     '''
 
     :param all_detector_one_data: A dictionary of the run name to a list of lists of luminosity blocks
@@ -497,6 +497,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     # print(sorted(all_detector_one_data.keys()))
     for run in sorted(all_detector_one_data.keys()):
         block_count = 0
+        print"Starting run", run
         for block in range(len(all_detector_one_data.get(run)) - 1):
             del temp_detector_one.get(run)[block][:]
             del temp_detector_two.get(run)[block][:]
@@ -507,11 +508,11 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
             two_count = 0
             for bcid in range(len(all_detector_one_data.get(run)[block])):
                 # Gets the previous BCID luminosity to subtract as the background
-                if run == "286282":
+                if run in background_list:
                     detector_one_point_background = all_detector_one_data.get(run)[block][bcid - 1]
                     detector_two_point_background = all_detector_two_data.get(run)[block][bcid - 1]
-                    print("BCID [N-1]: " + str(detector_one_point_background))
-                    print("BCID [N]: " + str(all_detector_one_data.get(run)[block][bcid]))
+                    print("BCID [N-1] Stability: " + str(all_detector_one_data.get(run)[block][bcid - 1]))
+                    print("BCID [N] Stability: " + str(all_detector_one_data.get(run)[block][bcid - 1]))
                     detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid]) \
                                          + math.log(1 - detector_one_point_background)
                     print("Detector 1 Point: " + str(detector_one_point))
@@ -525,12 +526,15 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
                 else:
                     #print("         RUN:     " + str(run) + "                    END")
                     #print(all_detector_one_data.get(run)[block][bcid])
-                    detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid])
-                    detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid])
-                    detector_one_avg += detector_one_point
-                    one_count += 1
-                    detector_two_avg += detector_two_point
-                    two_count += 1
+                    # Checking if the status is stable
+                    if all_detector_one_data.get(run)[block][bcid] > 0.0 and all_detector_two_data.get(run)[block][bcid] > 0.0\
+                            and status_data.get(run)[block][bcid] > 0.0:
+                        detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid])
+                        detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid])
+                        detector_one_avg += detector_one_point
+                        one_count += 1
+                        detector_two_avg += detector_two_point
+                        two_count += 1
             if one_count != 0:
                 detector_one_avg = detector_one_avg / one_count
                 detector_two_avg = detector_two_avg / two_count
