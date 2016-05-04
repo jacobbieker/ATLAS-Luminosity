@@ -509,10 +509,13 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
             for bcid in range(len(all_detector_one_data.get(run)[block])):
                 # Gets the previous BCID luminosity to subtract as the background
                 if run in background_list:
-                    detector_one_point_background = all_detector_one_data.get(run)[block][bcid - 1]
-                    detector_two_point_background = all_detector_two_data.get(run)[block][bcid - 1]
-                    print("BCID [N-1] Stability: " + str(all_detector_one_data.get(run)[block][bcid - 1]))
-                    print("BCID [N] Stability: " + str(all_detector_one_data.get(run)[block][bcid - 1]))
+                    if status_data.get(run)[block][bcid - 1] <= 0.0:
+                        detector_one_point_background = all_detector_one_data.get(run)[block][bcid - 1]
+                        detector_two_point_background = all_detector_two_data.get(run)[block][bcid - 1]
+                        print("BCID [N-1] Stability: " + str(status_data.get(run)[block][bcid - 1]))
+                    else:
+                        print("No empty BCID to subtract background from")
+                    print("BCID [N] Stability: " + str(status_data.get(run)[block][bcid]))
                     detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid]) \
                                          + math.log(1 - detector_one_point_background)
                     print("Detector 1 Point: " + str(detector_one_point))

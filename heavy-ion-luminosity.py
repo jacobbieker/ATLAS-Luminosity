@@ -176,7 +176,7 @@ for file_name in data_list:
     master_status[display_name] = luminosity_status
 
 # list of runs to subtract background on (currently just subtracting the previous not stable BCID
-background_list = [""]
+background_list = ["286282"]
 print"Made it to Background list"
     # Actually plot the luminosity ratios
    # luminosity_plotting.plot_raw_detector_vs_detector(lucid_event_or_bi1, bcm_v_event_or1, 'ATLAS', str(display_name) + ' LUCID vs BCM V')
@@ -213,32 +213,31 @@ luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi, 
                                                     'LUCID BI / BCM H')
 
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi_a, master_luminosity_bcm_v_a,
-                                                    background_list, 'ATLAS', master_status,
+                                                    background_list, master_status, 'ATLAS',
                                                     'LUCID BI A / BCM V A')
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi_c, master_luminosity_bcm_h_c,
-                                                    background_list,'ATLAS', master_status,
+                                                    background_list, master_status,'ATLAS',
                                                     'LUCID BI C/ BCM H C')
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi_c, master_luminosity_bcm_v_c,
-                                                    background_list,'ATLAS', master_status,
+                                                    background_list, master_status, 'ATLAS',
                                                     'LUCID BI C/ BCM V C')
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi_a, master_luminosity_bcm_h_a,
-                                                    background_list,'ATLAS', master_status,
+                                                    background_list, master_status, 'ATLAS',
                                                     'LUCID BI A/ BCM H A')
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi_a, master_luminosity_lucid_bi_c,
-                                                    background_list,'ATLAS', master_status,
+                                                    background_list, master_status, 'ATLAS',
                                                     'LUCID BI A/ LUCID BI C')
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_bcm_h_a, master_luminosity_bcm_h_c,
-                                                    background_list,'ATLAS', master_status,
+                                                    background_list, master_status, 'ATLAS',
                                                     'BCM H A / BCM H C')
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_bcm_v_a, master_luminosity_bcm_v_c,
-                                                    background_list,'ATLAS', master_status,
+                                                    background_list, master_status, 'ATLAS',
                                                     'BCM V A / BCM V C')
 luminosity_plotting.plot_multiple_all_luminosity_block_ratio(master_luminosity_lucid_bi, master_luminosity_bcm_v,
-                                                             master_luminosity_bcm_h, background_list,'ATLAS',
-                                                             master_status,
-                                                             'LUCID BI /BCM V & LUCID BI / BCM H')
+                                                             master_luminosity_bcm_h, background_list, master_status,
+                                                             'ATLAS', 'LUCID BI /BCM V & LUCID BI / BCM H')
 
 luminosity_plotting.plot_all_integrated_luminosity(master_luminosity_lucid_bi, master_luminosity_bcm_v,
-                                                   master_lumi_block_length, 'ATLAS', master_status,
+                                                   master_lumi_block_length, master_status, 'ATLAS',
                                                    'LUCID BI vs BCM V Integrated Ratio')
 
