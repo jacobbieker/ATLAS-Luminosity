@@ -114,8 +114,6 @@ for file_name in data_list:
     count_bunches = 0
     for block in range(len(luminosity_block)):
         for bcid in range(3564):
-            print "Block", block
-            print"New BCID", bcid
             # Convert to simple luminosity plot, to try to get smooth drop off
             if luminosity_block_stable[block] > 0.0: #and status[block][bcid] > 0.0:
                 if lucid_event_or_bi[block][bcid] > 0.0 and bcm_h_event_or[block][bcid] > 0.0 and bcm_v_event_or[block][bcid] > 0.0 and bcm_v_event_or_a[block][bcid] > 0.0 and bcm_v_event_or_c[block][bcid] > 0.0 and bcm_h_event_or_a[block][bcid] > 0.0 and bcm_h_event_or_c[block][bcid] > 0.0 and lucid_event_or_bi_c[block][bcid] > 0.0 and lucid_event_or_bi_a[block][bcid] > 0.0:
@@ -141,7 +139,6 @@ for file_name in data_list:
                     bcm_v_event_or1_c[block].append(bcm_v_c)
                     luminosity_status[block].append(status_lum)
                     if status[block][bcid] > 0.0:
-                        print"Adding status 1 block"
                         block_length1 = end_time[block] - start_time[block]
                         block_length[block].append(block_length1)
                         count_bunches += 1

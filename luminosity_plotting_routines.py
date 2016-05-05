@@ -532,6 +532,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
                     # Checking if the status is stable
                     if all_detector_one_data.get(run)[block][bcid] > 0.0 and all_detector_two_data.get(run)[block][bcid] > 0.0\
                             and status_data.get(run)[block][bcid] > 0.0:
+                        print("Value of Block, BCID: " + str(block) + " " + str(bcid) + " " + str(all_detector_one_data.get(run)[block][bcid]))
                         detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid])
                         detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid])
                         detector_one_avg += detector_one_point
@@ -591,8 +592,8 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     graph.markercolor = 'blue'
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
-    graph.xaxis.SetRangeUser(0, max(lumi_blocks))
-    graph.yaxis.SetRangeUser(min(luminosity_ratio), 5)
+    graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
+    graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
     # graph.yaxis.SetRangeUser(-15, 15)
 
     # plot with ROOT
