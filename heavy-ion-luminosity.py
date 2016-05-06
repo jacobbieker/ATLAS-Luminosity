@@ -208,22 +208,25 @@ luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi, 
                                                     background_list, master_status,
                                                     'ATLAS',
                                                     'LUCID BI / BCM H')
-
+'''
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi_a, master_luminosity_bcm_v_a,
                                                     background_list, master_status, 'ATLAS',
                                                     'LUCID BI A / BCM V A')
+'''
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi_c, master_luminosity_bcm_h_c,
                                                     background_list, master_status,'ATLAS',
                                                     'LUCID BI C/ BCM H C')
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi_c, master_luminosity_bcm_v_c,
                                                     background_list, master_status, 'ATLAS',
                                                     'LUCID BI C/ BCM V C')
+
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi_a, master_luminosity_bcm_h_a,
                                                     background_list, master_status, 'ATLAS',
                                                     'LUCID BI A/ BCM H A')
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi_a, master_luminosity_lucid_bi_c,
                                                     background_list, master_status, 'ATLAS',
                                                     'LUCID BI A/ LUCID BI C')
+
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_bcm_h_a, master_luminosity_bcm_h_c,
                                                     background_list, master_status, 'ATLAS',
                                                     'BCM H A / BCM H C')

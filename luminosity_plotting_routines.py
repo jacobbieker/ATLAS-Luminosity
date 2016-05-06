@@ -798,7 +798,7 @@ def plot_multiple_all_luminosity_block_ratio(all_detector_one_data, all_detector
     wait(True)
 
 
-def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data, block_length, style, name):
+def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data, block_length, bcid_status, style, name):
     '''
     Take all the luminosity ratio for each luminosity block and multiply by the time to get the integrated luminosity
     :param all_detector_one_data: A dictionary of the run name to a list of lists of luminosity blocks
@@ -825,12 +825,13 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
             detector_two_avg = 0
             two_count = 0
             for bcid in range(len(all_detector_one_data.get(run)[block])):
-                detector_one_point = all_detector_one_data.get(run)[block][bcid]
-                detector_two_point = all_detector_two_data.get(run)[block][bcid]
-                detector_one_avg += detector_one_point
-                one_count += 1
-                detector_two_avg += detector_two_point
-                two_count += 1
+                if bcid_status.get(run)[block][bcid] > 0.0:
+                    detector_one_point = all_detector_one_data.get(run)[block][bcid]
+                    detector_two_point = all_detector_two_data.get(run)[block][bcid]
+                    detector_one_avg += detector_one_point
+                    one_count += 1
+                    detector_two_avg += detector_two_point
+                    two_count += 1
             if one_count != 0:
                 detector_one_avg = detector_one_avg / one_count
                 detector_two_avg = detector_two_avg / two_count
