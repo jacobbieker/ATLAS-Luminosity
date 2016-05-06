@@ -238,6 +238,7 @@ luminosity_plotting.plot_multiple_all_luminosity_block_ratio(master_luminosity_l
                                                              'ATLAS', 'LUCID BI /BCM V & LUCID BI / BCM H')
 
 luminosity_plotting.plot_all_integrated_luminosity(master_luminosity_lucid_bi, master_luminosity_bcm_v,
+                                                   master_luminosity_bcm_h,
                                                    master_lumi_block_length, master_status, 'ATLAS',
                                                    'LUCID BI vs BCM V Integrated Ratio')
 
