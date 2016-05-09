@@ -515,22 +515,23 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
                         print("BCID [N-1] Stability: " + str(status_data.get(run)[block][bcid - 1]))
                     else:
                         print("No empty BCID to subtract background from")
-                    print("BCID [N] Stability: " + str(status_data.get(run)[block][bcid]))
-                    detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid]) \
-                                         + math.log(1 - detector_one_point_background)
-                    print("Detector 1 Point: " + str(detector_one_point))
-                    detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid]) \
-                                         + math.log(1 - detector_two_point_background)
-                    print("Detector 2 Point: " + str(detector_two_point))
-                    detector_one_avg += detector_one_point
-                    one_count += 1
-                    detector_two_avg += detector_two_point
-                    two_count += 1
+                    if all_detector_one_data.get(run)[block][bcid] < 1 and all_detector_two_data.get(run)[block][bcid] < 1:
+                        print("BCID [N] Stability: " + str(status_data.get(run)[block][bcid]))
+                        detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid]) \
+                                             + math.log(1 - detector_one_point_background)
+                        print("Detector 1 Point: " + str(detector_one_point))
+                        detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid]) \
+                                             + math.log(1 - detector_two_point_background)
+                        print("Detector 2 Point: " + str(detector_two_point))
+                        detector_one_avg += detector_one_point
+                        one_count += 1
+                        detector_two_avg += detector_two_point
+                        two_count += 1
                 else:
                     #print("         RUN:     " + str(run) + "                    END")
                     #print(all_detector_one_data.get(run)[block][bcid])
                     # Checking if the status is stable
-                    if all_detector_one_data.get(run)[block][bcid] > 0.0 and all_detector_two_data.get(run)[block][bcid] > 0.0\
+                    if 1 > all_detector_one_data.get(run)[block][bcid] > 0.0 and 1 > all_detector_two_data.get(run)[block][bcid] > 0.0\
                             and status_data.get(run)[block][bcid] > 0.0:
                         #print("Value of Block, BCID: " + str(block) + " " + str(bcid) + " " + str(all_detector_one_data.get(run)[block][bcid]))
                         detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid])
