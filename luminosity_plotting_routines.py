@@ -532,7 +532,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
                     # Checking if the status is stable
                     if all_detector_one_data.get(run)[block][bcid] > 0.0 and all_detector_two_data.get(run)[block][bcid] > 0.0\
                             and status_data.get(run)[block][bcid] > 0.0:
-                        print("Value of Block, BCID: " + str(block) + " " + str(bcid) + " " + str(all_detector_one_data.get(run)[block][bcid]))
+                        #print("Value of Block, BCID: " + str(block) + " " + str(bcid) + " " + str(all_detector_one_data.get(run)[block][bcid]))
                         detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid])
                         detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid])
                         detector_one_avg += detector_one_point
@@ -798,7 +798,8 @@ def plot_multiple_all_luminosity_block_ratio(all_detector_one_data, all_detector
     wait(True)
 
 
-def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data, all_detector_three_data, block_length, bcid_status, style, name):
+def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data, all_detector_three_data, block_length,
+                                   bcid_status, background_list, style, name):
     '''
     Take all the luminosity ratio for each luminosity block and multiply by the time to get the integrated luminosity
     :param all_detector_one_data: A dictionary of the run name to a list of lists of luminosity blocks
@@ -829,13 +830,40 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
             detector_three_avg = 0
             three_count = 0
             for bcid in range(len(all_detector_one_data.get(run)[block])):
-                if bcid_status.get(run)[block][bcid] > 0.0:
-                    detector_one_point = all_detector_one_data.get(run)[block][bcid]
-                    detector_two_point = all_detector_two_data.get(run)[block][bcid]
+                # Gets the previous BCID luminosity to subtract as the background
+                if run in background_list:
+                    if bcid_status.get(run)[block][bcid - 1] <= 0.0:
+                        detector_one_point_background = all_detector_one_data.get(run)[block][bcid - 1]
+                        detector_two_point_background = all_detector_two_data.get(run)[block][bcid - 1]
+                        detector_three_point_background = all_detector_three_data.get(run)[block][bcid - 1]
+                        #print("BCID [N-1] Stability: " + str(bcid_status.get(run)[block][bcid - 1]))
+                    else:
+                        print("No empty BCID to subtract background from")
+                    #print("BCID [N] Stability: " + str(bcid_status.get(run)[block][bcid]))
+                    detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid]) \
+                                         + math.log(1 - detector_one_point_background)
+                    #print("Detector 1 Point: " + str(detector_one_point))
+                    detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid]) \
+                                         + math.log(1 - detector_two_point_background)
+                    #print("Detector 2 Point: " + str(detector_two_point))
+                    detector_three_point = -math.log(1 - all_detector_three_data.get(run)[block][bcid]) \
+                                         + math.log(1 - detector_three_point_background)
                     detector_one_avg += detector_one_point
                     one_count += 1
                     detector_two_avg += detector_two_point
                     two_count += 1
+                    detector_three_avg += detector_three_point
+                    three_count += 1
+                if bcid_status.get(run)[block][bcid] > 0.0:
+                    detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid])
+                    detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid])
+                    detector_three_point = -math.log(1 - all_detector_three_data.get(run)[block][bcid])
+                    detector_one_avg += detector_one_point
+                    one_count += 1
+                    detector_two_avg += detector_two_point
+                    two_count += 1
+                    detector_three_avg += detector_three_point
+                    three_count += 1
             if one_count != 0:
                 detector_one_avg = detector_one_avg / one_count
                 detector_two_avg = detector_two_avg / two_count
@@ -871,13 +899,10 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
                 detector_two_point = all_detector_two_data.get(run)[block][bcid]
                 detector_three_point = all_detector_three_data.get(run)[block][bcid]
                 if detector_one_point != 0.0 and detector_two_point != 0.0 and detector_three_point != 0.0:
-                    converted_point_one = -math.log(1 - detector_one_point)
-                    converted_point_two = -math.log(1 - detector_two_point)
-                    converted_point_three = -math.log(1 - detector_three_point)
                     # Use conversion factor
-                    converted_point_one = convert_to_raw_luminosity(11.245, 20.8, converted_point_one)
-                    converted_point_two = convert_to_raw_luminosity(11.245, 20.8, converted_point_two)
-                    converted_point_three = convert_to_raw_luminosity(11.245, 20.8, converted_point_three)
+                    converted_point_one = convert_to_raw_luminosity(11.245, 20.8, detector_one_point)
+                    converted_point_two = convert_to_raw_luminosity(11.245, 20.8, detector_two_point)
+                    converted_point_three = convert_to_raw_luminosity(11.245, 20.8, detector_three_point)
                     ratio_one_two = converted_point_one / converted_point_two
                     ratio_one_three = converted_point_one / converted_point_three
                     luminosity_ratio_two.append(ratio_one_two)
@@ -906,13 +931,17 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
 
     # set visual attributes
 
+    # Set temp list for the min and max functions
+    luminosity_ratio = luminosity_ratio_two + luminosity_ratio_three
+    integrated_luminosity = integrated_luminosity_one
+
     graph.markercolor = 'blue'
     graph.yaxis.SetTitle("Luminosity Ratio [Percent]")
     graph.xaxis.SetTitle("Luminosity [Integrated]")
-    graph.yaxis.SetRangeUser(min(luminosity_ratio_two, luminosity_ratio_three),
-                             max(luminosity_ratio_two, luminosity_ratio_three))
-    graph.xaxis.SetRangeUser(min(integrated_luminosity_two, integrated_luminosity_three),
-                             max(integrated_luminosity_two, integrated_luminosity_three))
+    graph.yaxis.SetRangeUser(min(luminosity_ratio),
+                             max(luminosity_ratio))
+    graph.xaxis.SetRangeUser(min(integrated_luminosity),
+                             max(integrated_luminosity))
 
     # plot with ROOT
     canvas = Canvas()
@@ -937,10 +966,10 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
     run_length = 0
     for run in sorted(all_detector_one_data.keys()):
         run_length += len(all_detector_one_data.get(run))
-        line = ROOT.TLine(run_length, min(luminosity_ratio_two, luminosity_ratio_three),
-                          run_length, max(luminosity_ratio_two, luminosity_ratio_three))
+        line = ROOT.TLine(run_length, min(luminosity_ratio),
+                          run_length, max(luminosity_ratio))
         line.Draw()
-        line_label = ROOT.TText(run_length - 30, max(luminosity_ratio_two, luminosity_ratio_three) - 1.5, str(run))
+        line_label = ROOT.TText(run_length - 30, max(luminosity_ratio) - 1.5, str(run))
         line_label.SetTextAngle(90)
         line_label.SetTextSize(18)
         line_label.SetTextFont(43)
