@@ -854,6 +854,7 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
                         three_count += 1
                     else:
                         print("No empty BCID to subtract background from")
+                        '''
                         print("BCID [N] Stability: " + str(bcid_status.get(run)[block][bcid]))
                         detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid]) #\
                                              #+ math.log(1 - detector_one_point_background)
@@ -869,6 +870,7 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
                         two_count += 1
                         detector_three_avg += detector_three_point
                         three_count += 1
+                        '''
                 if bcid_status.get(run)[block][bcid] > 0.0:
                     detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid])
                     detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid])
@@ -988,10 +990,10 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
     print"Integrated Luminosity length: ",len(integrated_luminosity)
     for run in sorted(all_detector_one_data.keys()):
         print str(run)
-        num_run += 1
-        total_length += len(run_length_dict[run])
+        total_length += run_length_dict[run]
         print"Total Length: ",total_length
-        run_length += integrated_luminosity_one[total_length - num_run]
+        run_length = integrated_luminosity_one[total_length - 1]
+        print"Run Length", run_length
         line = ROOT.TLine(run_length, min(luminosity_ratio),
                           run_length, max(luminosity_ratio))
         line.Draw()
@@ -1000,7 +1002,7 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
         line_label.SetTextSize(18)
         line_label.SetTextFont(43)
         line_label.Draw()
-    label = ROOT.TText(0.7, 1.0, str(name))
+    label = ROOT.TText(0.7, 0.9, str(name))
     label.SetTextFont(43)
     label.SetTextSize(25)
     label.SetNDC()
