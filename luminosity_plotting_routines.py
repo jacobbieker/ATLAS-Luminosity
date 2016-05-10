@@ -594,8 +594,8 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     graph.xaxis.SetTitle("Luminosity Block")
     graph.yaxis.SetTitle("Luminosity [Average Percent Ratio]")
     graph.xaxis.SetRangeUser(min(lumi_blocks), max(lumi_blocks))
-    graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
-    # graph.yaxis.SetRangeUser(-15, 15)
+    #graph.yaxis.SetRangeUser(min(luminosity_ratio), max(luminosity_ratio))
+    graph.yaxis.SetRangeUser(-5, 5)
 
     # plot with ROOT
     canvas = Canvas()
@@ -606,10 +606,10 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     for run in sorted(all_detector_one_data.keys()):
         #print("Length of Run " + str(run) + ": " + str(len(all_detector_one_data.get(run))))
         run_length += len(all_detector_one_data.get(run))
-        line = ROOT.TLine(run_length, min(luminosity_ratio),
-                          run_length, max(luminosity_ratio))
+        line = ROOT.TLine(run_length, -5, #min(luminosity_ratio),
+                          run_length, 5,)  # max(luminosity_ratio))
         line.Draw()
-        line_label = ROOT.TText(run_length - 30, max(luminosity_ratio) - 1.5, str(run))
+        line_label = ROOT.TText(run_length - 30, 5 -1.5, str(run)) #max(luminosity_ratio) - 1.5, str(run))
         line_label.SetTextAngle(90)
         line_label.SetTextSize(18)
         line_label.SetTextFont(43)
