@@ -17,6 +17,84 @@ def convert_to_raw_luminosity(f_rev, sigma_vis, mu_vis):
     return converted
 
 
+def create_graph(detector_one_data, other_data, style, xname, yname, title, colors, vs_block, **kwargs):
+
+    # Set ROOT graph style
+    set_style(str(style))
+
+    num_of_points = len(other_data)
+
+    # Get percentage difference based off the first block and BCID
+    first_point = detector_one_data[0]
+
+    for dataset in other_data:
+        for index in range(other_data[dataset]):
+            other_data[dataset][index] = 100 * ((other_data[dataset][index] / first_point) - 1)
+
+    # Set temp list for the min and max functions
+    luminosity_ratio = 0
+    for dataset in other_data:
+        luminosity_ratio += other_data[dataset]
+
+    if vs_block:
+        xaxis_data = kwargs["lumi_block"]
+    else:
+        xaxis_data = detector_one_data
+
+    for index, dataset in enumerate(other_data):
+        # create graph
+        graph = Graph(len(xaxis_data))
+        for i, (xx, yy) in enumerate(zip(xaxis_data, dataset)):
+            graph.SetPoint(i, float(xx), float(yy))
+
+        # set visual attributes
+
+        graph.markercolor = colors[index]
+        if index == 1:
+            graph.yaxis.SetTitle(yname)
+            graph.xaxis.SetTitle(xname)
+            graph.yaxis.SetRangeUser(min(luminosity_ratio),
+                                     max(luminosity_ratio))
+            graph.xaxis.SetRangeUser(min(xaxis_data),
+                                     max(xaxis_data))
+
+            # plot with ROOT
+            canvas = Canvas()
+            graph.Draw("AP")
+            canvas.Update()
+        else:
+            canvas = Canvas()
+            graph.draw("P")
+            canvas.Update()
+
+    # Draw lines for different runs
+    run_length = 0
+    total_length = 0
+    num_run = 0
+    for run in sorted(detector_one_data.keys()):
+        print str(run)
+        total_length += run_length_dict[run]
+        print"Total Length: ",total_length
+        run_length = integrated_luminosity_one[total_length - 1]
+        #run_length += len(all_detector_one_data.get(run))
+        print"Run Length", run_length
+        line = ROOT.TLine(run_length, min(luminosity_ratio),
+                          run_length, max(luminosity_ratio))
+        line.Draw()
+        line_label = ROOT.TText(run_length - 30, max(luminosity_ratio) - 1.5, str(run))
+        line_label.SetTextAngle(90)
+        line_label.SetTextSize(18)
+        line_label.SetTextFont(43)
+        line_label.Draw()
+        label = ROOT.TText(0.2, 0.9, str(title))
+        label.SetTextFont(43)
+        label.SetTextSize(25)
+        label.SetNDC()
+        label.Draw()
+        canvas.Modified()
+        canvas.Update()
+        wait(True)
+
 def plot_luminosity_ratio(detector_one_data, detector_two_data, style, run_name):
     '''
 
@@ -802,7 +880,7 @@ def plot_multiple_all_luminosity_block_ratio(all_detector_one_data, all_detector
 
 
 def plot_all_integrated_luminosity(all_detector_one_data, block_length,
-                                   bcid_status, background_list, style, name, **kwargs):
+                                   bcid_status, background_list, style, name, integrated, **kwargs):
     '''
     Take all the luminosity ratio for each luminosity block and multiply by the time to get the integrated luminosity
     :param all_detector_one_data: A dictionary of the run name to a list of lists of luminosity blocks
@@ -857,7 +935,7 @@ def plot_all_integrated_luminosity(all_detector_one_data, block_length,
                                 #print("         RUN:     " + str(run) + "                    END")
                                 #print(all_detector_one_data.get(run)[block][bcid])
                                 # Checking if the status is stable
-                                if 1 > all_detector_one_data.get(run)[block][bcid] > 0.0 and 1 > all_detector_two_data.get(run)[block][bcid] > 0.0 \
+                                if 1 > all_detector_one_data.get(run)[block][bcid] > 0.0 and 1 > detector_data.get(run)[block][bcid] > 0.0 \
                                         and bcid_status.get(run)[block][bcid] > 0.0:
                                     #print("Value of Block, BCID: " + str(block) + " " + str(bcid) + " " + str(all_detector_one_data.get(run)[block][bcid]))
                                     detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid])
@@ -875,125 +953,49 @@ def plot_all_integrated_luminosity(all_detector_one_data, block_length,
                     temp_detector_one[run] = temp_detector_one[run][:-10]
                     temp_detector_two[run] = temp_detector_two[run][:-10]
 
+                if integrated:
+                    integrated_luminosity_one = []
+                    integrated_luminosity_two = []
+                    lumi_blocks = []
+                    luminosity_ratio = []
+                    block_count1 = 0
+                    lumi_total = 0
+                    lumi_total_two = 0
+                    run_length_dict = {}
+                    for run in sorted(all_detector_one_data.keys()):
+                        run_length_dict[run] = 0
+                        for block in range(len(all_detector_one_data.get(run))):
+                            block_count1 += 1
+                            for bcid in range(len(all_detector_one_data.get(run)[block])):
+                                detector_one_point = all_detector_one_data.get(run)[block][bcid]
+                                detector_two_point = detector_data.get(run)[block][bcid]
+                                if detector_one_point != 0.0 and detector_two_point != 0.0:
+                                    # Use conversion factor
+                                    converted_point_one = convert_to_raw_luminosity(11.245, 20.8, detector_one_point)
+                                    converted_point_two = convert_to_raw_luminosity(11.245, 20.8, detector_two_point)
+                                    ratio_one_two = converted_point_one / converted_point_two
+                                    luminosity_ratio.append(ratio_one_two)
+                                    length = block_length.get(run)[block][bcid]
+                                    lumi_total += converted_point_one * length
+                                    lumi_total_two += converted_point_two * length
+                                    integrated_luminosity_one.append(lumi_total)
+                                    integrated_luminosity_two.append(lumi_total_two)
+                                    lumi_blocks.append(block_count1)
+                                    run_length_dict[run] += 1
+                else:
+                    #TODO Add not integration to this part
+                    return 0
+
+
 
     # Set ROOT graph style
     set_style(str(style))
 
-    # Get average value of the rate for each luminosity block
-    temp_detector_one = copy.deepcopy(all_detector_one_data)
-    temp_detector_two = copy.deepcopy(all_detector_two_data)
-    temp_detector_three = copy.deepcopy(all_detector_three_data)
-    for run in sorted(all_detector_one_data.keys()):
-        block_count = 0
-        for block in range(len(all_detector_one_data.get(run)) - 1):
-            del temp_detector_one.get(run)[block][:]
-            del temp_detector_two.get(run)[block][:]
-            del temp_detector_three.get(run)[block][:]
-            block_count += 1
-            detector_one_avg = 0
-            one_count = 0
-            detector_two_avg = 0
-            two_count = 0
-            detector_three_avg = 0
-            three_count = 0
-            for bcid in range(len(all_detector_one_data.get(run)[block])):
-                # Gets the previous BCID luminosity to subtract as the background
-                if run in background_list:
-                    if bcid_status.get(run)[block][bcid - 1] == 0:
-                        detector_one_point_background = all_detector_one_data.get(run)[block][bcid - 1]
-                        detector_two_point_background = all_detector_two_data.get(run)[block][bcid - 1]
-                        detector_three_point_background = all_detector_three_data.get(run)[block][bcid - 1]
-                        #print("BCID [N-1] Stability: " + str(bcid_status.get(run)[block][bcid - 1]))
-                        #print("BCID [N] Stability: " + str(bcid_status.get(run)[block][bcid]))
-                        detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid]) \
-                                             + math.log(1 - detector_one_point_background)
-                        #print("Detector 1 Point: " + str(detector_one_point))
-                        detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid]) \
-                                             + math.log(1 - detector_two_point_background)
-                        #print("Detector 2 Point: " + str(detector_two_point))
-                        detector_three_point = -math.log(1 - all_detector_three_data.get(run)[block][bcid]) \
-                                               + math.log(1 - detector_three_point_background)
-                        detector_one_avg += detector_one_point
-                        one_count += 1
-                        detector_two_avg += detector_two_point
-                        two_count += 1
-                        detector_three_avg += detector_three_point
-                        three_count += 1
-                    else:
-                        print("No empty BCID to subtract background from")
-                if bcid_status.get(run)[block][bcid] > 0.0:
-                    detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid])
-                    detector_two_point = -math.log(1 - all_detector_two_data.get(run)[block][bcid])
-                    detector_three_point = -math.log(1 - all_detector_three_data.get(run)[block][bcid])
-                    detector_one_avg += detector_one_point
-                    one_count += 1
-                    detector_two_avg += detector_two_point
-                    two_count += 1
-                    detector_three_avg += detector_three_point
-                    three_count += 1
-            if one_count != 0:
-                detector_one_avg = detector_one_avg / one_count
-                detector_two_avg = detector_two_avg / two_count
-                detector_three_avg = detector_three_avg / three_count
-                temp_detector_one.get(run)[block_count - 1].append(detector_one_avg)
-                temp_detector_two.get(run)[block_count - 1].append(detector_two_avg)
-                temp_detector_three.get(run)[block_count - 1].append(detector_three_avg)
-        # Remove the last luminosity block from each run, the one that generally spikes
-        temp_detector_one[run] = temp_detector_one[run][:-10]
-        temp_detector_two[run] = temp_detector_two[run][:-10]
-        temp_detector_three[run] = temp_detector_three[run][:-10]
-    # Reassign temp to the original lists
-    all_detector_one_data = temp_detector_one
-    all_detector_two_data = temp_detector_two
-    all_detector_three_data = temp_detector_three
-
-    # Get integrated luminosity of the detectors
-    integrated_luminosity_one = []
-    integrated_luminosity_two = []
-    integrated_luminosity_three = []
-    luminosity_ratio_two = []
-    luminosity_ratio_three = []
-    lumi_blocks = []
-    block_count1 = 0
-    lumi_total = 0
-    lumi_total_two = 0
-    lumi_total_three = 0
-    # To keep track of how long each run actually is when plotting
-    run_length_dict = {}
-    for run in sorted(all_detector_one_data.keys()):
-        run_length_dict[run] = 0
-        for block in range(len(all_detector_one_data.get(run))):
-            block_count1 += 1
-            for bcid in range(len(all_detector_one_data.get(run)[block])):
-                detector_one_point = all_detector_one_data.get(run)[block][bcid]
-                detector_two_point = all_detector_two_data.get(run)[block][bcid]
-                detector_three_point = all_detector_three_data.get(run)[block][bcid]
-                if detector_one_point != 0.0 and detector_two_point != 0.0 and detector_three_point != 0.0:
-                    # Use conversion factor
-                    converted_point_one = convert_to_raw_luminosity(11.245, 20.8, detector_one_point)
-                    converted_point_two = convert_to_raw_luminosity(11.245, 20.8, detector_two_point)
-                    converted_point_three = convert_to_raw_luminosity(11.245, 20.8, detector_three_point)
-                    ratio_one_two = converted_point_one / converted_point_two
-                    ratio_one_three = converted_point_one / converted_point_three
-                    luminosity_ratio_two.append(ratio_one_two)
-                    luminosity_ratio_three.append(ratio_one_three)
-                    length = block_length.get(run)[block][bcid]
-                    lumi_total += converted_point_one * length
-                    lumi_total_two += converted_point_two * length
-                    lumi_total_three += converted_point_three * length
-                    integrated_luminosity_one.append(lumi_total)
-                    integrated_luminosity_two.append(lumi_total_two)
-                    integrated_luminosity_three.append(lumi_total_three)
-                    lumi_blocks.append(block_count1)
-                    run_length_dict[run] += 1
-
     # Get percentage difference based off the first block and BCID
-    first_point = luminosity_ratio_two[0]
-    first_point_three = luminosity_ratio_three[0]
+    first_point = luminosity_ratio[0]
 
     for index in range(len(integrated_luminosity_one)):
         luminosity_ratio_two[index] = 100 * ((luminosity_ratio_two[index] / first_point) - 1)
-        luminosity_ratio_three[index] = 100 * ((luminosity_ratio_three[index] / first_point) - 1)
 
         # Set temp list for the min and max functions
     luminosity_ratio = luminosity_ratio_two + luminosity_ratio_three
