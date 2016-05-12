@@ -18,7 +18,20 @@ def convert_to_raw_luminosity(f_rev, sigma_vis, mu_vis):
 
 
 def create_graph(all_data, detector_one_data, other_data, style, xname, yname, title, colors, vs_block, **kwargs):
-
+    """
+    Create a ROOT graph from the data, either integrated or by luminosity block
+    :param all_data: A copy of all the data, such as from all_detector_one_data
+    :param detector_one_data: The luminosity data, either integrated or not, depending on type of graph
+    :param other_data: List of lists of the same type of data for the other detectors
+    :param style: ROOT graphing style
+    :param xname: X-axis name
+    :param yname: Y-axis name
+    :param title: Title
+    :param colors: list of colors, as long as other_data, giving color to the points
+    :param vs_block: boolean whether the graph is versus time (lumi block) or integrated luminosity
+    :param kwargs: Only used if vs_block is true, gives other data needed
+    :return:
+    """
     # Set ROOT graph style
     set_style(str(style))
 
@@ -27,14 +40,16 @@ def create_graph(all_data, detector_one_data, other_data, style, xname, yname, t
     # Get percentage difference based off the first block and BCID
     first_point = detector_one_data[0]
 
-    for dataset in other_data:
-        for index in range(other_data[dataset]):
-            other_data[dataset][index] = 100 * ((other_data[dataset][index] / first_point) - 1)
+    for dataset in range(len(other_data)):
+        for index in range(len(other_data[dataset])):
+            for value in range(len(other_data[dataset][index])):
+                other_data[dataset][index][value] = 100 * ((other_data[dataset][index][value] / first_point) - 1)
 
     # Set temp list for the min and max functions
     luminosity_ratio = 0
-    for dataset in other_data:
-        luminosity_ratio += other_data[dataset]
+    for dataset in range(len(other_data)):
+        for index in range(len(other_data[dataset])):
+            luminosity_ratio += other_data[dataset][index]
 
     if vs_block:
         xaxis_data = kwargs["lumi_block"]
@@ -892,6 +907,8 @@ def plot_all_integrated_luminosity(all_detector_one_data, block_length,
     '''
 
     # kwargs is a dict of the keyword args passed to the function
+    other_data = []
+    run_length_dict = {}
     for key, value in kwargs.iteritems():
         print "%s = %s" % (key, value)
         print(sorted(all_detector_one_data.keys()))
@@ -962,7 +979,6 @@ def plot_all_integrated_luminosity(all_detector_one_data, block_length,
                     block_count1 = 0
                     lumi_total = 0
                     lumi_total_two = 0
-                    run_length_dict = {}
                     for run in sorted(all_detector_one_data.keys()):
                         run_length_dict[run] = 0
                         for block in range(len(all_detector_one_data.get(run))):
@@ -983,90 +999,11 @@ def plot_all_integrated_luminosity(all_detector_one_data, block_length,
                                     integrated_luminosity_two.append(lumi_total_two)
                                     lumi_blocks.append(block_count1)
                                     run_length_dict[run] += 1
+                        other_data[run] = integrated_luminosity_two
                 else:
                     #TODO Add not integration to this part
                     return 0
 
-
-
-    # Set ROOT graph style
-    set_style(str(style))
-
-    # Get percentage difference based off the first block and BCID
-    first_point = luminosity_ratio[0]
-
-    for index in range(len(integrated_luminosity_one)):
-        luminosity_ratio_two[index] = 100 * ((luminosity_ratio_two[index] / first_point) - 1)
-
-        # Set temp list for the min and max functions
-    luminosity_ratio = luminosity_ratio_two + luminosity_ratio_three
-    integrated_luminosity = integrated_luminosity_one
-    #integrated_luminosity = lumi_blocks
-
-    # create graph
-    #graph = Graph(len(integrated_luminosity_one))
-    graph = Graph(len(integrated_luminosity))
-    for i, (xx, yy) in enumerate(zip(integrated_luminosity, luminosity_ratio_two)):
-        graph.SetPoint(i, float(xx), float(yy))
-
-    # set visual attributes
-
-    graph.markercolor = 'blue'
-    graph.yaxis.SetTitle("Luminosity Ratio [Percent]")
-    graph.xaxis.SetTitle("Luminosity Block")
-    graph.yaxis.SetRangeUser(min(luminosity_ratio),
-                             max(luminosity_ratio))
-    graph.xaxis.SetRangeUser(min(integrated_luminosity),
-                             max(integrated_luminosity))
-
-    # plot with ROOT
-    canvas = Canvas()
-
-    graph.Draw("AP")
-    canvas.Update()
-
-    # add points from detectors 1 and 3
-    # create graph
-    graph1 = Graph(len(integrated_luminosity_one))
-    graph1 = Graph(len(integrated_luminosity))
-    for i, (xx, yy) in enumerate(zip(integrated_luminosity, luminosity_ratio_three)):
-        graph1.SetPoint(i, float(xx), float(yy))
-
-    # set visual attributes
-
-    graph1.linecolor = 'white'  # Hides the lines at this time
-    graph1.markercolor = 'red'
-
-    graph1.Draw("P")
-    canvas.Update()
-    # Draw lines for different runs
-    run_length = 0
-    total_length = 0
-    num_run = 0
-    print"Integrated Luminosity length: ",len(integrated_luminosity)
-    for run in sorted(all_detector_one_data.keys()):
-        print str(run)
-        total_length += run_length_dict[run]
-        print"Total Length: ",total_length
-        run_length = integrated_luminosity_one[total_length - 1]
-        #run_length += len(all_detector_one_data.get(run))
-        print"Run Length", run_length
-        line = ROOT.TLine(run_length, min(luminosity_ratio),
-                          run_length, max(luminosity_ratio))
-        line.Draw()
-        line_label = ROOT.TText(run_length - 30, max(luminosity_ratio) - 1.5, str(run))
-        line_label.SetTextAngle(90)
-        line_label.SetTextSize(18)
-        line_label.SetTextFont(43)
-        line_label.Draw()
-    label = ROOT.TText(0.2, 0.9, str(name))
-    label.SetTextFont(43)
-    label.SetTextSize(25)
-    label.SetNDC()
-    label.Draw()
-    canvas.Modified()
-    canvas.Update()
-    wait(True)
 
 
 def plot_raw_detector_vs_detector(detector_one_data, detector_two_data, style, name):
