@@ -893,8 +893,8 @@ def plot_multiple_all_luminosity_block_ratio(all_detector_one_data, all_detector
     wait(True)
 
 
-def plot_all_integrated_luminosity(all_detector_one_data, block_length,
-                                   bcid_status, background_list, style, name, integrated, **kwargs):
+def plot_all_luminosity(all_detector_one_data, block_length,
+                        bcid_status, background_list, style, name, integrated, **kwargs):
     '''
     Take all the luminosity ratio for each luminosity block and multiply by the time to get the integrated luminosity
     :param all_detector_one_data: A dictionary of the run name to a list of lists of luminosity blocks
@@ -1006,8 +1006,27 @@ def plot_all_integrated_luminosity(all_detector_one_data, block_length,
                                  xname="Luminosity Block", yname="Luminosity Ratio [Percent]",
                                  title=name, colors=["blue", "red"], vs_block=True, lumi_blocks=lumi_blocks)
                 else:
-                    #TODO Add not integration to this part
-                    return 0
+                    luminosity_ratio = []
+                    lumi_blocks = []
+                    block_count1 = 0
+                    for run in sorted(all_detector_one_data.keys()):
+                        for block in range(len(all_detector_one_data.get(run))):
+                            block_count1 += 1
+                            for bcid in range(len(all_detector_one_data.get(run)[block])):
+                                detector_one_point = all_detector_one_data.get(run)[block][bcid]
+                                detector_two_point = detector_data.get(run)[block][bcid]
+                                # Check if the blocks are zero
+                                if detector_one_point != 0.0 or detector_two_point != 0.0:
+                                    ratio = detector_one_point / detector_two_point
+                                    luminosity_ratio.append(ratio)
+                                    lumi_blocks.append(block_count1)
+                                else:
+                                    print("Run", str(run), " Block:", str(block), "One:", str(detector_one_point),
+                                          "Two:", str(detector_two_point))
+                        other_data[run] = luminosity_ratio
+                    create_graph(all_detector_one_data, luminosity_ratio, other_data=other_data, style=style,
+                                 xname="Luminosity Block", yname="Luminosity Ratio [Percent]",
+                                 title=name, colors=["blue", "red"], vs_block=True, lumi_blocks=lumi_blocks)
 
 
 
