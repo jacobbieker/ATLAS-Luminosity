@@ -17,7 +17,7 @@ def convert_to_raw_luminosity(f_rev, sigma_vis, mu_vis):
     return converted
 
 
-def create_graph(detector_one_data, other_data, style, xname, yname, title, colors, vs_block, **kwargs):
+def create_graph(all_data, detector_one_data, other_data, style, xname, yname, title, colors, vs_block, **kwargs):
 
     # Set ROOT graph style
     set_style(str(style))
@@ -71,12 +71,13 @@ def create_graph(detector_one_data, other_data, style, xname, yname, title, colo
     run_length = 0
     total_length = 0
     num_run = 0
-    for run in sorted(detector_one_data.keys()):
+    for run in sorted(all_data.keys()):
         print str(run)
-        total_length += run_length_dict[run]
-        print"Total Length: ",total_length
-        run_length = integrated_luminosity_one[total_length - 1]
-        #run_length += len(all_detector_one_data.get(run))
+        if vs_block:
+            run_length += len(all_data.get(run))
+        else:
+            total_length += kwargs["run_length"][run]
+            run_length = detector_one_data[total_length - 1]
         print"Run Length", run_length
         line = ROOT.TLine(run_length, min(luminosity_ratio),
                           run_length, max(luminosity_ratio))
