@@ -204,7 +204,7 @@ print"Made it to Background list"
 
 
 # Plotting methods for plotting all the runs
-
+'''
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi, master_luminosity_bcm_h,
                                                     background_list, master_status,
                                                     'ATLAS',
@@ -237,9 +237,9 @@ luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_bcm_v_a, m
 luminosity_plotting.plot_multiple_all_luminosity_block_ratio(master_luminosity_lucid_bi, master_luminosity_bcm_v,
                                                              master_luminosity_bcm_h, background_list, master_status,
                                                              'ATLAS', 'LUCID BI /BCM V & LUCID BI / BCM H')
-
+'''
 luminosity_plotting.plot_all_integrated_luminosity(master_luminosity_lucid_bi, master_luminosity_bcm_v,
                                                    master_luminosity_bcm_h,
                                                    master_lumi_block_length, master_status, background_list, 'ATLAS',
-                                                   'LUCID BI / BCM V \n LUCID BI / BCM H \n Integrated Ratio')
+                                                   'LUCID BI / BCM V LUCID BI / BCM H Integrated Ratio')
 
