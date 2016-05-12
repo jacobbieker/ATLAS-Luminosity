@@ -35,8 +35,6 @@ def create_graph(all_data, detector_one_data, other_data, style, xname, yname, t
     # Set ROOT graph style
     set_style(str(style))
 
-    num_of_points = len(other_data)
-
     # Get percentage difference based off the first block and BCID
     first_point = detector_one_data[0]
 
@@ -1000,6 +998,13 @@ def plot_all_integrated_luminosity(all_detector_one_data, block_length,
                                     lumi_blocks.append(block_count1)
                                     run_length_dict[run] += 1
                         other_data[run] = integrated_luminosity_two
+                    # create the graph
+                    create_graph(all_detector_one_data, integrated_luminosity_one, other_data=other_data, style=style,
+                                 xname="Luminosity [Integrated]", yname="Luminosity Ratio [Percent]",
+                                 title=name, colors=["blue", "red"], vs_block=False, run_length=run_length_dict)
+                    create_graph(all_detector_one_data, integrated_luminosity_one, other_data=other_data, style=style,
+                                 xname="Luminosity Block", yname="Luminosity Ratio [Percent]",
+                                 title=name, colors=["blue", "red"], vs_block=True, lumi_blocks=lumi_blocks)
                 else:
                     #TODO Add not integration to this part
                     return 0
