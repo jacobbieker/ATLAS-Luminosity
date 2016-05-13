@@ -907,128 +907,126 @@ def plot_all_luminosity(all_detector_one_data, block_length,
     # kwargs is a dict of the keyword args passed to the function
     other_data = []
     run_length_dict = {}
-    for key, value in kwargs.iteritems():
-        print "%s = %s" % (key, value)
-        print(sorted(all_detector_one_data.keys()))
-        if key == "vs_data":
-            # Get the data from each detector and get the values needed in comparison to all_detector_one_data
-            for detector_data in value:
-                temp_detector_one = copy.deepcopy(all_detector_one_data)
-                temp_detector_two = copy.deepcopy(detector_data)
-                for run in sorted(all_detector_one_data.keys()):
-                    block_count = 0
-                    for block in range(len(all_detector_one_data.get(run)) - 1):
-                        del temp_detector_one.get(run)[block][:]
-                        del temp_detector_two.get(run)[block][:]
-                        block_count += 1
-                        detector_one_avg = 0
-                        one_count = 0
-                        detector_two_avg = 0
-                        two_count = 0
-                        for bcid in range(len(all_detector_one_data.get(run)[block])):
-                            # Gets the previous BCID luminosity to subtract as the background
-                            if run in background_list:
-                                if bcid_status.get(run)[block][bcid - 1] <= 0.0:
-                                    detector_one_point_background = all_detector_one_data.get(run)[block][bcid - 1]
-                                    detector_two_point_background = detector_data.get(run)[block][bcid - 1]
-                                    #print("BCID [N-1] Stability: " + str(status_data.get(run)[block][bcid - 1]))
-                                else:
-                                    print("No empty BCID to subtract background from")
-                                if all_detector_one_data.get(run)[block][bcid] < 1 and \
-                                    detector_data.get(run)[block][bcid] < 1:
-                                    #print("BCID [N] Stability: " + str(status_data.get(run)[block][bcid]))
-                                    detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid]) \
-                                                         + math.log(1 - detector_one_point_background)
-                                    #print("Detector 1 Point: " + str(detector_one_point))
-                                    detector_two_point = -math.log(1 - detector_data.get(run)[block][bcid]) \
-                                                         + math.log(1 - detector_two_point_background)
-                                    #print("Detector 2 Point: " + str(detector_two_point))
-                                    detector_one_avg += detector_one_point
-                                    one_count += 1
-                                    detector_two_avg += detector_two_point
-                                    two_count += 1
+    if "vs_data" in kwargs:
+        # Get the data from each detector and get the values needed in comparison to all_detector_one_data
+        for detector_data in kwargs["vs_data"]:
+            temp_detector_one = copy.deepcopy(all_detector_one_data)
+            temp_detector_two = copy.deepcopy(detector_data)
+            for run in sorted(all_detector_one_data.keys()):
+                block_count = 0
+                for block in range(len(all_detector_one_data.get(run)) - 1):
+                    del temp_detector_one.get(run)[block][:]
+                    del temp_detector_two.get(run)[block][:]
+                    block_count += 1
+                    detector_one_avg = 0
+                    one_count = 0
+                    detector_two_avg = 0
+                    two_count = 0
+                    for bcid in range(len(all_detector_one_data.get(run)[block])):
+                        # Gets the previous BCID luminosity to subtract as the background
+                        if run in background_list:
+                            if bcid_status.get(run)[block][bcid - 1] <= 0.0:
+                                detector_one_point_background = all_detector_one_data.get(run)[block][bcid - 1]
+                                detector_two_point_background = detector_data.get(run)[block][bcid - 1]
+                                #print("BCID [N-1] Stability: " + str(status_data.get(run)[block][bcid - 1]))
                             else:
-                                #print("         RUN:     " + str(run) + "                    END")
-                                #print(all_detector_one_data.get(run)[block][bcid])
-                                # Checking if the status is stable
-                                if 1 > all_detector_one_data.get(run)[block][bcid] > 0.0 and 1 > detector_data.get(run)[block][bcid] > 0.0 \
-                                        and bcid_status.get(run)[block][bcid] > 0.0:
-                                    #print("Value of Block, BCID: " + str(block) + " " + str(bcid) + " " + str(all_detector_one_data.get(run)[block][bcid]))
-                                    detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid])
-                                    detector_two_point = -math.log(1 - detector_data.get(run)[block][bcid])
-                                    detector_one_avg += detector_one_point
-                                    one_count += 1
-                                    detector_two_avg += detector_two_point
-                                    two_count += 1
-                        if one_count != 0:
-                            detector_one_avg = detector_one_avg / one_count
-                            detector_two_avg = detector_two_avg / two_count
-                            temp_detector_one.get(run)[block_count - 1].append(detector_one_avg)
-                            temp_detector_two.get(run)[block_count - 1].append(detector_two_avg)
-                    # Remove the last luminosity block from each run, the one that generally spikes
-                    temp_detector_one[run] = temp_detector_one[run][:-10]
-                    temp_detector_two[run] = temp_detector_two[run][:-10]
+                                print("No empty BCID to subtract background from")
+                            if all_detector_one_data.get(run)[block][bcid] < 1 and \
+                                detector_data.get(run)[block][bcid] < 1:
+                                #print("BCID [N] Stability: " + str(status_data.get(run)[block][bcid]))
+                                detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid]) \
+                                                     + math.log(1 - detector_one_point_background)
+                                #print("Detector 1 Point: " + str(detector_one_point))
+                                detector_two_point = -math.log(1 - detector_data.get(run)[block][bcid]) \
+                                                     + math.log(1 - detector_two_point_background)
+                                #print("Detector 2 Point: " + str(detector_two_point))
+                                detector_one_avg += detector_one_point
+                                one_count += 1
+                                detector_two_avg += detector_two_point
+                                two_count += 1
+                        else:
+                            #print("         RUN:     " + str(run) + "                    END")
+                            #print(all_detector_one_data.get(run)[block][bcid])
+                            # Checking if the status is stable
+                            if 1 > all_detector_one_data.get(run)[block][bcid] > 0.0 and 1 > detector_data.get(run)[block][bcid] > 0.0 \
+                                    and bcid_status.get(run)[block][bcid] > 0.0:
+                                #print("Value of Block, BCID: " + str(block) + " " + str(bcid) + " " + str(all_detector_one_data.get(run)[block][bcid]))
+                                detector_one_point = -math.log(1 - all_detector_one_data.get(run)[block][bcid])
+                                detector_two_point = -math.log(1 - detector_data.get(run)[block][bcid])
+                                detector_one_avg += detector_one_point
+                                one_count += 1
+                                detector_two_avg += detector_two_point
+                                two_count += 1
+                    if one_count != 0:
+                        detector_one_avg = detector_one_avg / one_count
+                        detector_two_avg = detector_two_avg / two_count
+                        temp_detector_one.get(run)[block_count - 1].append(detector_one_avg)
+                        temp_detector_two.get(run)[block_count - 1].append(detector_two_avg)
+                # Remove the last luminosity block from each run, the one that generally spikes
+                temp_detector_one[run] = temp_detector_one[run][:-10]
+                temp_detector_two[run] = temp_detector_two[run][:-10]
 
-                if integrated:
-                    integrated_luminosity_one = []
-                    integrated_luminosity_two = []
-                    lumi_blocks = []
-                    luminosity_ratio = []
-                    block_count1 = 0
-                    lumi_total = 0
-                    lumi_total_two = 0
-                    for run in sorted(all_detector_one_data.keys()):
-                        run_length_dict[run] = 0
-                        for block in range(len(all_detector_one_data.get(run))):
-                            block_count1 += 1
-                            for bcid in range(len(all_detector_one_data.get(run)[block])):
-                                detector_one_point = all_detector_one_data.get(run)[block][bcid]
-                                detector_two_point = detector_data.get(run)[block][bcid]
-                                if detector_one_point != 0.0 and detector_two_point != 0.0:
-                                    # Use conversion factor
-                                    converted_point_one = convert_to_raw_luminosity(11.245, 20.8, detector_one_point)
-                                    converted_point_two = convert_to_raw_luminosity(11.245, 20.8, detector_two_point)
-                                    ratio_one_two = converted_point_one / converted_point_two
-                                    luminosity_ratio.append(ratio_one_two)
-                                    length = block_length.get(run)[block][bcid]
-                                    lumi_total += converted_point_one * length
-                                    lumi_total_two += converted_point_two * length
-                                    integrated_luminosity_one.append(lumi_total)
-                                    integrated_luminosity_two.append(lumi_total_two)
-                                    lumi_blocks.append(block_count1)
-                                    run_length_dict[run] += 1
-                        other_data[run] = integrated_luminosity_two
-                    # create the graph
-                    create_graph(all_detector_one_data, integrated_luminosity_one, other_data=other_data, style=style,
-                                 xname="Luminosity [Integrated]", yname="Luminosity Ratio [Percent]",
-                                 title=name, colors=["blue", "red"], vs_block=False, run_length=run_length_dict)
-                    create_graph(all_detector_one_data, integrated_luminosity_one, other_data=other_data, style=style,
-                                 xname="Luminosity Block", yname="Luminosity Ratio [Percent]",
-                                 title=name, colors=["blue", "red"], vs_block=True, lumi_blocks=lumi_blocks)
-                else:
-                    luminosity_ratio = []
-                    lumi_blocks = []
-                    block_count1 = 0
-                    for run in sorted(all_detector_one_data.keys()):
-                        for block in range(len(all_detector_one_data.get(run))):
-                            block_count1 += 1
-                            for bcid in range(len(all_detector_one_data.get(run)[block])):
-                                detector_one_point = all_detector_one_data.get(run)[block][bcid]
-                                detector_two_point = detector_data.get(run)[block][bcid]
-                                # Check if the blocks are zero
-                                if detector_one_point != 0.0 or detector_two_point != 0.0:
-                                    ratio = detector_one_point / detector_two_point
-                                    luminosity_ratio.append(ratio)
-                                    lumi_blocks.append(block_count1)
-                                else:
-                                    print("Run", str(run), " Block:", str(block), "One:", str(detector_one_point),
-                                          "Two:", str(detector_two_point))
-                        other_data[run] = luminosity_ratio
-                    create_graph(all_detector_one_data, luminosity_ratio, other_data=other_data, style=style,
-                                 xname="Luminosity Block", yname="Luminosity Ratio [Percent]",
-                                 title=name, colors=["blue", "red"], vs_block=True, lumi_blocks=lumi_blocks)
-
-
+            if integrated:
+                integrated_luminosity_one = []
+                integrated_luminosity_two = []
+                lumi_blocks = []
+                luminosity_ratio = []
+                block_count1 = 0
+                lumi_total = 0
+                lumi_total_two = 0
+                for run in sorted(all_detector_one_data.keys()):
+                    run_length_dict[run] = 0
+                    for block in range(len(all_detector_one_data.get(run))):
+                        block_count1 += 1
+                        for bcid in range(len(all_detector_one_data.get(run)[block])):
+                            detector_one_point = all_detector_one_data.get(run)[block][bcid]
+                            detector_two_point = detector_data.get(run)[block][bcid]
+                            if detector_one_point != 0.0 and detector_two_point != 0.0:
+                                # Use conversion factor
+                                converted_point_one = convert_to_raw_luminosity(11.245, 20.8, detector_one_point)
+                                converted_point_two = convert_to_raw_luminosity(11.245, 20.8, detector_two_point)
+                                ratio_one_two = converted_point_one / converted_point_two
+                                luminosity_ratio.append(ratio_one_two)
+                                length = block_length.get(run)[block][bcid]
+                                lumi_total += converted_point_one * length
+                                lumi_total_two += converted_point_two * length
+                                integrated_luminosity_one.append(lumi_total)
+                                integrated_luminosity_two.append(lumi_total_two)
+                                lumi_blocks.append(block_count1)
+                                run_length_dict[run] += 1
+                    other_data[run] = integrated_luminosity_two
+                # create the graph
+                create_graph(all_detector_one_data, integrated_luminosity_one, other_data=other_data, style=style,
+                             xname="Luminosity [Integrated]", yname="Luminosity Ratio [Percent]",
+                             title=name, colors=["blue", "red"], vs_block=False, run_length=run_length_dict)
+                create_graph(all_detector_one_data, integrated_luminosity_one, other_data=other_data, style=style,
+                             xname="Luminosity Block", yname="Luminosity Ratio [Percent]",
+                             title=name, colors=["blue", "red"], vs_block=True, lumi_blocks=lumi_blocks)
+            else:
+                luminosity_ratio = []
+                lumi_blocks = []
+                block_count1 = 0
+                for run in sorted(all_detector_one_data.keys()):
+                    for block in range(len(all_detector_one_data.get(run))):
+                        block_count1 += 1
+                        for bcid in range(len(all_detector_one_data.get(run)[block])):
+                            detector_one_point = all_detector_one_data.get(run)[block][bcid]
+                            detector_two_point = detector_data.get(run)[block][bcid]
+                            # Check if the blocks are zero
+                            if detector_one_point != 0.0 and detector_two_point != 0.0:
+                                ratio = detector_one_point / detector_two_point
+                                luminosity_ratio.append(ratio)
+                                lumi_blocks.append(block_count1)
+                            else:
+                                print("Run", str(run), " Block:", str(block), "One:", str(detector_one_point),
+                                      "Two:", str(detector_two_point))
+                    other_data[run] = luminosity_ratio
+                create_graph(all_detector_one_data, luminosity_ratio, other_data=other_data, style=style,
+                             xname="Luminosity Block", yname="Luminosity Ratio [Percent]",
+                             title=name, colors=["blue", "red"], vs_block=True, lumi_blocks=lumi_blocks)
+    # Else if there is no vs_data, plot the singular one
+    else:
+        return 0
 
 def plot_raw_detector_vs_detector(detector_one_data, detector_two_data, style, name):
     # Set ROOT graph style
