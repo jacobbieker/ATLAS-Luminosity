@@ -987,7 +987,9 @@ def plot_all_luminosity(all_detector_one_data, block_length,
                                 converted_point_two = convert_to_raw_luminosity(11.245, 20.8, detector_two_point)
                                 ratio_one_two = converted_point_one / converted_point_two
                                 luminosity_ratio.append(ratio_one_two)
-                                length = block_length.get(run)[block][bcid]
+                                print"Block Length",str(len(block_length.get(run)))
+                                print"BCID", str(bcid)
+                                length = block_length.get(run)[bcid]
                                 lumi_total += converted_point_one * length
                                 lumi_total_two += converted_point_two * length
                                 integrated_luminosity_one.append(lumi_total)
