@@ -13,6 +13,7 @@ data_files = glob.iglob(os.path.join("data", "*.root"))
 data_list = list(data_files)
 data_list.sort()
 master_luminosity_lucid_bi = {}
+master_luminosity_lucid = {}
 master_luminosity_bcm_h = {}
 master_luminosity_bcm_v = {}
 master_luminosity_lucid_bi_a = {}
@@ -42,6 +43,11 @@ for file_name in data_list:
 
     lucid_event_or_bi_a = detector_array['LUCID_EVENTORA_BI'].tolist()
     lucid_event_or_bi_c = detector_array['LUCID_EVENTORC_BI'].tolist()
+
+    lucid_event_or = detector_array['LUCID_EVENT_OR'].tolist()
+
+    lucid_event_or_a = detector_array['LUCID_EVENT_ORA'].tolist()
+    lucid_event_or_c = detector_array['LUCID_EVENT_ORB'].tolist()
 
     bcm_h_event_or = detector_array['BCM_H_EVENTOR'].tolist()
     bcm_v_event_or = detector_array['BCM_V_EVENTOR'].tolist()
@@ -74,7 +80,7 @@ for file_name in data_list:
 
     # Each luminosity block is an array in the
     # Slice the data to ignore certain datasets because of physical reasons
-    temp_lucid = []
+    temp_lucid_bi = []
     temp_bcm_h = []
     temp_bcm_v = []
     temp_lucid_a = []
@@ -85,7 +91,7 @@ for file_name in data_list:
     temp_bcm_v_b = []
 
     # Go through each BCID number
-    lucid_sum = 0.0
+    lucid_bi_sum = 0.0
     bcm_h_sum = 0.0
     bcm_v_sum = 0.0
     lucid_sum_a = 0.0
@@ -97,6 +103,7 @@ for file_name in data_list:
 
     # Save each event to a list to plot later
     lucid_event_or_bi1 = [[] for _ in xrange(len(luminosity_block))]
+    lucid_event_or1 = [[] for _ in xrange(len(luminosity_block))]
     bcm_v_event_or1 = [[] for _ in xrange(len(luminosity_block))]
     bcm_h_event_or1 = [[] for _ in xrange(len(luminosity_block))]
     lucid_event_or_bi1_a = [[] for _ in xrange(len(luminosity_block))]
@@ -117,7 +124,8 @@ for file_name in data_list:
             # Convert to simple luminosity plot, to try to get smooth drop off
             if luminosity_block_stable[block] > 0.0: #and status[block][bcid] > 0.0:
                 if lucid_event_or_bi[block][bcid] > 0.0 and bcm_h_event_or[block][bcid] > 0.0 and bcm_v_event_or[block][bcid] > 0.0 and bcm_v_event_or_a[block][bcid] > 0.0 and bcm_v_event_or_c[block][bcid] > 0.0 and bcm_h_event_or_a[block][bcid] > 0.0 and bcm_h_event_or_c[block][bcid] > 0.0 and lucid_event_or_bi_c[block][bcid] > 0.0 and lucid_event_or_bi_a[block][bcid] > 0.0:
-                    lucid = lucid_event_or_bi[block][bcid]
+                    lucid_bi = lucid_event_or_bi[block][bcid]
+                    lucid = lucid_event_or[block][bcid]
                     bcm_h = bcm_h_event_or[block][bcid]
                     bcm_v = bcm_v_event_or[block][bcid]
                     lucid_a = lucid_event_or_bi_a[block][bcid]
@@ -128,7 +136,8 @@ for file_name in data_list:
                     bcm_v_c = bcm_v_event_or_c[block][bcid]
                     status_lum = status[block][bcid]
                     # Save the event to the list
-                    lucid_event_or_bi1[block].append(lucid)
+                    lucid_event_or1[block].append(lucid)
+                    lucid_event_or_bi1[block].append(lucid_bi)
                     bcm_h_event_or1[block].append(bcm_h)
                     bcm_v_event_or1[block].append(bcm_v)
                     lucid_event_or_bi1_a[block].append(lucid_a)
@@ -161,6 +170,7 @@ for file_name in data_list:
 
     # Add to master ones for plotting later
     master_luminosity_lucid_bi[display_name] = lucid_event_or_bi1
+    master_luminosity_lucid[display_name] = lucid_event_or1
     master_luminosity_bcm_h[display_name] = bcm_h_event_or1
     master_luminosity_bcm_v[display_name] = bcm_v_event_or1
     master_luminosity_lucid_bi_a[display_name] = lucid_event_or_bi1_a
@@ -175,10 +185,12 @@ for file_name in data_list:
 # list of runs to subtract background on (currently just subtracting the previous not stable BCID
 background_list = ["286282"]
 print"Made it to Background list"
+'''
 lp.plot_all_luminosity(master_luminosity_lucid_bi, master_lumi_block_length, bcid_status=master_status,
                        background_list=background_list,
                        style='ATLAS', name='LUCID BI EVENTOR', integrated=True, vs_data=[master_luminosity_bcm_v,
                                                                                          master_luminosity_bcm_h])
+'''
     # Actually plot the luminosity ratios
    # luminosity_plotting.plot_raw_detector_vs_detector(lucid_event_or_bi1, bcm_v_event_or1, 'ATLAS', str(display_name) + ' LUCID vs BCM V')
     #luminosity_plotting.plot_luminosity_log(lucid_event_or_bi1, 'ATLAS', display_name)
@@ -191,8 +203,10 @@ lp.plot_all_luminosity(master_luminosity_lucid_bi, master_lumi_block_length, bci
     luminosity_plotting.plot_luminosity_ratio(lucid_event_or_bi1, bcm_v_event_or1,
                                               'ATLAS', display_name)'''
 '''
-    luminosity_plotting.plot_percent_luminosity_ratio(lucid_event_or_bi1, bcm_h_event_or1, new_luminosity_block,
-                                                      'ATLAS', os.path.splitext(file_name)[0])
+lp.plot_percent_luminosity_ratio(lucid_event_or1, bcm_h_event_or1, new_luminosity_block,
+                                             'ATLAS', os.path.splitext(file_name)[0])
+'''
+'''
     luminosity_plotting.plot_normalized_luminosity_ratio(lucid_event_or_bi1, bcm_h_event_or1, new_luminosity_block,
                                                          'ATLAS', os.path.splitext(file_name)[0])
     luminosity_plotting.plot_luminosity_ratio(lucid_event_or_bi1, bcm_h_event_or1, new_luminosity_block,
@@ -208,12 +222,12 @@ lp.plot_all_luminosity(master_luminosity_lucid_bi, master_lumi_block_length, bci
 
 
 # Plotting methods for plotting all the runs
-'''
-luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi, master_luminosity_bcm_h,
+
+lp.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi, master_luminosity_lucid,
                                                     background_list, master_status,
                                                     'ATLAS',
-                                                    'LUCID BI / BCM H')
-
+                                                    'LUCID / LUCID BI')
+'''
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi_a, master_luminosity_bcm_v_a,
                                                     background_list, master_status, 'ATLAS',
                                                     'LUCID BI A / BCM V A')
