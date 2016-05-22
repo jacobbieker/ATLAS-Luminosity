@@ -30,6 +30,9 @@ for file_name in data_list:
     second_name = first_part_name[0].split("/")[1]
     display_name = second_name.split("r")[1]
 
+    for element in detector_array.dtype.names:
+        print(element)
+        print("\n")
 
     # Get LUCID and BCM EventOR data to graph
     luminosity_block = detector_array['LBDATA_LB'].tolist()
@@ -44,10 +47,10 @@ for file_name in data_list:
     lucid_event_or_bi_a = detector_array['LUCID_EVENTORA_BI'].tolist()
     lucid_event_or_bi_c = detector_array['LUCID_EVENTORC_BI'].tolist()
 
-    lucid_event_or = detector_array['LUCID_EVENT_OR'].tolist()
+    lucid_event_or = detector_array['LUCID_EVENTOR_PMT'].tolist()
 
-    lucid_event_or_a = detector_array['LUCID_EVENT_ORA'].tolist()
-    lucid_event_or_c = detector_array['LUCID_EVENT_ORB'].tolist()
+    lucid_event_or_a = detector_array['LUCID_EVENTORA_PMT'].tolist()
+    lucid_event_or_c = detector_array['LUCID_EVENTORC_PMT'].tolist()
 
     bcm_h_event_or = detector_array['BCM_H_EVENTOR'].tolist()
     bcm_v_event_or = detector_array['BCM_V_EVENTOR'].tolist()
