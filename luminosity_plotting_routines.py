@@ -39,13 +39,14 @@ def create_graph(all_data, detector_one_data, other_data, style, xname, yname, t
     first_point = detector_one_data[0]
 
     for dataset in other_data:
+        print"Start Dataset One"
         for index in range(len(other_data[dataset])):
-            for value in range(len(other_data[dataset][index])):
-                other_data[dataset][index][value] = 100 * ((other_data[dataset][index][value] / first_point) - 1)
+            other_data[dataset][index] = 100 * ((other_data[dataset][index] / first_point) - 1)
 
     # Set temp list for the min and max functions
     luminosity_ratio = 0
-    for dataset in range(len(other_data)):
+    for dataset in other_data:
+        print"Start data set two"
         for index in range(len(other_data[dataset])):
             luminosity_ratio += other_data[dataset][index]
 
@@ -987,10 +988,10 @@ def plot_all_luminosity(all_detector_one_data, block_length,
                                 converted_point_two = convert_to_raw_luminosity(11.245, 20.8, detector_two_point)
                                 ratio_one_two = converted_point_one / converted_point_two
                                 luminosity_ratio.append(ratio_one_two)
-                                print"Block Length",str(len(block_length.get(run)))
-                                print"BCID", str(bcid)
+                                #print"Block Length",str(len(block_length.get(run)))
+                                #print"BCID", str(bcid)
                                 length = block_length.get(run)[block][bcid]
-                                print"Length",length
+                                #print"Length",length
                                 lumi_total += converted_point_one * length
                                 lumi_total_two += converted_point_two * length
                                 integrated_luminosity_one.append(lumi_total)
