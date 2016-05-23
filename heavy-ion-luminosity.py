@@ -150,9 +150,9 @@ for file_name in data_list:
                     bcm_h_event_or1_c[block].append(bcm_h_c)
                     bcm_v_event_or1_c[block].append(bcm_v_c)
                     luminosity_status[block].append(status_lum)
+                    block_length1 = end_time[block] - start_time[block]
+                    block_length[block].append(block_length1)
                     if status[block][bcid] > 0.0:
-                        block_length1 = end_time[block] - start_time[block]
-                        block_length[block].append(block_length1)
                         count_bunches += 1
                         #print(luminosity_status[block][bcid-1])
                         # Add as the negative log of 1 - rate, as that should be linear to luminosity
@@ -188,12 +188,12 @@ for file_name in data_list:
 # list of runs to subtract background on (currently just subtracting the previous not stable BCID
 background_list = ["286282"]
 print"Made it to Background list"
-'''
+
 lp.plot_all_luminosity(master_luminosity_lucid_bi, master_lumi_block_length, bcid_status=master_status,
                        background_list=background_list,
                        style='ATLAS', name='LUCID BI EVENTOR', integrated=True, vs_data=[master_luminosity_bcm_v,
-                                                                                         master_luminosity_bcm_h])
-'''
+                                                                                   master_luminosity_bcm_h])
+
     # Actually plot the luminosity ratios
    # luminosity_plotting.plot_raw_detector_vs_detector(lucid_event_or_bi1, bcm_v_event_or1, 'ATLAS', str(display_name) + ' LUCID vs BCM V')
     #luminosity_plotting.plot_luminosity_log(lucid_event_or_bi1, 'ATLAS', display_name)

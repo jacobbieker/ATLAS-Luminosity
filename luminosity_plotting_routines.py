@@ -38,7 +38,7 @@ def create_graph(all_data, detector_one_data, other_data, style, xname, yname, t
     # Get percentage difference based off the first block and BCID
     first_point = detector_one_data[0]
 
-    for dataset in range(len(other_data)):
+    for dataset in other_data:
         for index in range(len(other_data[dataset])):
             for value in range(len(other_data[dataset][index])):
                 other_data[dataset][index][value] = 100 * ((other_data[dataset][index][value] / first_point) - 1)
@@ -905,7 +905,7 @@ def plot_all_luminosity(all_detector_one_data, block_length,
     '''
 
     # kwargs is a dict of the keyword args passed to the function
-    other_data = []
+    other_data = {}
     run_length_dict = {}
     if "vs_data" in kwargs:
         # Get the data from each detector and get the values needed in comparison to all_detector_one_data
@@ -989,7 +989,8 @@ def plot_all_luminosity(all_detector_one_data, block_length,
                                 luminosity_ratio.append(ratio_one_two)
                                 print"Block Length",str(len(block_length.get(run)))
                                 print"BCID", str(bcid)
-                                length = block_length.get(run)[bcid]
+                                length = block_length.get(run)[block][bcid]
+                                print"Length",length
                                 lumi_total += converted_point_one * length
                                 lumi_total_two += converted_point_two * length
                                 integrated_luminosity_one.append(lumi_total)
