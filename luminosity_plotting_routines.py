@@ -40,15 +40,13 @@ def create_graph(all_data, detector_one_data, other_data, style, xname, yname, t
 
     for dataset in other_data:
         print"Start Dataset One"
-        for index in range(len(other_data[dataset])):
+        for index in xrange(len(other_data[dataset])):
             other_data[dataset][index] = 100 * ((other_data[dataset][index] / first_point) - 1)
 
     # Set temp list for the min and max functions
-    luminosity_ratio = 0
+    luminosity_ratio = []
     for dataset in other_data:
-        print"Start data set two"
-        for index in range(len(other_data[dataset])):
-            luminosity_ratio += other_data[index]
+        luminosity_ratio += other_data[dataset]
 
     if vs_block:
         xaxis_data = kwargs["lumi_block"]
@@ -63,7 +61,7 @@ def create_graph(all_data, detector_one_data, other_data, style, xname, yname, t
 
         # set visual attributes
 
-        graph.markercolor = colors[index]
+        graph.markercolor = "blue"
         if index == 1:
             graph.yaxis.SetTitle(yname)
             graph.xaxis.SetTitle(xname)
@@ -1010,7 +1008,7 @@ def plot_all_luminosity(all_detector_one_data, block_length,
                              title=name, colors=["blue", "red"], vs_block=False, run_length=run_length_dict)
                 create_graph(all_detector_one_data, integrated_luminosity_one, other_data=other_data, style=style,
                              xname="Luminosity Block", yname="Luminosity Ratio [Percent]",
-                             title=name, colors=["blue", "red"], vs_block=True, lumi_blocks=lumi_blocks)
+                             title=name, colors=["blue", "red"], vs_block=True, lumi_block=lumi_blocks)
             else:
                 luminosity_ratio = []
                 lumi_blocks = []

@@ -30,10 +30,6 @@ for file_name in data_list:
     second_name = first_part_name[0].split("/")[1]
     display_name = second_name.split("r")[1]
 
-    for element in detector_array.dtype.names:
-        print(element)
-        print("\n")
-
     # Get LUCID and BCM EventOR data to graph
     luminosity_block = detector_array['LBDATA_LB'].tolist()
     luminosity_block_stable = detector_array['LBDATA_stable'].tolist()
