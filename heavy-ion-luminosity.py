@@ -122,8 +122,8 @@ for file_name in data_list:
     luminosity_status = [[] for _ in xrange(len(luminosity_block))]
     new_luminosity_block = []
     count_bunches = 0
-    for block in range(len(luminosity_block)):
-        for bcid in range(3564):
+    for block in xrange(len(luminosity_block)):
+        for bcid in xrange(3564):
             # Convert to simple luminosity plot, to try to get smooth drop off
             if luminosity_block_stable[block] > 0.0: #and status[block][bcid] > 0.0:
                 if lucid_event_or_bi[block][bcid] > 0.0 and bcm_h_event_or[block][bcid] > 0.0 and bcm_v_event_or[block][bcid] > 0.0 and bcm_v_event_or_a[block][bcid] > 0.0 and bcm_v_event_or_c[block][bcid] > 0.0 and bcm_h_event_or_a[block][bcid] > 0.0 and bcm_h_event_or_c[block][bcid] > 0.0 and lucid_event_or_bi_c[block][bcid] > 0.0 and lucid_event_or_bi_a[block][bcid] > 0.0:
@@ -192,7 +192,7 @@ print"Made it to Background list"
 lp.plot_all_luminosity(master_luminosity_lucid_bi, master_lumi_block_length, bcid_status=master_status,
                        background_list=background_list,
                        style='ATLAS', name='LUCID BI EVENTOR', integrated=True, vs_data=[master_luminosity_bcm_v,
-                                                                                   master_luminosity_bcm_h])
+                                                                                         master_luminosity_bcm_h])
 
     # Actually plot the luminosity ratios
    # luminosity_plotting.plot_raw_detector_vs_detector(lucid_event_or_bi1, bcm_v_event_or1, 'ATLAS', str(display_name) + ' LUCID vs BCM V')

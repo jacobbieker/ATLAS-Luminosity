@@ -48,7 +48,7 @@ def create_graph(all_data, detector_one_data, other_data, style, xname, yname, t
     for dataset in other_data:
         print"Start data set two"
         for index in range(len(other_data[dataset])):
-            luminosity_ratio += other_data[dataset][index]
+            luminosity_ratio += other_data[index]
 
     if vs_block:
         xaxis_data = kwargs["lumi_block"]
@@ -908,14 +908,19 @@ def plot_all_luminosity(all_detector_one_data, block_length,
     # kwargs is a dict of the keyword args passed to the function
     other_data = {}
     run_length_dict = {}
+    print"Got to kwargs"
     if "vs_data" in kwargs:
         # Get the data from each detector and get the values needed in comparison to all_detector_one_data
         for detector_data in kwargs["vs_data"]:
+            print"Open kwargs"
             temp_detector_one = copy.deepcopy(all_detector_one_data)
+            print"Copieddetector one"
             temp_detector_two = copy.deepcopy(detector_data)
+            print"Copied detector two"
             for run in sorted(all_detector_one_data.keys()):
                 block_count = 0
-                for block in range(len(all_detector_one_data.get(run)) - 1):
+                print"Got to run",run
+                for block in xrange(len(all_detector_one_data.get(run)) - 1):
                     del temp_detector_one.get(run)[block][:]
                     del temp_detector_two.get(run)[block][:]
                     block_count += 1
@@ -923,7 +928,7 @@ def plot_all_luminosity(all_detector_one_data, block_length,
                     one_count = 0
                     detector_two_avg = 0
                     two_count = 0
-                    for bcid in range(len(all_detector_one_data.get(run)[block])):
+                    for bcid in xrange(len(all_detector_one_data.get(run)[block])):
                         # Gets the previous BCID luminosity to subtract as the background
                         if run in background_list:
                             if bcid_status.get(run)[block][bcid - 1] <= 0.0:
@@ -977,9 +982,9 @@ def plot_all_luminosity(all_detector_one_data, block_length,
                 lumi_total_two = 0
                 for run in sorted(all_detector_one_data.keys()):
                     run_length_dict[run] = 0
-                    for block in range(len(all_detector_one_data.get(run))):
+                    for block in xrange(len(all_detector_one_data.get(run))):
                         block_count1 += 1
-                        for bcid in range(len(all_detector_one_data.get(run)[block])):
+                        for bcid in xrange(len(all_detector_one_data.get(run)[block])):
                             detector_one_point = all_detector_one_data.get(run)[block][bcid]
                             detector_two_point = detector_data.get(run)[block][bcid]
                             if detector_one_point != 0.0 and detector_two_point != 0.0:
@@ -1011,9 +1016,9 @@ def plot_all_luminosity(all_detector_one_data, block_length,
                 lumi_blocks = []
                 block_count1 = 0
                 for run in sorted(all_detector_one_data.keys()):
-                    for block in range(len(all_detector_one_data.get(run))):
+                    for block in xrange(len(all_detector_one_data.get(run))):
                         block_count1 += 1
-                        for bcid in range(len(all_detector_one_data.get(run)[block])):
+                        for bcid in xrange(len(all_detector_one_data.get(run)[block])):
                             detector_one_point = all_detector_one_data.get(run)[block][bcid]
                             detector_two_point = detector_data.get(run)[block][bcid]
                             # Check if the blocks are zero
