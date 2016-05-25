@@ -12,6 +12,8 @@ import copy
 def convert_to_raw_luminosity(f_rev, sigma_vis, mu_vis):
     converted = f_rev / sigma_vis
     converted *= mu_vis
+    # Divide by this to get pico barns
+    converted /= 1e12
     return converted
 
 
@@ -956,6 +958,7 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
     # Set temp list for the min and max functions
     luminosity_ratio = luminosity_ratio_two + luminosity_ratio_three
     integrated_luminosity = integrated_luminosity_one
+    #integrated_luminosity = lumi_blocks
 
     graph.markercolor = 'blue'
     graph.yaxis.SetTitle("Luminosity Ratio [Percent]")
@@ -973,8 +976,8 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
 
     # add points from detectors 1 and 3
     # create graph
-    graph1 = Graph(len(integrated_luminosity_one))
-    for i, (xx, yy) in enumerate(zip(integrated_luminosity_one, luminosity_ratio_three)):
+    graph1 = Graph(len(integrated_luminosity))
+    for i, (xx, yy) in enumerate(zip(integrated_luminosity, luminosity_ratio_three)):
         graph1.SetPoint(i, float(xx), float(yy))
 
     # set visual attributes
@@ -993,7 +996,7 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
         print str(run)
         total_length += run_length_dict[run]
         print"Total Length: ",total_length
-        run_length = integrated_luminosity_one[total_length - 1]
+        #run_length = integrated_luminosity[total_length - 1]
         print"Run Length", run_length
         line = ROOT.TLine(run_length, min(luminosity_ratio),
                           run_length, max(luminosity_ratio))
@@ -1003,7 +1006,7 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
         line_label.SetTextSize(18)
         line_label.SetTextFont(43)
         line_label.Draw()
-    label = ROOT.TText(0.7, 0.9, str(name))
+    label = ROOT.TText(0.2, 0.9, str(name))
     label.SetTextFont(43)
     label.SetTextSize(25)
     label.SetNDC()
