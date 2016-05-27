@@ -802,7 +802,8 @@ def plot_multiple_all_luminosity_block_ratio(all_detector_one_data, all_detector
 
 
 def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data, all_detector_three_data, block_length,
-                                   bcid_status, background_list, style, name):
+                                   bcid_status, background_list, style, name, detector_one_calibration,
+                                   detector_two_calibration, detector_three_calibration):
     '''
     Take all the luminosity ratio for each luminosity block and multiply by the time to get the integrated luminosity
     :param all_detector_one_data: A dictionary of the run name to a list of lists of luminosity blocks
@@ -941,12 +942,12 @@ def plot_all_integrated_luminosity(all_detector_one_data, all_detector_two_data,
                     run_length_dict[run] += 1
 
     # Get percentage difference based off the first block and BCID
-    first_point = luminosity_ratio_two[0]
-    first_point_three = luminosity_ratio_three[0]
+    first_point = detector_one_calibration / detector_two_calibration
+    third_point = detector_one_calibration / detector_three_calibration
 
     for index in range(len(integrated_luminosity_one)):
         luminosity_ratio_two[index] = 100 * ((luminosity_ratio_two[index] / first_point) - 1)
-        luminosity_ratio_three[index] = 100 * ((luminosity_ratio_three[index] / first_point) - 1)
+        luminosity_ratio_three[index] = 100 * ((luminosity_ratio_three[index] / third_point) - 1)
 
     # create graph
     graph = Graph(len(integrated_luminosity_one))
