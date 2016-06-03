@@ -204,19 +204,31 @@ print"Made it to Background list"
 
 
 # Plotting methods for plotting all the runs
-'''
+
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi, master_luminosity_bcm_h,
                                                     background_list, master_status,
                                                     'ATLAS',
-                                                    'LUCID BI / BCM H')
-
+                                                    'LUCID BI / BCM H',
+                                                    detector_one_calibration=21.9,
+                                                    detector_two_calibration=15.15)
+luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi, master_luminosity_bcm_v,
+                                                    background_list, master_status,
+                                                    'ATLAS',
+                                                    'LUCID BI / BCM V',
+                                                    detector_one_calibration=21.9,
+                                                    detector_two_calibration=15.04)
+'''
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi_a, master_luminosity_bcm_v_a,
                                                     background_list, master_status, 'ATLAS',
-                                                    'LUCID BI A / BCM V A')
+                                                    'LUCID BI A / BCM V A',
+                                                    detector_one_calibration=21.9,
+                                                    detector_two_calibration=15.04)
 
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi_c, master_luminosity_bcm_h_c,
                                                     background_list, master_status,'ATLAS',
-                                                    'LUCID BI C/ BCM H C')
+                                                    'LUCID BI C/ BCM H C',
+                                                    detector_one_calibration=21.9,
+                                                    detector_two_calibration=15.15)
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_lucid_bi_c, master_luminosity_bcm_v_c,
                                                     background_list, master_status, 'ATLAS',
                                                     'LUCID BI C/ BCM V C')
@@ -234,12 +246,14 @@ luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_bcm_h_a, m
 luminosity_plotting.plot_all_luminosity_block_ratio(master_luminosity_bcm_v_a, master_luminosity_bcm_v_c,
                                                     background_list, master_status, 'ATLAS',
                                                     'BCM V A / BCM V C')
-luminosity_plotting.plot_multiple_all_luminosity_block_ratio(master_luminosity_lucid_bi, master_luminosity_bcm_v,
+'''
+'''luminosity_plotting.plot_multiple_all_luminosity_block_ratio(master_luminosity_lucid_bi, master_luminosity_bcm_v,
                                                              master_luminosity_bcm_h, background_list, master_status,
                                                              'ATLAS', 'LUCID BI /BCM V & LUCID BI / BCM H')
 '''
 luminosity_plotting.plot_all_integrated_luminosity(master_luminosity_lucid_bi, master_luminosity_bcm_v,
                                                    master_luminosity_bcm_h,
                                                    master_lumi_block_length, master_status, background_list, 'ATLAS',
-                                                   'LUCID BI / BCM V \n LUCID BI / BCM H \n Integrated Ratio', )
+                                                   'LUCID BI / BCM V \n LUCID BI / BCM H \n Integrated Ratio', detector_one_calibration=21.9,
+                                                   detector_two_calibration=15.04, detector_three_calibration=15.15)
 

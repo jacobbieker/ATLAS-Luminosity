@@ -482,7 +482,8 @@ def plot_bcid_percent_luminosity_ratio(detector_one_data, detector_two_data, sty
 
 
 # Functions with all the runs
-def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data, background_list, status_data, style, name):
+def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data, background_list, status_data, style, name,
+                                    detector_one_calibration, detector_two_calibration):
     '''
 
     :param all_detector_one_data: A dictionary of the run name to a list of lists of luminosity blocks
@@ -579,7 +580,7 @@ def plot_all_luminosity_block_ratio(all_detector_one_data, all_detector_two_data
     print("length lumi_ratio: " + str((len(luminosity_ratio))))
 
     # Get percentage difference based off the first block and BCID
-    first_point = luminosity_ratio[0]
+    first_point = detector_one_calibration / detector_two_calibration
 
     for index in range(len(luminosity_ratio)):
         luminosity_ratio[index] = 100 * ((luminosity_ratio[index] / first_point) - 1)
